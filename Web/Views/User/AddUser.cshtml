@@ -1,0 +1,817 @@
+﻿
+@using Services.Domain.Models.User;
+@model CompanyUserModel
+@using Web.AppCode;
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var dashBoardLink = "";
+    var usersLink = "";
+
+    dashBoardLink = "/AdminDashboard";
+    usersLink = "/User";
+
+}
+
+
+<style type="text/css">
+    label {
+        display: block;
+    }
+
+    input {
+        width: 300px;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    @@media (min-width: 600px) {
+        #main {
+            width: 60%;
+        }
+    }
+
+    .emojione {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* better progress bar styles for the bootstrap demo */
+    .pass-strength-visible input.form-control,
+    input.form-control:focus {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .pass-strength-visible .pass-graybar,
+    .pass-strength-visible .pass-colorbar,
+    .form-control:focus + .pass-wrapper .pass-graybar,
+    .form-control:focus + .pass-wrapper .pass-colorbar {
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+
+    .k-button.k-upload-button {
+        margin-left: -7px;
+        margin-right: -5px;
+    }
+
+    .k-upload-button.btn.btn-circle.green.btn-sm {
+        width: 195px !important;
+        cursor: pointer !important;
+        font-size: 15px !important;
+    }
+
+    .k-dropzone {
+        text-align: center;
+    }
+
+    .demo-hint {
+        line-height: 22px;
+        color: #aaa;
+        font-size: .9em;
+        padding-top: 1em;
+    }
+
+    input#ConfirmPassword {
+        display: block !important;
+    }
+</style>
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="@dashBoardLink">প্রথম পাতা</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="@usersLink">ব্যবহারকারী</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-english">Add New User</span><span class="ln-bangla">নতুন ব্যবহারকারী যুক্ত করুন </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet ">
+
+                        <div class="div-add-logo-header">
+                            <span class="spn-add-logo-title"><span class="ln-english">User Image</span><span class="ln-bangla">ব্যবহারকারীর ছবি</span></span>
+                        </div>
+
+                        <div class="profile-userpic">
+
+                            @{
+                                var imageURL = "/rams-logo.png";
+                                var imageTitle = "rams-logo.png";
+                            }
+
+                            <div class="dummy_UserImageContainerDiv">
+                                <img src="@Url.Content("~/assets/global/img/rams-logo.jpeg")" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo" title="@imageTitle">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-12">
+                                <div>
+                                    <br />
+                                    @using (Html.BeginForm("UploadFishImage", "CreateSegment", FormMethod.Post, new { @class = "form-horizontal", id = "frmC", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                    {
+                                        @(Html.Kendo().Upload()
+                                                        .Name("files")
+                                                        .Async(a => a
+                                                            .Save("UploadUserImage", "User")
+                                                            .AutoUpload(true)
+                                                        )
+                                                        .Multiple(false)
+                                                        .DropZone("CompanyAdminImageUploader")
+                                                        .Events(events => events
+                                                        .Select("onSelect")
+                                                        .Success("onSuccess")
+                                                        .Error("OErrorHandle")
+                                                        )
+                                                        .Messages(mess => mess.Select("ব্যবহারকারীর ছবি যুক্ত করুন"))
+                                                        .HtmlAttributes(new { id = "CompanyAdminUploader_UP" })
+                                                        .Validation(validation =>
+                                                        {
+                                                            validation.AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif" });
+                                                            validation.MaxFileSize(512000);//500KB max
+                                                        })
+                                        )
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="profile-userbuttons" style="display:inline-block;">
+
+                        </div>
+
+                        <div class="profile-usermenu">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> <span class="ln-english">New User Account Create</span><span class="ln-bangla">নতুন ব্যবহারকারী যুক্ত করুন</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase"><span class="ln-english">Create New User</span><span class="ln-bangla">নতুন ব্যবহারকারী যুক্ত করুন</span></span>
+                                    </div>
+                                    <ul class="nav nav-tabs">
+                                        <li class="" id="tab1">
+                                            <a href="#tab_1_1" data-toggle="tab" class="dummy_active_tab"><span class="ln-english">Personal Information</span><span class="ln-bangla">ব্যক্তিগত তথ্য</span></a>
+                                        </li>
+
+                                        <li class="active" id="tab2">
+                                            <a href="#tab_1_2" data-toggle="tab" class="tab-link-deactive"><span class="ln-english">Other Information</span><span class="ln-bangla">অন্যান্য তথ্য</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("AddUser", "User", FormMethod.Post, new { role = "form", @autocomplete = "off", id = "trialInfoForm", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <div class="tab-pane active" id="tab_1_1">
+
+                                                <span style="color: red;">@Html.ValidationSummary(true, "", new { @class = "text-danger" })</span>
+                                                @Html.HiddenFor(m => m.UserImagePath, new { id = "dummy_userImagePath" })
+                                                @Html.HiddenFor(m => m.UserImageCaption, new { id = "dummy_userImageCaption" })
+
+                                                <div class="form-group">
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+                                                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control custom dummy_text_validation", required = "required", messagespan = "#divFirstNameMessage", @maxlength = "20", title = "প্রথম নাম প্রয়োজন।", autocomplete = "nope" })
+                                                        @Html.LabelFor(m => m.FirstName, new { @class = " control-label" })
+
+                                                    </div>
+                                                    <span style="display: none;" id="divFirstNameMessage" class="text-danger field-validation-valid ">প্রথম নাম প্রয়োজন।</span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+
+                                                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control dummy_text_validation", required = "required", @maxlength = "20", messagespan = "#divLastNameMessage", title = "শেষ নাম প্রয়োজন।", autocomplete = "nope" })
+                                                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+
+                                                    </div>
+                                                    <span style="display: none;" id="divLastNameMessage" class="text-danger field-validation-valid">শেষ নাম প্রয়োজন।</span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+                                                        <div class="input-group">
+                                                            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control dummy_text_validation", type = "email", messagespan = "#divEmailAddressMessage", fieldType = "email", id = "dummy_User_Registration_Email", required = "required", title = "ইমেইল ঠিকানা প্রয়োজন।", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.EmailAddress, new { @class = "control-label" })
+                                                            @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                                                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                                        </div>
+                                                        <span style="display: none;" id="divExistingEmailMessage" class="text-danger field-validation-valid">Email already exist, please try with different email address.</span>
+                                                        <span style="display: none;" id="divEmailAddressMessage" class="text-danger field-validation-valid">ইমেইল ঠিকানা প্রয়োজন।</span>
+                                                    </div>
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+                                                        @Html.TextBoxFor(m => m.Position, new { @class = "form-control ", @maxlength = "99", autocomplete = "nope" })
+                                                        @Html.LabelFor(m => m.Position, new { @class = "control-label" })
+
+                                                    </div>
+                                                    <span class=" dummy_vlidation_hide" id="divPosition"></span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+                                                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control dummy_text_validation", type = "password", messagespan = "#divPasswordMessage", compare = "#ConfirmPassword", id = "password", autocomplete = "new-password" })
+                                                        @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+
+                                                    </div>
+                                                    <span style="display: none;" id="divPasswordMessage" class="text-danger field-validation-valid">পাসওয়ার্ড প্রয়োজন।</span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group form-md-line-input form-md-floating-label">
+                                                        @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control dummy_text_validation", type = "password", messagespan = "#divConfirmPasswordMessage", compare = "txtPassword" })
+                                                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+                                                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger", id = "ConfirmPassword" })
+                                                    </div>
+                                                    <span style="display: none;" id="divConfirmPasswordMessage" class="text-danger field-validation-valid">নিশ্চিতকরণ পাসওয়ার্ড প্রয়োজন।</span>
+                                                    <span style="display: none;" id="divConfmPasswordMessageId" class="text-danger field-validation-valid">Password and Confirmation Password must match.</span>
+                                                </div>
+
+                                                <div class="margin-top-10" style="margin-top: 20px !important;">
+                                                    <div>
+                                                        <div class="pull-left">
+                                                            <a class="btn btn-outline green" href="@usersLink"> ফেরত যান </a>
+                                                        </div>
+                                                        <div class="pull-right">
+
+                                                            <button class="btn green" onclick="return GoToStepTwoValidation('.dummy_text_validation');"> <span class="ln-english">Continue</span><span class="ln-bangla">চালিয়ে যান</span> </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <div class="tab-pane" id="tab_1_2">
+                                                <br>
+                                                <div class="form-group row">
+                                                    <label class="control-label col-md-12">ব্যবহারকারী অন্যান্য তথ্য যেমন প্রকল্পের প্রকল্প, প্রকল্পের নাম, ধর্ম , প্রকল্পে কর্মরত আছে কি না এবং পূর্ণ ঠিকানা দিয়ে অ্যাকাউন্ট টি নিশ্চিত করুন </label>
+                                                </div>
+
+                                                @*<div class="" style="margin-bottom:20px; clear:both"></div>
+
+                                                <div class="form-group row clear_both" style="padding-top:10px;">
+                                                    <label class="control-label col-md-3">
+                                                        <span class="ln-english">Area</span><span class="ln-bangla">এলাকা/প্রকল্প</span>
+                                                        <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-9">
+                                                        @(
+                                                            Html.Kendo().ComboBoxFor(model => model.AreaId)
+                                                            .Filter(FilterType.Contains)
+                                                            .BindTo(ViewBag.ListOfArea)
+                                                            .Placeholder("একটি এলাকা নির্বাচন করুন")
+                                                            .HtmlAttributes(new { style = "width: 100%;", id = "cmbAreaListComboBox" })
+                                                        )
+                                                        <div style="display:none" id="divAreaId">
+                                                            <span class="validation-message-color">একটি এলাকা নির্বাচন করুন</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>*@
+
+                                                @*<div class="" style="margin-bottom:20px; clear:both"></div>
+
+                                                <div class="form-group row clear_both" style="padding-top:10px;">
+                                                    <label class="control-label col-md-3">
+                                                        <span class="ln-english">Project</span><span class="ln-bangla">প্রকল্প</span>
+                                                        <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-9">
+
+                                                        <input type="text" id="cmbProjectComboBaseOnArea" style="width: 100%; border-width: 1px; border-color: #c2cad8; " />
+                                                        @Html.HiddenFor(model => model.ProjectID, new { id = "hdnSelectedProjectId" })
+                                                        <div style="display:none" id="divProjectID">
+                                                            <span class="validation-message-color">একটি প্রকল্প নির্বাচন করুন</span>
+                                                        </div>
+                                                    </div>
+                                                </div>*@
+
+                                                <div class="" style="margin-bottom:20px; clear:both"></div>                                            
+
+                                                <div class="form-group row clear_both">
+                                                    <label class="control-label col-md-3">
+                                                        <span class="ln-english">Status</span><span class="ln-bangla">অবস্থা</span>
+                                                        <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-9">
+                                                        @(Html.Kendo().ComboBoxFor(m => m.IsUserActivated)
+                                                              .Filter(FilterType.Contains)
+                                                              .Placeholder("অবস্থা")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .BindTo(new List<SelectListItem>() {
+                                                                  new SelectListItem() {
+                                                            Text = "সক্রিয়", Value = "True"
+                                                                  },
+                                                                  new SelectListItem() {
+                                                            Text = "নিষ্ক্রিয়", Value = "False"
+                                                                  }
+
+                                                              })
+                                                              .Suggest(true)
+                                                              .HtmlAttributes(new { style = "width: 100%;", id = "IsUserActivated" })
+                                                        )
+
+                                                        <div style="display:none" id="divIsUserActivated">
+                                                            <span class="validation-message-color">সক্রিয়/নিষ্ক্রিয় অবস্থা নির্বাচন করুন</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="div-activity-footer">
+                                                    <div class="pull-left" style="margin-top: 32px;">
+                                                        <button class="btn btn-outline green" onclick="return GotoFirstTab();"> পিছনে যান</button>
+                                                    </div>
+                                                    <div class="pull-right" style="margin-top: 32px;">
+                                                        <a href="@usersLink" class="btn btn-outline green"> ফেরত যান </a>
+                                                        <button class="btn green" type="submit" onclick="return kendoMultiselectValidation();">অ্যাকাউন্ট সম্পূর্ণ</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link type="text/css" href="~/css/password.css" rel="stylesheet" />
+<script src="~/Scripts/password.js"></script>
+<script type="text/javascript">
+
+
+    var areaListComboBox;
+
+    $(document).ready(function () {
+       // InitProjectComboBoxBasedOnAreaId(0);
+        $("#tab1").addClass("active");
+        $("#tab2").removeClass("active");
+        $("#tab_1_1").show();
+        $("#tab_1_2").hide();
+        $("#listUserManagmentSystem").addClass("active");
+        $("#divUserManagementId").addClass("active");
+
+        $(".dummy_text_validation").keypress(function (e) {
+
+            var messageId = $.trim($(this).attr("messagespan"));
+            var emailMessage = $.trim($(this).attr("fieldtype"));
+            var compare = $.trim($(this).attr("compare"));
+            if (messageId != "") {
+                $(messageId).hide();
+            }
+            if (emailMessage != "") {
+                $(emailMessage).hide();
+            }
+            if (compare != "") {
+                $(compare).hide();
+            }
+
+
+        });
+
+
+        $(".k-upload-button").removeClass("k-button");
+        $(".k-upload-button").addClass("btn btn-circle green btn-sm");
+
+        $("#dummy_User_Registration_Email").keyup(function () {
+            var email = $("#dummy_User_Registration_Email").val();
+
+            $.ajax({
+                type: "GET",
+                url: "/SignUp/CheckEmailExistInCompanyAndUser",
+                data: { email: email, userId: 0, companyId: 0 },
+                success: function (response) {
+
+                    if (response.CHKStatus == true) {
+
+                        $("#divExistingEmailMessage").show();
+                    }
+                    if (response.CHKStatus == false) {
+
+                        $("#divExistingEmailMessage").hide();
+                    }
+                }
+            });
+        });
+
+        $('#password').password({
+            animate: false
+        });
+
+
+        areaListComboBox = $("#cmbAreaListComboBox").data("kendoComboBox");
+        areaListComboBox.bind("change", function () {
+            if ((areaListComboBox.selectedIndex === -1 && areaListComboBox.value()) || areaListComboBox.value() == "") {
+                //$("#cmbProjectComboBaseOnArea").empty();
+                //var exitingCombo = $('#cmbProjectComboBaseOnArea').data('kendoGrid');
+                //if (typeof exitingCombo !== "undefined") {
+                //    exitingCombo.destroy();
+                //}
+                //InitProjectComboBoxBasedOnAreaId(0);
+                $("#hdnFishSellingAreaId").val("");
+            }
+            else {
+                //$("#cmbProjectComboBaseOnArea").empty();
+                //var exitingCombo = $('#cmbProjectComboBaseOnArea').data('kendoGrid');
+                //if (typeof exitingCombo !== "undefined") {
+                //    exitingCombo.destroy();
+                //}
+
+                var cmbVal = areaListComboBox.value();
+                $("#hdnFishSellingAreaId").val(cmbVal);
+                //InitProjectComboBoxBasedOnAreaId(cmbVal);
+            }
+        });
+
+        onChangeUserKendoCombobox();
+
+    });//end document ready
+
+
+    //function InitProjectComboBoxBasedOnAreaId(areaId) {
+
+    //    $.get("/User/GetProjectListByAreaId", { areaID: areaId }, function (data) {
+    //        var test = data;
+    //        var dataSource = new kendo.data.DataSource({
+    //            data: data
+    //        });
+    //        $("#cmbProjectComboBaseOnArea").kendoComboBox({
+    //            placeholder: "Please choose",
+    //            filter: "contains",
+    //            dataTextField: "Name",
+    //            dataValueField: "ID",
+    //            autoBind: true,
+    //            selectable: true,
+    //            dataSource: dataSource,
+    //            suggest: true
+    //        });
+    //        projectListComboBox = $("#cmbProjectComboBaseOnArea").data("kendoComboBox");
+    //        projectListComboBox.bind("change", function () {
+    //            if (projectListComboBox.selectedIndex === -1 && projectListComboBox.value()) {
+    //                $("#hdnSelectedProjectId").val("");
+    //            }
+    //            else {
+    //                var cmbVal = projectListComboBox.value();
+    //                $("#hdnSelectedProjectId").val(cmbVal);
+    //            }
+    //        });
+
+
+    //        var projectId = $.trim($("#hdnSelectedProjectId").val());
+    //        if (projectListComboBox) {
+    //            projectListComboBox.value(projectId)
+    //        }
+    //    });
+
+    //}
+
+
+
+
+    $("#Password").keypress(function () {
+        $("#ConfirmPassword").css("display", "block");
+    });
+
+
+    function DoStepValidationByClassName(className) {
+        var isStepValid = true;
+        var regExpEmail = /^\w+([-+.]\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+
+        $(".field-validation-valid").hide();
+        $("#divConfmPasswordMessageId").hide();
+        $(className).each(function () {
+            var inputValue = $.trim($(this).val());
+            var messageId = $.trim($(this).attr("messagespan"));
+            var secondMessage = $.trim($(this).attr("secondTabMessagespan"));
+
+            var fieldType = $.trim($(this).attr("fieldtype"));
+            var compare = $.trim($(this).attr("compare"));
+            if (inputValue == "") {
+                isStepValid = false;
+                if (messageId != "") {
+                    $(messageId).show();
+                }
+
+                if (secondMessage != "") {
+
+                    $(secondMessage).show();
+                }
+            }
+
+            if (fieldType == "email" && !regExpEmail.test(inputValue) && inputValue != "") {
+                isStepValid = false;
+                $(messageId).show();
+            }
+
+            if (compare && compare != "") {
+                var cmpValue = $.trim($(compare).val());
+
+                if (cmpValue != "" && inputValue != cmpValue) {
+                    isStepValid = false;
+                    //$(messageId).show();
+                    $("#divConfmPasswordMessageId").show();
+                }
+            }
+
+
+
+
+        });
+
+        return isStepValid;
+    }
+
+
+    //validation for step one
+    function GoToStepTwoValidation(className) {
+        debugger;
+        var isStepValid = DoStepValidationByClassName(className);
+
+        $("#divExistingEmailMessage").hide();
+
+        var isValid = false;
+        var email = $("#dummy_User_Registration_Email").val();
+
+        if (email.length > 0) {
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "/SignUp/CheckEmailExistInCompanyAndUser",
+                data: { email: email, userId: 0, companyId: 0 },
+                success: function (response) {
+
+                    if (response.CHKStatus == true) {
+
+                        $("#divEmailAddressMessage").hide();
+                        $("#divExistingEmailMessage").show();
+                        $("html, body").animate({ scrollTop: 550 }, "slow");
+                        isValid = false;
+                    }
+                    if (response.CHKStatus == false) {
+
+                        $("#divExistingEmailMessage").hide();
+                        isValid = true;
+                    }
+                }
+            });
+
+            //if (!isValid)
+                //return false;
+        }
+
+        debugger;
+        if (isStepValid == true) {
+            $("#tab1").removeClass("active");
+            $("#tab2").addClass("active");
+
+            $("#tab_1_1").hide();
+            $("#tab_1_2").show();
+
+            return false;
+        }
+        return false;
+
+    }
+
+
+    function GotoFirstTab() {
+        $("#tab2").removeClass("active");
+        $("#tab1").addClass("active");
+        $("#tab_1_2").hide();
+        $("#tab_1_1").show();
+        return false;
+    }
+
+    function addPreview(file) {
+        var raw = file.rawFile;
+        var reader = new FileReader();
+
+        if (raw) {
+            reader.onloadend = function () {
+                var preview = $("<img class='image-preview img-responsive dummy_divUplodedUserImg'>").attr("src", this.result);
+                $(".dummy_UserImageContainerDiv").html(preview);
+                $('#divDefaultUploadedUserImg').hide();
+            };
+
+            reader.readAsDataURL(raw);
+        }
+    }
+
+
+    function onSelect(e) {
+
+        $("#divForProfileImageValidation").hide();
+        var files = e.files;
+
+        var fullImageName = e.files["0"].name;
+        var imageExtension = e.files["0"].extension;
+        var exactImageName = fullImageName.replace(imageExtension, "");
+        var fileInfo = e.files[0];
+        setTimeout(function () {
+            addPreview(fileInfo);
+        });
+        $.each(files, function () {
+
+            if (this.size > 512000 && exactImageName.length > 90) {
+
+                //image & name validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB in size and 90 characters name are allowed for user logo.");
+                $('#divForProfileImageValidation').show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size > 512000 && exactImageName.length <= 90) {
+
+                //image validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB image allowed for user logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size <= 512000 && exactImageName.length > 90) {
+
+                //name validation
+                $('#ProfileImageValidationMessage').text("Maximum 90 characters name allowed for user logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+        });
+    }
+
+
+    function onSuccess(e) {
+        try {
+
+            //if (typeof e.response.DynamicHtml !== 'undefined' && e.response.DynamicHtml != null) {
+            //    setTimeout(function () {
+
+            //        $('#divDefaultUploadedUserImg').hide();
+            //        $('.dummy_divUplodedUserImg').hide();
+            //        //this code will execute after 4 sec
+            //        $(".dummy_UserImageContainerDiv").append($(e.response.DynamicHtml));
+
+            //        $("#dummy_userImagePath").val(e.response.userUploadedImagePath);
+            //        $("#dummy_userImageCaption").val(e.response.userUploadedImageCaption);
+            //    }, 4000);
+            //}
+
+        }
+        catch (err) {
+
+        }
+    }
+
+    function OErrorHandle(e) {
+        try {
+
+            if (e.XMLHttpRequest.status == 200) {
+                $(".k-upload-files.k-reset").remove();
+            }
+
+            if (e.XMLHttpRequest.response) {
+                $("#dummy_userImagePath").val(e.XMLHttpRequest.response);
+
+            }
+
+        } catch (err) {
+
+        }
+    }
+
+    function onChangeUserKendoCombobox() {
+
+        //$("#ProjectID").change(function () {
+        //    var selectedArea = $.trim($("#ProjectID").val());
+
+        //    if (selectedArea == "" || $("#ProjectID").data("kendoComboBox").selectedIndex === -1) {
+        //        $("#divProjectID").show();
+        //        return false;
+        //    }
+        //    else {
+        //        $("#divProjectID").hide();
+        //    }
+        //});
+
+        $("#AreaId").change(function () {
+            var selectedArea = $.trim($("#AreaId").val());
+
+            if (selectedArea == "" || $("#AreaId").data("kendoComboBox").selectedIndex === -1) {
+                $("#divAreaId").show();
+                return false;
+            }
+            else {
+                $("#divAreaId").hide();
+            }
+        });
+
+
+        $("#IsUserActivated").change(function () {
+            var selectedStatus = $("#IsUserActivated").val();
+
+            if (selectedStatus == "" || $("#IsUserActivated").data("kendoComboBox").selectedIndex === -1) {
+                $("#divIsUserActivated").show();
+                return false;
+            }
+            else {
+                $("#divIsUserActivated").hide();
+            }
+        });
+    }
+
+
+    function kendoMultiselectValidation() {
+
+        var isTabThreeValid = true;
+        var selectedItem = 0;
+        var userActivation = $.trim($("#IsUserActivated").val());
+        var AreaId = $.trim($("#AreaId").val());
+        //var ProjectId = $.trim($("#hdnSelectedProjectId").val());
+        $("#divAreaId").hide();
+        //$("#divProjectID").hide();
+        $("#divIsUserActivated").hide();
+
+        if (areaListComboBox.selectedIndex === -1 && areaListComboBox.value() || areaListComboBox.value() == "" || areaListComboBox.value() == null) {
+            $("#divAreaId").show();
+            isTabThreeValid = false;
+        }
+
+        //if (ProjectId == "") {
+        //    $("#divProjectID").show();
+        //    isTabThreeValid = false;
+        //}
+       
+
+        //For user activation combobox
+        if (userActivation == "" || $("#IsUserActivated").data("kendoComboBox").selectedIndex === -1) {
+            $("#divIsUserActivated").show();
+            isTabThreeValid = false;
+        }
+
+        return isTabThreeValid;
+    }
+
+
+
+
+</script>
+
+
+
+

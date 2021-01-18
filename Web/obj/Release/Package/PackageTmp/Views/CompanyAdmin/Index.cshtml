@@ -1,0 +1,367 @@
+﻿@using Services.Domain
+@using Services.Domain.Company.SPModels
+@model SMDLCompanyAdminList
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style type="text/css">
+    @@media screen and (max-width: 768px) and (min-width: 0px) {
+        .div-link-create-user {
+            padding-right: 0px !important;
+            margin-top: -38px;
+            margin-right: 11px;
+        }
+    }
+
+    @@media screen and (max-width: 1920px) and (min-width: 769px) {
+        .div-link-create-user {
+            padding-right: 0px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 812px) {
+        .k-grid-content {
+            min-height: 360px !important;
+        }
+
+        div[data-role="grid"].k-grid {
+            max-height: 401px !important;
+            overflow: hidden;
+        }
+    }
+</style>
+
+
+<!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+
+
+
+        <div class="page-title">
+
+            @if (ViewBag.DeleteInformationMessage != null)
+            {
+                <div class="alert alert-dismissable alert-worning-msg" id="divDeleteMessage">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong></strong>@ViewBag.DeleteInformationMessage
+                </div>
+            }
+
+            @if (ViewBag.InformationMessage != null)
+            {
+                <div class="alert alert-success alert-dismissable alert-success-msg" id="divAddEditMessage">
+                    <i class="fa fa-check"></i>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong></strong>@ViewBag.InformationMessage
+                </div>
+            }
+            <div class="hidden-xs-title">
+                Company Admins
+                @*<small>All registered user of RAMS</small>*@
+            </div>
+        </div>
+
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li> <em class="icon-home"></em> <a href="~/Dashboard">Home</a> <em class="fa fa-angle-right"></em> </li>
+                <li>
+                    <span>Company Admins</span>
+                </li>
+            </ul>
+
+        </div>
+        <!-- END PAGE HEADER-->
+        <div class="page-bar" style="padding-top: 3px; padding-bottom: 5px;">
+
+            <div class="col-sm-5 col-md-5 search-responsive" style="padding-left: 8px; padding-top: 2px;">
+                <div class="input-group" style="width: 100%">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" id=""><i class=" fa fa-search"></i></button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search for company admin" id="txtSearchString" name="txtSearchString" width="100%" autocomplete="off" />
+
+                </div>
+            </div>
+
+            <div class="col-sm-5 search-btn-area find-btn-responsive" style="padding-left: 0px;padding-top: 2px;">
+                <input type="button" value="Find" id="btnFindCompanyAdmin" class="btn btn-outline green custom-btn-green" onclick="SearchCompanyAdmin();" />
+
+                <input type="button" value="Reset" id="btnResetUserSearch" class="btn btn-outline green custom-btn-green" onclick="ResetCompanyAdminSearch();" />
+
+            </div>
+
+            <div class="col-sm-2 pull-right div-link-create-rams create-btn-responsive">
+
+                <a href="/CompanyAdmin/CreateCompanyAdmin" class="btn green price-button sbold uppercase pull-right create-btn-responsive " style="margin-right: 4px;">Create New Company Admin</a>
+
+            </div>
+
+        </div>
+
+        <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <div class="portlet box green mobile-grid-area">
+            <div class="portlet-title">
+                <div class="caption">
+                    Company Admins
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body flip-scroll">
+                @(Html.Kendo().Grid<SMDLCompanyAdminList>()
+              .Name("gridMobile")
+              .Columns(columns =>
+              {
+                  columns.Bound(c => c.companyID).Title("").Width(100).HtmlAttributes(new { @class = "" })
+                                           .ClientTemplate(@"<strong>ID</strong>").Width(100);
+                  columns.Bound(c => c.companyID).Title("ID").Width(100);
+
+                  columns.Bound(c => c.companyID).Title("").Width(100).HtmlAttributes(new { @class = "" })
+                                           .ClientTemplate(@"<strong>Company Name</strong>").Width(100);
+
+                  columns.Bound(c => c.CompanyName).Title("Company Name").Width(200)
+                             .ClientTemplate(@"<div class='test'><b>#: CompanyName #</b></div>").Width(200);
+
+                  columns.Bound(c => c.companyID).Title("").Width(100).HtmlAttributes(new { @class = "" })
+                                           .ClientTemplate(@"<strong>Email</strong>").Width(100);
+                  columns.Bound(c => c.EmailAddress).Title("Email Address").Width(300);  
+
+                  columns.Bound(c => c.companyID).Title("").Width(100).HtmlAttributes(new { @class = "" })
+                                           .ClientTemplate(@"<strong>Status</strong>").Width(100);
+
+                  columns.Bound(c => c.IsActive).Title("Activation Status").Width(200)
+                      .ClientTemplate(@"<div style='color: #: IsActive=='Active'? 'green': 'red' #;'><b>#: IsActive #</b></div>").Width(200);
+
+                  columns.Bound(c => c.companyID).Title("").Width(100).HtmlAttributes(new { @class = "" })
+                                           .ClientTemplate(@"<strong>Action</strong>").Width(100);
+
+                  columns.Command(command =>
+                  {
+                      command.Custom("Review").HtmlAttributes(new {  style = "text-transform: none; background-color: #32c5d2 !important;color: white; border: none;" }).Click("EditCompanyAdmin");
+                      command.Custom("Delete").HtmlAttributes(new {  style = "text-transform: none;background-color: #e31d2d !important;color: white; border: none;" }).Click("CompanyAdminDeleteModal");
+
+                  }).Width(180).Title("Action").HtmlAttributes(new { @class = "action-header-align" });
+
+
+              })
+
+                    .HtmlAttributes(new { style = "height: 400px;", @class = "horizantal-header-grid" })
+                    .Sortable()
+                    .Scrollable()
+                    .Pageable(pageable => pageable
+                        .Refresh(true)
+                        .ButtonCount(5)
+
+                    )
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Read(read => read
+                            .Action("GetCompanyAdminDataList", "CompanyAdmin")
+                            .Data("SearchDataFromExternalInput")
+                        )
+                    )
+                    .Events(events => events
+                        .DataBound("KendoGridDataBound")
+
+                    )
+
+
+                )
+            </div>
+        </div>
+
+
+        <div class="portlet box green large-device-grid">
+            <div class="portlet-title">
+                <div class="caption">
+                    Company Admins
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body flip-scroll">
+                @(Html.Kendo().Grid<SMDLCompanyAdminList>()
+              .Name("grid")
+              .Columns(columns =>
+              {
+                  columns.Bound(c => c.companyID).Title("ID").Width(80);
+                  columns.Bound(c => c.CompanyName).Title("Company Name").Width(200)
+                             .ClientTemplate(@"<div class='test'><b>#: CompanyName #</b></div>").Width(200);
+                  columns.Bound(c => c.EmailAddress).Title("Email Address").Width(300);
+        
+                  columns.Bound(c => c.IsActive).Title("Activation Status").Width(200)
+                      .ClientTemplate(@"<div style='color: #: IsActive=='Active'? 'green': 'red' #;'><b>#: IsActive #</b></div>").Width(200);
+
+                  columns.Command(command =>
+                  {
+                      command.Custom("Review").HtmlAttributes(new {  style = "text-transform: none; background-color: #32c5d2 !important;color: white; border: none;" }).Click("EditCompanyAdmin");
+                      command.Custom("Delete").HtmlAttributes(new { style = "text-transform: none;background-color: #e31d2d !important;color: white; border: none;" }).Click("CompanyAdminDeleteModal");
+
+                  }).Width(180).Title("Action").HtmlAttributes(new { @class = "action-header-align" });
+
+
+              })
+
+                    .HtmlAttributes(new { style = "height: 400px;", @class = "user_grid" })
+                    .Sortable()
+                    .Scrollable()
+                    .Pageable(pageable => pageable
+                        .Refresh(true)
+                        .ButtonCount(5)
+
+                    )
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Read(read => read
+                            .Action("GetCompanyAdminDataList", "CompanyAdmin")
+                            .Data("SearchDataFromExternalInput")
+                        )
+                    )
+                    .Events(events => events
+                        .DataBound("KendoGridDataBound")
+
+                    )
+
+
+                )
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="divDeleteModelApper">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Information</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger dummy_delete_yes">Delete</button>
+                <button type="button" class="btn btn green dummy_delete_no" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#divCompany").addClass("active");
+        $(".dummy_user_no_found").hide();
+
+        $(".k-grid table").addClass("table table-condensed");
+
+        document.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                $("#btnFindCompanyAdmin").click();
+                return false;
+            }
+        }
+    });
+
+
+
+
+      $(window).load(function () {
+
+        if ('@ViewBag.InformationMessage' != null && '@ViewBag.InformationMessage' != '') {
+            $("#divAddEditMessage").show().fadeOut(5000);
+        }
+        if ('@ViewBag.DeleteInformationMessage' != null && '@ViewBag.DeleteInformationMessage' != '') {
+            $("#divDeleteMessage").show().fadeOut(5000);
+        }
+
+     });
+
+    function EditCompanyAdmin(e) {
+        var getId = this.dataItem($(e.currentTarget).closest("tr"));
+        var id = getId.companyID;
+        window.location.href = "/CompanyAdmin/EditCompanyAdmin/" + id;
+    }
+
+
+    function CompanyAdminDeleteModal(e) {
+
+        $("#divDeleteModelApper").modal('show');
+
+        var getId = this.dataItem($(e.currentTarget).closest("tr"));
+        var id = getId.companyID;
+        $('.dummy_delete_yes').click(function (event) {
+            event.preventDefault();
+
+            window.location.href = "/CompanyAdmin/DeleteCompanyAdmin/" + id;
+        });
+
+        $(".dummy_delete_no").click(function () {
+            ClickNo();
+        });
+        $("html").css("overflow-y", "scroll");
+    }
+
+    function ClickNo() {
+
+        $("#divDeleteModelApper").modal('hide');
+
+    }
+
+
+    function SearchDataFromExternalInput() {
+
+        return {
+            searchText: $.trim($("#txtSearchString").val())
+        };
+
+    }
+
+    function SearchCompanyAdmin() {
+        $('#grid').data('kendoGrid').dataSource.page(1);
+        $('#gridMobile').data('kendoGrid').dataSource.page(1);
+
+    }
+
+    function ResetCompanyAdminSearch() {
+        $("#txtSearchString").val("");
+        SearchCompanyAdmin();
+
+    }
+
+    function KendoGridDataBound(arg) {
+        var count = $('#grid').data('kendoGrid').dataSource.total();
+
+        if (count == 0) {
+            $(".dummy_user_no_found").show().fadeOut(5000);
+        } else {
+            $(".dummy_user_no_found").hide();
+        }
+
+
+        var countMobile = $('#gridMobile').data('kendoGrid').dataSource.total();
+
+        if (countMobile == 0) {
+            $(".dummy_user_no_found").show().fadeOut(5000);
+        } else {
+            $(".dummy_user_no_found").hide();
+        }
+
+
+    }
+
+
+
+</script>

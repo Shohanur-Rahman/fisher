@@ -1,0 +1,542 @@
+﻿@using Services.Domain.Accounts.Models.Feed
+@model FeedSellingReportTableDataModal
+@using Web.AppCode
+@{
+    ViewBag.Title = "NewSell";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/ProjectDashboard"><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/SellOfFeed"><span class="ln-bangla">খাদ্য ক্রয়ের হিসাব</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+
+                        <div class="div-add-logo-header wow fadeInUp animated">
+                            <span class="spn-add-logo-title"><span class="ln-english">Area Image</span><span class="ln-bangla">হিসাবের ছবি</span></span>
+                        </div>
+
+                        <div class="profile-userpic wow fadeInUp animated">
+
+                            <div class="dummy_UserImageContainerDiv">
+                                <img src="@Url.Content("~/assets/global/img/rams-logo.jpeg")" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo">
+                            </div>
+
+                        </div>
+
+                        <div class="profile-usermenu wow fadeInUp animated">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase"><span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span></span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("AddFeedSellingReport", "SellOfFeed", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+                                                  
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">হিসাবের নাম</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(m => m.feedSellingReportTableDomain.SellingReportName, new { @class = "form-control", id = "txtSellingReportName", autocomplete = "off",})
+                                                            <span class="validation-message-color" id="#spnSellingReportName"><span class="ln-bangla">হিসাবের নাম লিখুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">হিসাবের নং</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(m => m.feedSellingReportTableDomain.SellingFeedReportNumber, new { @class = "form-control", id = "txtSellingFeedReportNumber", autocomplete = "off",})
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">হিসাবের নং লিখুন</span></span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Time</span><span class="ln-bangla">খাদ্যের নাম</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().ComboBoxFor(m => m.feedSellingReportTableDomain.FeedId)
+                                                              .DataTextField("Name")
+                                                              .DataValueField("ID")
+                                                              .HtmlAttributes(new { style = "width: 100%;", id = "cmbFeedNameListList" })
+                                                              .DataSource(source =>
+                                                              {
+                                                                  source.Read(read =>
+                                                                  {
+                                                                      read.Action("GetAllFeedNameList", "SellOfFeed");
+                                                                  });
+                                                              })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnMainFishNameList"><span class="ln-bangla">খাদ্যের নাম নিশ্চিত করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Time</span><span class="ln-bangla">খাদ্যের ধরন</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            <input type="text" id="txtCmbFeedCategoryList" style="width: 100%;" />
+                                                            @Html.HiddenFor(m => m.feedSellingReportTableDomain.SellingReportFeedCategoryId, new { id = "hdnSelectedFeedCategoryId" })
+                                                            <span class="validation-message-color" id="#spnMainFishNameList"><span class="ln-bangla">খাদ্যের ধরন নিশ্চিত করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">খাদ্যের পরিমান (বস্তায়)</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().ComboBoxFor(m => m.feedSellingReportTableDomain.SellingFeedWeightPerSack)
+                                                              .Placeholder("")
+                                                              .DataTextField("Text")
+                                                              .DataValueField("Value")
+                                                              .BindTo(new List<SelectListItem>() {
+                                                                  new SelectListItem() {
+                                                                    Text = "20 কেজি", Value = "20"
+                                                                  },
+                                                                  new SelectListItem() {
+                                                                    Text = "25 কেজি", Value = "25"
+                                                                  },
+                                                                  new SelectListItem() {
+                                                                    Text = "30 কেজি", Value = "30"
+                                                                  },
+
+                                                                  new SelectListItem() {
+                                                                    Text = "40 কেজি", Value = "40"
+                                                                  },
+                                                                  new SelectListItem() {
+                                                                    Text = "50 কেজি", Value = "50"
+                                                                  }
+                                                              })
+                                                              .Suggest(true)
+                                                              .HtmlAttributes(new { style = "width:100%;", id = "txtCmbWeightOfSack" })
+
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">খাদ্যের পরিমান (বস্তায়) নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">বস্তার সংখ্যা</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.feedSellingReportTableDomain.SellingFeedSackNumber)
+                                                            .Events(e => e
+                                                                 .Change("OnChangeSellingFeedWeightPerSack")
+                                                                 .Spin("OnChangeSellingFeedWeightPerSack")
+                                                            )
+                                                            .Format("#.00 টা")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedSackNumber" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">বস্তার সংখ্যা নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">মোট ওজন</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.feedSellingReportTableDomain.SellingFeedTotalWeight)
+                                                            .Events(e => e
+                                                                 .Change("OnChangeSellingFeedTotalWeight")
+                                                                 .Spin("OnChangeSellingFeedTotalWeight")
+                                                            )
+                                                            .Format("#.00 কেজি")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 কেজি")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalWeight" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট ওজন নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">মুল্য প্রতি কেজি</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.feedSellingReportTableDomain.SellingFeedPricePerKg)
+                                                            .Events(e => e
+                                                                 .Change("OnChangeSellingFeedPricePerKg")
+                                                                 .Spin("OnChangeSellingFeedPricePerKg")
+                                                            )
+                                                            .Format("#.00 টাকা")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedPricePerKg" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মুল্য প্রতি কেজি নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">মোট মুল্য</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.feedSellingReportTableDomain.SellingFeedTotalPrice)
+                                                            .Events(e => e
+                                                                 .Change("OnChangeSellingFeedTotalPrice")
+                                                                 .Spin("OnChangeSellingFeedTotalPrice")
+                                                            )
+                                                            .Format("#.00 টাকা")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalPrice" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট মুল্য নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">তারিখ</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                           @(Html.Kendo().DatePicker()
+                                                              .Name("SellDate")
+                                                              .Format("dd/MM/yyyy")
+                                                              .Value(DateTime.Now)
+                                                              .Max(DateTime.Now)
+                                                              .HtmlAttributes(new { style = "width: 100%", id = "txtClnSellDate" })
+                                                            )
+                                                            @Html.HiddenFor(m => m.feedSellingReportTableDomain.SellingFeedCalculationDate, new { id = "hdnSellDate" })
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">তারিখ নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Time</span><span class="ln-bangla">নোট </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().EditorFor(m => m.feedSellingReportTableDomain.SellingFeedSellNote)
+                                                             .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                                             .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                                             .Tools(tools => tools.Clear()
+                                                             .InsertUnorderedList()
+                                                             .Bold().Italic().Underline()
+                                                             .InsertOrderedList().CreateLink()
+                                                             ))
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/SellOfFeed" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoThisFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var feedNameListList;
+    var sellingFeedWeightPerSackPicker;
+    var sellingFeedSackNumberPicker;
+    var sellingFeedTotalWeightPicker;
+    var sellingFeedPricePerKgPicker;
+    var sellingFeedTotalPricePicker;
+    var sellDatePicker;
+    var feedId;
+    var feedCategoryList;
+
+    $(document).ready(function () {
+
+        $("#lstFeedhSellingLink").addClass("active");
+        LoadFeedCategoryComboBox(0);
+        $(".dummy_default_0").val("5");
+        feedNameListList = $("#cmbFeedNameListList").data("kendoComboBox");
+        feedNameListList.bind("change", function () {
+            feedCategoryList.value("");
+            if ((feedNameListList.selectedIndex === -1 && feedNameListList.value()) || feedNameListList.value() == "") {
+                $("#divDefaultUploadedUserImg").attr("src", "/assets/global/img/rams-logo.jpeg");
+                feedId = 0;
+                LoadFeedCategoryComboBox(feedId);
+            }
+            else {
+                var selectedItem = feedNameListList.dataItem(feedNameListList.select());
+                feedId = feedNameListList.value();
+                LoadFeedCategoryComboBox(feedId);
+                if (selectedItem) {
+                    $("#divDefaultUploadedUserImg").attr("src", "/" + selectedItem.ImageUrl);
+                }
+
+            }
+        });
+        
+
+        sellingFeedWeightPerSackPicker = $("#txtCmbWeightOfSack").data("kendoComboBox");
+        sellingFeedSackNumberPicker = $("#txtNumSellingFeedSackNumber").data("kendoNumericTextBox");
+        sellingFeedTotalWeightPicker = $("#txtNumSellingFeedTotalWeight").data("kendoNumericTextBox");
+        sellingFeedPricePerKgPicker = $("#txtNumSellingFeedPricePerKg").data("kendoNumericTextBox");
+        sellingFeedTotalPricePicker = $("#txtNumSellingFeedTotalPrice").data("kendoNumericTextBox");
+        sellDatePicker = $("#txtClnSellDate").data("kendoDatePicker");
+
+        setTimeout(function () {
+            if ((feedNameListList.selectedIndex === -1 && feedNameListList.value()) || feedNameListList.value() == "") {
+                $("#divDefaultUploadedUserImg").attr("src", "/assets/global/img/rams-logo.jpeg");
+                feedId = 0;
+                LoadFeedCategoryComboBox(feedId);
+            }
+            else {
+                var selectedItem = feedNameListList.dataItem(feedNameListList.select());
+                feedId = feedNameListList.value();
+                LoadFeedCategoryComboBox(feedId);
+                if (selectedItem) {
+                    $("#divDefaultUploadedUserImg").attr("src", "/" + selectedItem.ImageUrl);
+                }
+
+            }
+            setTimeout(function () {
+                feedCatID = $("#hdnSelectedFeedCategoryId").val();
+                feedCategoryList.value(feedCatID);
+            }, 500);
+
+        }, 500);
+
+        sellingFeedWeightPerSackPicker.bind("change", function () {
+            OnChangeSellingFeedWeightPerSack();
+        });
+
+    });
+
+
+    function LoadFeedCategoryComboBox(feedId) {
+
+
+        $.get("/SellOfFeed/GetFeedCategoryListByFeedId", { feedId: feedId }, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data,
+            });
+
+            $("#txtCmbFeedCategoryList").kendoComboBox({
+                placeholder: "",
+                dataTextField: "FeedCategoryName",
+                dataValueField: "FeedCategoryId",
+                filter: "contains",
+                autoBind: false,
+                dataSource: dataSourceGrid
+            });
+
+            feedCategoryList = $("#txtCmbFeedCategoryList").data("kendoComboBox");
+            
+        });
+
+    }
+
+    function OnChangeSellingFeedWeightPerSack() {
+        sellingFeedWeightPerSack = sellingFeedWeightPerSackPicker.value();
+        sellingFeedSackNumber = sellingFeedSackNumberPicker.value();
+        if (sellingFeedWeightPerSack && sellingFeedSackNumber) {
+            var calCulatedValue = (sellingFeedWeightPerSack * sellingFeedSackNumber);
+            var toFixedValue = calCulatedValue.toFixed(2);
+            sellingFeedTotalWeightPicker.value(toFixedValue);
+        }
+        OnChangeSellingFeedTotalWeight();
+        OnChangeSellingFeedPricePerKg();
+        OnChangeSellingFeedTotalPrice();
+    }
+
+
+    function OnChangeSellingFeedTotalWeight() {
+        sellingFeedWeightPerSack = sellingFeedWeightPerSackPicker.value();
+        sellingFeedTotalWeight = sellingFeedTotalWeightPicker.value();
+        if (sellingFeedWeightPerSack && sellingFeedTotalWeight) {
+            var calCulatedValue = (sellingFeedTotalWeight / sellingFeedWeightPerSack);
+            var toFixedValue = calCulatedValue.toFixed(2);
+            sellingFeedSackNumberPicker.value(toFixedValue);
+        }
+    }
+
+    function OnChangeSellingFeedPricePerKg() {
+        sellingFeedTotalWeight = sellingFeedTotalWeightPicker.value();
+        sellingFeedPricePerKg = sellingFeedPricePerKgPicker.value();
+        if (sellingFeedTotalWeight && sellingFeedPricePerKg) {
+            var calCulatedValue = (sellingFeedTotalWeight * sellingFeedPricePerKg);
+            var toFixedValue = calCulatedValue.toFixed(2);
+            sellingFeedTotalPricePicker.value(toFixedValue);
+        }
+    }
+
+    function OnChangeSellingFeedTotalPrice() {
+
+        sellingFeedTotalWeight = sellingFeedTotalWeightPicker.value();
+        sellingFeedTotalPrice = sellingFeedTotalPricePicker.value();
+        if (sellingFeedTotalWeight && sellingFeedTotalPrice) {
+            var calCulatedValue = (sellingFeedTotalPrice / sellingFeedTotalWeight);
+            var toFixedValue = calCulatedValue.toFixed(2);
+            sellingFeedPricePerKgPicker.value(toFixedValue);
+        }
+    }
+
+
+    function OnChangeDateSellDate() {
+
+    }
+
+    function DoThisFormValidation() {
+
+        var isFormValid = true;
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage,.validation-message-color").hide();
+
+        var sellDate = sellDatePicker.value()
+        if (sellDatePicker && sellDate) {
+            var dateString = kendo.toString(new Date(sellDate), "MM/dd/yyyy");
+            $("#hdnSellDate").val(dateString);
+        }
+        var dateText = $.trim($("#hdnSellDate").val());
+        var fishName = $.trim($("#txtSellingReportName").val());
+        var txtSellingFeedReportNumber = $.trim($("#txtSellingFeedReportNumber").val());
+
+        weightPerSackPic = sellingFeedWeightPerSackPicker.value();
+        sackNumber = sellingFeedSackNumberPicker.value();
+        totalWeight = sellingFeedTotalWeightPicker.value();
+        pricePerKg = sellingFeedPricePerKgPicker.value();
+        totalPrice = sellingFeedTotalPricePicker.value();
+
+
+        if (typeof fishName === 'undefined' || fishName == "") {
+            isFormValid = false;
+            $("#txtSellingReportName").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof txtSellingFeedReportNumber === 'undefined' || txtSellingFeedReportNumber == "") {
+            isFormValid = false;
+            $("#txtSellingFeedReportNumber").closest("div").find('span').css("display", "block");
+        }
+
+        if (feedNameListList.selectedIndex === -1 && feedNameListList.value() || feedNameListList.value() == "" || feedNameListList.value() == null) {
+            isFormValid = false;
+            $("#cmbFeedNameListList").closest("div").find('span').css("display", "block");
+        }
+
+        if (feedCategoryList.selectedIndex === -1 && feedCategoryList.value() || feedCategoryList.value() == "" || feedCategoryList.value() == null) {
+            isFormValid = false;
+            $("#hdnSelectedFeedCategoryId").val("");
+            $("#txtCmbFeedCategoryList").closest("div").find('span').css("display", "block");
+        } else {
+            $("#hdnSelectedFeedCategoryId").val(feedCategoryList.value());
+        }
+
+        if (sellingFeedWeightPerSackPicker.selectedIndex === -1 && sellingFeedWeightPerSackPicker.value() || sellingFeedWeightPerSackPicker.value() == "" || sellingFeedWeightPerSackPicker.value() == null) {
+            isFormValid = false;
+            $("#txtCmbWeightOfSack").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof sackNumber === 'undefined' || sackNumber == null || sackNumber <= 0) {
+            isFormValid = false;
+            $("#txtNumSellingFeedSackNumber").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof totalWeight === 'undefined' || totalWeight == null || totalWeight <= 0) {
+            isFormValid = false;
+            $("#txtNumSellingFeedTotalWeight").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof pricePerKg === 'undefined' || pricePerKg == null || pricePerKg <= 0) {
+            isFormValid = false;
+            $("#txtNumSellingFeedPricePerKg").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof totalPrice === 'undefined' || totalPrice == null || totalPrice <= 0) {
+            isFormValid = false;
+            $("#txtNumSellingFeedTotalPrice").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof sellDate === 'undefined' || sellDate == null || sellDate <= 0) {
+            isFormValid = false;
+            $("#txtClnSellDate").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof dateText === 'undefined' || dateText == "") {
+            isFormValid = false;
+            $("#txtClnSellDate").closest("div").find('span').css("display", "block");
+        }
+
+        return isFormValid;
+
+    }
+
+</script>

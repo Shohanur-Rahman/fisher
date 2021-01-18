@@ -1,0 +1,575 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style type="text/css">
+   
+    .page-template {
+        font-family: "DejaVu Sans", "Arial", sans-serif;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+        .page-template .header {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            border-bottom: 1px solid #888;
+            color: #888;
+        }
+
+        .page-template .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            border-top: 1px solid #888;
+            text-align: center;
+            color: #888;
+        }
+
+        .page-template .watermark {
+            font-weight: bold;
+            font-size: 400%;
+            text-align: center;
+            margin-top: 30%;
+            color: #aaaaaa;
+            opacity: 0.1;
+            transform: rotate(-35deg) scale(1.7, 1.5);
+        }
+
+   
+    .customer-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
+    kendo-pdf-document .customer-photo {
+        border: 1px solid #dedede;
+    }
+
+    .customer-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+</style>
+
+<script src="https://kendo.cdn.telerik.com/2018.1.221/js/pako_deflate.min.js"></script>
+<!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <div class="page-title wow fadeInUp animated">
+            <div class="hidden-xs-title">
+                <span class="ln-english">Area list</span><span class="ln-bangla">হিসাবের তালিকা</span>
+            </div>
+        </div>
+
+        <div class="page-bar wow fadeInUp animated ">
+            <ul class="page-breadcrumb">
+                <li> <em class="icon-home"></em> <a href="~/ProjectDashboard"><span class="ln-bangla">প্রথম পাতা</span></a> <em class="fa fa-angle-right"></em> </li>
+                <li>
+                    <span class="ln-bangla">মাছ বিক্রির হিসাব</span>
+                </li>
+            </ul>
+
+        </div>
+        <!-- END PAGE HEADER-->
+        <div class="page-bar" style="padding-top: 3px; padding-bottom: 5px;">
+
+            <div class="col-sm-12 search-responsive" style="padding-left: 8px; padding-top: 2px;">
+                <div class="input-group  wow fadeInUp animated " style="width: 100%">
+                    <div class="form-group col-sm-3 col-md-2 col-sm-2 xs-nopadding-left">
+                        <input type="checkbox" class="checkbox" id="chkSearchSwitch" />
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">শুরুর তারিখ</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <input type="text" class="" id="formDate" />
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">শেষ তারিখ</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <input type="text" class="" id="endDate" />
+                    </div>
+                    
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">এলাকা/স্থান</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+                        @(Html.Kendo().ComboBox()
+                            .Name("projectComboBox")
+                            .DataTextField("Name")
+                            .DataValueField("ID")
+                            .Placeholder("নির্ধারণ করুন")
+                            .HtmlAttributes(new { style = "width: 100%;", id = "cmbSellerListComboBox" })
+                            .DataSource(source =>
+                            {
+                                source.Read(read =>
+                                {
+                                    read.Action("GetAllAreaList", "CreateSegment");
+                                });
+                            })
+                        )
+                    </div>
+
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">প্রকল্পের নাম</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <input type="text" id="cmbProjectComboBox" />
+                    </div>
+
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            &nbsp;
+                        </label>
+                        <div class="ln-bangla pull-left mr-5">
+                            <input type="button" value="খুঁজুন" id="btnFindFishBn" class="btn btn-outline green custom-btn-green" onclick="SearchFishSellingReport();" />
+                        </div>
+                        <div class="ln-bangla pull-left">
+                            <input type="button" value="পুন:স্থাপন" id="btnResetFishSearchBn" class="btn btn-outline green custom-btn-green" onclick="ResetFishSellingSearch();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12  wow fadeInUp animated ">
+                <div class="col-sm-10 col-xs-10">
+                    <strong class="income-expenditure">বিক্রি: <span class="dummy_totalKG">0.00 কেজি</span></strong>
+                    <strong class="income-expenditure">মূল্য: <span class="dummy_totalSellPrice">0.00 টাকা</span></strong>
+                    <strong class="income-expenditure">পরিশোধ: <span class="dummy_pricePerKG">0.00 টাকা</span></strong>
+                    <strong class="income-expenditure">বকেয়া: <span class="dummy_totalFishPieces">0 টাকা</span></strong>
+                </div>
+                <div class="pull-right">
+                    <button class="btn green price-button sbold uppercase create-btn-responsive" onclick="ExportGridDataAsPdfFile();">পিডিএফ</button>
+                    <button class="btn green price-button sbold uppercase create-btn-responsive" onclick="ExportGridDataAsExcelFile();">XL</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="portlet box green wow fadeInUp animated  ">
+            <div class="portlet-title  wow fadeInUp animated ">
+                <div class="caption">
+                    <span class="ln-english">Manage Area</span><span class="ln-bangla">মাছ বিক্রির হিসাব</span>
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body flip-scroll wow fadeInUp animated ">
+                <div id="divFishSellingReport" style="height: 550px;"></div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="divDeleteModelApper" class="kendo-warning-popup">
+    <p>আপনি কি এই স্থানটি নিশ্চিত মুছে ফেলবেন? আপনি স্থানটি মুছে ফেললে তা সম্পূর্ণরূপে হারিয়ে যাবে। আপনার সিদ্ধান্ত নিশ্চিত করুন। </p>
+    <button type="button" class="btn btn-danger pull-right" onclick="DoDeleteYesComand();">নিশ্চিত</button>
+    <button class="btn btn green pull-left" onclick="ClosenNotificationWindowFromButton();">না</button>
+</div>
+
+
+<script type="x/kendo-template" id="page-template">
+    <div class="page-template">
+        <div class="header">
+            <div style="float: left;"><img src="@Url.Content("~/assets/layouts/layout2/img/logo-default.png") " alt="logo" class="logo-default header-logo-width" /></div>
+            <div style="float: right">Page #: pageNum # of #: totalPages #</div>
+        </div>
+        <div class="footer">
+            Page #: pageNum # of #: totalPages #
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    kendo.pdf.defineFont({
+        "DejaVu Sans": "https://kendo.cdn.telerik.com/2016.2.607/styles/fonts/DejaVu/DejaVuSans.ttf",
+        "DejaVu Sans|Bold": "https://kendo.cdn.telerik.com/2016.2.607/styles/fonts/DejaVu/DejaVuSans-Bold.ttf",
+        "DejaVu Sans|Bold|Italic": "https://kendo.cdn.telerik.com/2016.2.607/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf",
+        "DejaVu Sans|Italic": "https://kendo.cdn.telerik.com/2016.2.607/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf",
+        "WebComponentsIcons": "https://kendo.cdn.telerik.com/2017.1.223/styles/fonts/glyphs/WebComponentsIcons.ttf"
+    });
+
+    var sellerListComboBox;
+    var projectComboBox;
+    var fromDataComboBox;
+    var endDatePicker;
+    var startDate = "";
+    var endDate = "";
+    var areaId = "";
+    var projectId = "";
+    var sellerId = "";
+    var isPartial = 1;
+    var deltedId = 0;
+    var areaPrm = 0;
+    var projectId = "";
+    var pdfStartDate = "";
+    var pdfEndDate = "";
+
+    $(document).ready(function () {
+        InitProjectComboBoxBasedOnAreaId(areaPrm);
+        fromDataComboBox = $("#formDate").kendoDatePicker({
+            format: "dd/MM/yyyy",
+            change: OnChangeEndDatePicker,
+            value: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        }).data("kendoDatePicker");
+
+        endDatePicker = $("#endDate").kendoDatePicker({
+            format: "dd/MM/yyyy",
+            value: new Date(),
+            change: OnChangeEndDatePicker
+        }).data("kendoDatePicker");
+
+        sellerListComboBox = $("#cmbSellerListComboBox").data("kendoComboBox");
+
+        sellerListComboBox.bind("change", function () {
+            if ((sellerListComboBox.selectedIndex === -1 && sellerListComboBox.value()) || sellerListComboBox.value() == "") {
+                $("#cmbProjectComboBox").empty();
+                var exitingCombo = $('#cmbProjectComboBox').data('kendoGrid');
+                if (typeof exitingCombo !== "undefined") {
+                    exitingCombo.destroy();
+                }
+                InitProjectComboBoxBasedOnAreaId(0);
+            }
+            else {
+                $("#cmbProjectComboBox").empty();
+                var exitingCombo = $('#cmbProjectComboBox').data('kendoGrid');
+                if (typeof exitingCombo !== "undefined") {
+                    exitingCombo.destroy();
+                }
+
+                var cmbVal = sellerListComboBox.value();
+                InitProjectComboBoxBasedOnAreaId(cmbVal);
+            }
+        });
+        $("#listFishSellReport").addClass("active");
+        $(".dummy_user_no_found").hide();
+
+        $(".k-grid table").addClass("table table-condensed");
+
+
+        $("#chkSearchSwitch").bootstrapSwitch({
+            size: null,
+            offText: "আংশিক হিসাব",
+            onText: "সম্পূর্ণ হিসাব",
+            offColor: "primary",
+            onColor: "default",
+            onSwitchChange: OnChangeSearchSwitch
+        });
+
+
+        SearchFishSellingReport();
+
+
+
+        document.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                $("#btnFindUser").click();
+                return false;
+            }
+        }
+
+        if ('@ViewBag.InformationMessage' != null && '@ViewBag.InformationMessage' != '') {
+            ShowAjaxNotificationMessage("সফল", '@ViewBag.InformationMessage', "success");
+        }
+
+        if ('@ViewBag.DeleteInformationMessage' != null && '@ViewBag.DeleteInformationMessage' != '') {
+            ShowAjaxNotificationMessage("দুঃখিত", '@ViewBag.DeleteInformationMessage', "warning");
+        }
+    });
+
+
+    function ExportGridDataAsPdfFile() {
+        if (areaId == "") {
+            pArea = "0";
+        }
+        if (projectId == "") {
+            pprojectId = "0";
+        }
+        window.location.href = "/PDFGenerate/DownLoadFishSellingReportForAdmin/" + pdfStartDate + "/" + pdfEndDate + "/" + isPartial + "/" + pArea + "/" + pprojectId;
+    }
+
+    function ExportGridDataAsExcelFile() {
+        DownloadExcelSheetForKendoGridData("#divFishSellingReport", "কোনো তথ্য খুঁজে পাওয়া যায় নাই");
+    }
+
+    function InitProjectComboBoxBasedOnAreaId(areaPrm) {
+
+        $.get("/User/GetProjectListByAreaId", { areaID: areaPrm }, function (data) {
+            
+            var test = data;
+            var dataSource = new kendo.data.DataSource({
+                data: data
+            });
+            $("#cmbProjectComboBox").kendoComboBox({
+                placeholder: "Please choose",
+                filter: "contains",
+                dataTextField: "Name",
+                dataValueField: "ID",
+                autoBind: true,
+                selectable: true,
+                dataSource: dataSource,
+                suggest: true
+            });
+            projectComboBox = $("#cmbProjectComboBox").data("kendoComboBox");
+            projectComboBox.value("");
+
+        });
+
+    }
+
+    function OnChangeEndDatePicker() {
+        var startDateVl = fromDataComboBox.value();
+        var endDateVl = endDatePicker.value();
+
+        if (startDateVl && endDateVl && (startDateVl > endDateVl)) {
+            ShowAjaxNotificationMessage("দুঃখিত", "শেষ তারিখ থেকে শুরুর তারিখ ছোট হবে !", "warning");
+        }
+
+    }
+
+    function OnChangeSearchSwitch() {
+        if ($("#chkSearchSwitch").is(':checked')) {
+            sellerListComboBox.value("");
+            sellerListComboBox.enable(false);
+            projectComboBox.value("");
+            projectComboBox.enable(false);
+            fromDataComboBox.value("");
+            fromDataComboBox.enable(false);
+            endDatePicker.value("");
+            endDatePicker.enable(false);
+        } else {
+            sellerListComboBox.enable();
+            projectComboBox.enable();
+            fromDataComboBox.enable();
+            endDatePicker.enable();
+        }
+    }
+
+
+
+    function SearchFishSellingReport() {
+        
+            isPartial = 1;
+            if ($("#chkSearchSwitch").is(':checked')) {
+                isPartial = 0;
+            }
+
+            if (fromDataComboBox && fromDataComboBox.value()) {
+                startDate = kendo.toString(new Date(fromDataComboBox.value()), "MM/dd/yyyy");
+                pdfStartDate = kendo.toString(new Date(fromDataComboBox.value()), "yyyy-MM-dd");
+            } else {
+                startDate = "";
+                pdfStartDate = "1";
+            }
+
+            if (endDatePicker && endDatePicker.value()) {
+                endDate = kendo.toString(new Date(endDatePicker.value()), "MM/dd/yyyy");
+                pdfEndDate = kendo.toString(new Date(endDatePicker.value()), "yyyy-MM-dd");
+            } else {
+                endDate = "";
+                pdfEndDate = "1";
+            }
+
+            if (sellerListComboBox) {
+                areaId = sellerListComboBox.value();
+            } else {
+                areaId = ""
+            }
+            if (projectComboBox) {
+                projectId = projectComboBox.value();
+            } else {
+                projectId = "";
+            }
+
+
+
+            var startDateVl = fromDataComboBox.value();
+            var endDateVl = endDatePicker.value();
+
+            if (startDateVl && endDateVl && (startDateVl > endDateVl)) {
+                ShowAjaxNotificationMessage("দুঃখিত", "শেষ তারিখ থেকে শুরুর তারিখ ছোট হবে !", "warning");
+                return false;
+            }
+
+            if (isPartial == 1 && startDate == "" && endDate == "" && fishId == "" && projectId == "") {
+                ShowAjaxNotificationMessage("দুঃখিত", "আপনাকে কমপক্ষে যে কোন একটি অনুসন্ধান মাধ্যম  বেছে  নিতে হবে।", "warning");
+                return false;
+            }
+            $.get("/AdminData/GetFishSellingReportTotalForAdminByParams", { startDate: startDate, endDate: endDate, isPartial: isPartial, areaId: areaId, projectId: projectId }, function (dataItem) {
+                
+                var all = dataItem;
+                if (dataItem) {
+                    if (dataItem.TotalSellInKg) {
+                        $(".dummy_totalKG").text(dataItem.TotalSellInKg + " কেজি");
+                    }
+
+                    if (dataItem.TotalSellPrice) {
+                        $(".dummy_totalSellPrice").text(dataItem.TotalSellPrice + " টাকা");
+                    }
+
+                    if (dataItem.FishAmountPaid) {
+                        $(".dummy_pricePerKG").text(dataItem.FishAmountPaid + " টাকা");
+                    }
+
+                    if (dataItem.FishAmountDue) {
+                        $(".dummy_totalFishPieces").text(dataItem.FishAmountDue + " টাকা");
+                    }
+                }
+            });
+
+
+            $.get("/AdminData/GetFishSellingReportForAdminByParams", { startDate: startDate, endDate: endDate, isPartial: isPartial, areaId: areaId, projectId: projectId }, function (data) {
+
+                var dataSourceGrid = new kendo.data.DataSource({
+                    data: data.Data,
+                    schema: {
+                        model:
+                      {
+                          id: "FishSellId"
+
+                      }
+                    },
+                    pageSize: 10
+                });
+
+                $("#divFishSellingReport").empty();
+                var existingGrid = $('#divFishSellingReport').data('kendoGrid');
+                if (typeof existingGrid !== "undefined") {
+                    existingGrid.destroy();
+                }
+
+                $("#divFishSellingReport").kendoGrid({
+                    dataSource: dataSourceGrid,
+                    pdf: {
+                        allPages: true,
+                        avoidLinks: true,
+                        paperSize: "A4",
+                        margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
+                        landscape: true,
+                        repeatHeaders: true,
+                        template: $("#page-template").html(),
+                        scale: 0.8
+                    },
+                    excel: {
+                        allPages: true,
+                        multiPage: false,
+                        fileName: "fish_selling" + CreateDynamicGuidFromJs() + ".xlsx",
+                    },
+                    height: 550,
+                    reorderable: true,
+                    resizable: true,
+                    filterable: true,
+                    columnMenu: true,
+                    sortable: true,
+                    scrollable: {
+                        virtual: true
+                    },
+                    selectable: "multiple cell",
+                    allowCopy: true,
+                    pageable: {
+                        refresh: true,
+                        numeric: true,
+                        previousNext: true
+                    },
+                    columns: [
+                     {
+                         field: "FishSellingDate",
+                         title: "বিক্রির তারিখ",
+                     },
+                     {
+                         field: "SellingFishName",
+                         title: "মাছের নাম",
+                     },
+                     {
+                         field: "TotalSellInKG",
+                         title: "মোট বিক্রি (কেজি)",
+                         template: "#: TotalSellInKG # কেজি"
+                     },
+                     {
+                         field: "TotalSellPrice",
+                         title: "মোট মূল্য",
+                         template: "#: TotalSellPrice # টাকা"
+                     },
+                     {
+                         field: "FishAmountPaid",
+                         title: "প্রদান",
+                         template: "#: FishAmountPaid # টাকা"
+                     },
+                     {
+                         field: "FishAmountDue",
+                         title: "বকেয়া",
+                         template: "#: FishAmountDue # টাকা"
+                     }
+                    ],
+                    selectable: true
+
+                });
+
+                $("#divFishSellingReport .k-pager-refresh.k-link").click();
+            });
+        }
+
+
+
+        function DoDeleteYesComand() {
+            alert("ok");
+        }
+
+        function DoDeleteThisId(id) {
+            deltedId = id;
+            var myWindow = $("#divDeleteModelApper"), undo = $("#undo");
+
+            undo.click(function () {
+                myWindow.data("kendoWindow").open();
+                undo.fadeOut();
+            });
+
+            myWindow.kendoWindow({
+                width: "500px",
+                title: "নিশ্চিত মুছে ফেলবেন",
+                visible: false,
+                open: onOpenNotificationWindow,
+                close: onClosenNotificationWindow,
+                deactivate: onClosenNotificationWindow,
+                actions: [
+                    "Close"
+                ]
+            }).data("kendoWindow").center().open();
+
+            $("html").css("overflow-y", "scroll");
+        }
+
+
+        function ResetFishSellingSearch() {
+            $("#chkSearchSwitch").bootstrapSwitch('state', false);
+            fromDataComboBox.value(new Date(new Date().setMonth(new Date().getMonth() - 1)));
+            endDatePicker.value(new Date());
+            sellerListComboBox.value("");
+            projectComboBox.value("");
+            SearchFishSellingReport();
+        }
+
+</script>

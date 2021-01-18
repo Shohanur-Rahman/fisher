@@ -1,0 +1,419 @@
+﻿@using Services.Domain.Models.ToolboxTalks
+@using Web.AppCode;
+@using Services.AzureServices;
+@model ToolboxTalksPDFOperationModel
+@{
+    ViewBag.Title = "Toolbox Talk";
+    Layout = null;
+}
+<html>
+<head>
+    <style type="text/css">
+    @@page {
+        size: A4 portrait;
+        margin: 6mm 9.5mm 25mm 11mm;
+        background: #fff !important;
+    }
+
+    body {
+        font-family: Arial !important;
+        font-size: 12pt !important;
+        font-weight: normal !important;
+        background: #fff !important;
+    }
+
+    h1, h2 {
+        font-size: 15pt !important;
+        font-weight: bold !important;
+    }
+
+    h3, h4 {
+        font-size: 15pt !important;
+        font-weight: bold !important;
+    }
+
+    ul li, ol li {
+        font-size: 9pt !important;
+        font-family: Arial !important;
+        line-height: 20px !important;
+    }
+
+    ul, ol {
+        padding-left: 0px !important;
+        margin-left: 30px !important;
+        line-height: 16px;
+    }
+
+    table.persons-table td {
+        border-bottom: 2px solid #F2F2F2;
+        border-right: 1px solid #F2F2F2;
+    }
+
+        table.persons-table td:last-child {
+            border-right: 0px solid #F2F2F2;
+        }
+
+
+    p {
+        font-size: 12pt !important;
+        line-height: 16px;
+        color: #231F20 !important;
+    }
+
+        p strong.company-name, p.company-info {
+            font-size: 12pt !important;
+            color: #231F20 !important;
+            line-height: 20px;
+        }
+
+    .page-break-attending-briefing {
+        page-break-before: always;
+    }
+
+    @@page {
+        @@top {
+            content: flow(header);
+        }
+
+        ;
+
+        @@bottom {
+            content: flow(footer);
+        }
+
+        ;
+    }
+
+    header {
+        /*flow: static(header);*/
+    }
+
+    footer {
+        flow: static(footer);
+    }
+
+    hr {
+        page-break-after: always;
+    }
+
+    #currentPage:after {
+        counter-increment: page;
+        content: "" counter(page);
+    }
+
+    #pageNumber:after {
+        counter-increment: page;
+        content: " of " counter(pages);
+    }
+
+
+    .main-header-div {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        background: #D7D8DA;
+        padding: 15px;
+        margin-top: 22px;
+        font-size: 15pt !important;
+    }
+
+    .footer-left {
+        float: left;
+        display: block;
+        width: 68%;
+        margin-top: 5px;
+        font-size: 12pt !important;
+    }
+
+    .footer-right {
+        float: right;
+        display: block;
+        width: 30%;
+        margin-top: 5px;
+        font-size: 12pt !important;
+    }
+
+    .toolbox-talk-details h1, .toolbox-talk-details h1 span, .toolbox-talk-details h1 strong, .toolbox-talk-details h1 strong span,
+    .toolbox-talk-details h2, .toolbox-talk-details h2 span, .toolbox-talk-details h2 strong, .toolbox-talk-details h2 strong span {
+        font-size: 11pt !important;
+        color: #231F20 !important;
+        font-weight: 700;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        word-break: break-all;
+        page-break-inside: auto !important;
+    }
+
+    .toolbox-talk-details h4, .toolbox-talk-details h4 span, .toolbox-talk-details h4 strong, .toolbox-talk-details h4 strong span,
+    .toolbox-talk-details h3, .toolbox-talk-details h3 span, .toolbox-talk-details h3 strong, .toolbox-talk-details h3 strong span {
+        font-size: 11pt !important;
+        color: #231F20 !important;
+        font-weight: 700;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        word-break: break-all;
+        page-break-inside: auto !important;
+    }
+
+    .toolbox-talk-details ol, .toolbox-talk-details ul {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        page-break-inside: auto !important;
+    }
+
+    .toolbox-talk-details p {
+        margin-bottom: 0;
+        margin-top: 8px;
+    }
+
+    body, p, ul li, h1, h2, h3, h4, h5, h6, strong, span, ol, ol li, div, * {
+        color: #231F20 !important;
+        font-family: Arial !important;
+    }
+
+        body, body div, body p, body span, body p span, body p strong, body p span strong,
+        body ul li span body ul li strong {
+            font-family: Arial !important;
+            font-size: 9pt !important;
+            color: #231F20 !important;
+        }
+
+            body div.top-color {
+                color: #000 !important;
+            }
+    </style>
+</head>
+
+<body style="font-size:12pt !important;">
+
+    @{
+        var imageURL = AzureStorageURL.BLOB_URL + AzureBlobFolderName.USER_LOGO_FOLDER_NAME + "/rams-logo.png";
+        if (Model.userData.UserImagePath != null)
+        {
+            imageURL = AzureStorageURL.BLOB_URL + Model.userData.UserImagePath;
+        }
+    }
+    <header>
+        <div style="width: 100%; display: block; margin-top: 10px; overflow: hidden; padding-left: 10px;">
+            <div style="float: left; width: 48%; display: block;">
+                <p class="company-info" style="margin-bottom: 0px; margin-top: 0px; font-size: 11pt !important;">
+                    <strong style="display: block; font-size: 15pt !important; margin-bottom: 0px;" class="company-name">@Model.userCompany.CompanyName</strong>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;">@Model.userCompany.CompanyAddressOne, @Model.userCompany.CompanyAddressTwo</span>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;">@Model.userCompany.CompanyTown, @Model.userCompany.PostCode</span>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;"><strong style="font-size: 11pt !important;">Telephone: </strong><span style="font-size: 11pt !important;">@Model.userCompany.CompanyPhone</span></span>
+                    @if (Model.userCompany.CompanyWebsite != null)
+                    {
+                        <span style="display:block; margin-bottom: 0px;font-size: 11pt !important;"><strong style="font-size: 11pt !important;">Website: </strong><span style="font-size: 11pt !important;">@Model.userCompany.CompanyWebsite</span></span>
+                    }
+                </p>
+            </div>
+
+            <div style="display: block; width: 43%; float: right; margin-right: 60px; font-size: 15pt !important;">
+                <img src="@imageURL" style="max-width: 330px !important;font-size: 15pt !important; max-height:140px !important; float: right;margin-top: -10px !important;" alt="@Model.userCompany.CompanyName" title="@Model.userCompany.CompanyName">
+            </div>
+        </div>
+    </header>
+
+    @if (Model.toolboxTalks != null)
+    {
+        <div style="page-break-before: avoid !important; page-break-after: avoid !important;page-break-inside: auto !important;">
+
+            <div class="main-header-div" style="width: 97%;page-break-before: avoid !important; page-break-after: avoid !important; margin-left: -10px;padding-left: 20px !important;"><strong>Toolbox Talks  </strong>@Model.toolboxTalks.ToolboxName.Trim()</div>
+
+            <div style="width: 100%; display: block; overflow: hidden;page-break-before: avoid !important; page-break-after: avoid !important;padding-left: 9px !important;">
+                <div style="width: 31%; float: left; padding: 0px 10px 0px 0px; display: block; ">
+                    <h3 style="font-family: Arial;border-bottom: 1px solid #000;padding-bottom: 15px; margin-bottom: 15px; font-size: 11pt !important;">Reason</h3>
+                    <div class="top-color" style="font-family: Arial;margin-bottom: 5px; display: block; font-size: 12pt !important; color: #58585A !important;">
+                       @Html.Raw(HttpUtility.HtmlDecode(Model.toolboxTalks.Reason)) 
+                    </div>
+                </div>
+
+                <div style="width: 31%; float: left; padding: 0px 10px 0px 10px; display: block; ">
+                    <h3 style="font-family: Arial;border-bottom: 1px solid #000;padding-bottom: 15px; margin-bottom: 15px; font-size: 11pt !important;">Why</h3>
+                    <div class="top-color" style="font-family: Arial;margin-bottom: 5px; display: block; font-size: 12pt !important; color: #58585A !important;">
+                       @Html.Raw(HttpUtility.HtmlDecode(Model.toolboxTalks.Why))    
+                    </div>
+                </div>
+
+                <div style="width: 31%; float: left; padding: 0px 0px 0px 10px; display: block; ">
+                    <h3 style="font-family: Arial;border-bottom: 1px solid #000;padding-bottom: 15px; margin-bottom: 15px; font-size: 11pt !important;">Outline</h3>
+                    <div class="top-color" style="font-family: Arial;margin-bottom: 5px; display: block; font-size: 12pt !important; color: #58585A !important;">
+                        @Html.Raw(HttpUtility.HtmlDecode(Model.toolboxTalks.Outline))                         
+                    </div>
+                </div>
+            </div>
+
+            <div style="width: 98.7%;padding-left: 8.5px !important; display: block; overflow: hidden; margin-top: 20px;page-break-inside: auto !important;page-break-before: avoid !important; page-break-after: avoid !important;">
+                <h3 style="font-family: Arial;text-align: center;padding-bottom: 15px;border-bottom: 1px solid #000; display: block;  font-size: 11pt !important;page-break-before: avoid !important; page-break-after: avoid !important;">Details</h3>
+
+                <div style="display: block; width: 695px; font-family: Arial !important; font-size: 9pt !important;padding-right: 10px; " class="toolbox-talk-details">
+                    @Html.Raw(HttpUtility.HtmlDecode(Model.toolboxTalks.Others)) 
+                </div>
+            </div>
+        </div>
+    }    
+    <div class="col-sm-12" style="page-break-before:always; padding: 0px;">
+        <div style="width: 100%; display: block; margin-top: 10px; overflow: hidden; padding-left: 10px;">
+            <div style="float: left; width: 48%; display: block;">
+                <p class="company-info" style="margin-bottom: 0px; margin-top: 0px; font-size: 11pt !important;">
+                    <strong style="display: block; font-size: 15pt !important; margin-bottom: 0px;" class="company-name">@Model.userCompany.CompanyName</strong>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;">@Model.userCompany.CompanyAddressOne, @Model.userCompany.CompanyAddressTwo</span>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;">@Model.userCompany.CompanyTown, @Model.userCompany.PostCode</span>
+                    <span style="display: block; margin-bottom: 0px;font-size: 11pt !important;"><strong style="font-size: 11pt !important;">Telephone: </strong><span style="font-size: 11pt !important;">@Model.userCompany.CompanyPhone</span></span>
+                    @if (Model.userCompany.CompanyWebsite != null)
+                    {
+                        <span style="display:block; margin-bottom: 0px;font-size: 11pt !important;"><strong style="font-size: 11pt !important;">Website: </strong><span style="font-size: 11pt !important;">@Model.userCompany.CompanyWebsite</span></span>
+                    }
+                </p>
+            </div>
+
+            <div style="display: block; width: 43%; float: right; margin-right: 60px; font-size: 15pt !important;">
+                <img src="@imageURL" style="max-width: 330px !important;font-size: 15pt !important; max-height:140px !important; float: right;margin-top: -10px !important;" alt="@Model.userCompany.CompanyName" title="@Model.userCompany.CompanyName">
+            </div>
+        </div>
+    </div>
+        <div style="width: 100%; display: block; margin-top: 20px; overflow: hidden;  border-top: 1px solid #000; "></div>
+
+
+        <div class="main-header-div" style="width: 97%;page-break-before: avoid !important; page-break-after: avoid !important; margin-left: -10px;padding-left: 20px !important;"><strong>Toolbox Talks</strong> @Model.toolboxTalks.ToolboxName.Trim()</div>
+
+
+        <div style="width: 101.85%; display: block; overflow: hidden;margin-left: -10px;">
+            <div style="height: auto; overflow: hidden; width: 100%;">
+                <h1 style="font-family: Arial;text-align: left;color: #231F20 !important;margin: 25px 0px 15px;font-size: 15pt !important;">Briefing Record – @Model.toolboxTalks.ToolboxName.Trim()</h1>
+
+                <table class="brefing-table" style="width: 100%; overflow: hidden;" cellspacing="0">
+                    <tbody>
+                        <tr style="height:25px;">
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; background: #F2F2F2; font-weight: 800;border-bottom: 1px solid #F2F2F2;border-top: 2px solid #000000; ">Briefing Delivered By:</td>
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial;border-bottom: 1px solid #F2F2F2;border-top: 2px solid #000000; "></td>
+                            <td style="text-align: left;width: 10%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; background: #F2F2F2;font-weight: 800;border-bottom: 1px solid #F2F2F2;border-top: 2px solid #000000; ">Date:</td>
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial;border-bottom: 1px solid #F2F2F2;border-top: 2px solid #000000; "></td>
+                        </tr>
+
+                        <tr style="height:25px;">
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; background: #F2F2F2;font-weight: 800;border-bottom: 2px solid #000000; ">Signature:</td>
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial;border-bottom: 2px solid #000000;"></td>
+                            <td style="text-align: left;width: 10%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; background: #F2F2F2;font-weight: 800;border-bottom: 2px solid #000000;">Time:</td>
+                            <td style="text-align: left;width: 30%;padding: 2px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial;border-bottom: 2px solid #000000;"></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="height: auto; overflow: hidden; width: 100%;">
+                <h1 style="font-family: Arial;text-align: left;color: #231F20333;margin: 50px 0px 15px;color: #231F20 !important;font-size: 15pt !important;">Persons attending the briefing</h1>
+
+                <table class="persons-table" style="width: 100%; overflow: hidden;" cellspacing="0">
+                    <thead>
+                        <tr style="border: 1px solid #ddd;">
+                            <th style="width:30%;color: #231F20333; padding: 3px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; text-align:left; background: #F2F2F2;border-bottom: 2px solid #000000;border-top: 2px solid #000000; font-weight: 800;">Name</th>
+                            <th style="width:20%;color: #231F20333; padding: 3px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; text-align:left; background: #F2F2F2;border-bottom: 2px solid #000000;border-top: 2px solid #000000; font-weight: 800;">Signature</th>
+                            <th style="width:15%;color: #231F20333; padding: 3px 5px;color: #231F20 !important;font-size: 12pt !important; font-family: Arial; text-align:left; background: #F2F2F2;border-bottom: 2px solid #000000;border-top: 2px solid #000000; font-weight: 800;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+
+                        <tr style="height:30px;">
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                            <td style="text-align: center;color: #231F20333; font-family: Arial;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</body>
+
+</html>

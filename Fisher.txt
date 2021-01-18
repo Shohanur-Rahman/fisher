@@ -1,0 +1,42 @@
+
+
+            <div class="row wow fadeInUp animated">
+                <h1>তথ্যের জন্য লগইন করুন</h1>
+            </div>
+            <div class="row wow fadeInUp animated">
+                <p>আপনি আপনার মাছ বিক্রি, মাছ ক্রয়, খাদ্য ক্রয়, খাদ্য খাওয়ানো, প্রকল্পের খরচ দেখতে পারবেন</p>
+            </div>
+
+            @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+
+            {
+                
+                
+
+                <div class="row wow fadeInUp animated">
+                    <div class="col-xs-6 right-pad0" style="padding-right: 0px">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control form-group", @placeholder = "ই-মেইল", @required = "required", title = "আপনার ই-মেইল দিন" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-xs-6 right-pad0" style="padding-right: 0px">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control form-group", @placeholder = "পাসওয়ার্ড", @required = "required", title = "আপনার পাসওয়ার্ড দিন", @type = "password" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row wow fadeInUp animated" style="margin-top: 10px;">
+                    <div class="col-sm-12" style="margin-left: -15px;">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                    <div class="col-sm-12 text-right responsive-left-side" style="margin-left: 15px;">
+                        <a href="~/Login/ForgotPassword" id="forget-password" class="forget-password" style="margin-right: -4px;">পাসওয়ার্ড ভুলে গেছেন</a>
+                    </div>
+                </div>
+
+                <div class="row wow fadeInUp animated" style="margin-top: 10px;">
+                    <div class="col-sm-12 text-right responsive-left-side">
+                        <button class="btn green" type="submit" id="btnSignIn">প্রবেশ করুন</button>
+                    </div>
+                </div>
+            }

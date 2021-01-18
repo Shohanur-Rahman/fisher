@@ -1,0 +1,305 @@
+﻿@using Services.Domain
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="page-content-wrapper dashboar-responsive">
+    <div class="page-content">
+        <div id="hostingUpdateNotification" class="kendo-warning-popup" style="background: red;color: #fff;font-size: 16px;"><p> আপনি এই ওয়েব সাইড টিতে কোনো ছবি আপলোড করতে পারবেন না। ওয়েব সাইট টি পেইড ভার্শন এ নিয়ে গেলে আপনি ছবি আপলোড করতে পারবেন। ওয়েব সাইড টি ফ্রি ভার্শন এ থাকায় আপনি কিছূ ত্রূটি পেতে পারেন। এই জন্য হোস্টিং টি প্রিমিয়াম ভার্শন এ আপডেট করুন। <br /><br />ধন্যবাদ।</p></div>
+
+
+
+        <div class="page-title"><span class="responsive-time-hide"><span class="ln-bangla">চা বাগান মাছের প্রকল্পে আপনাকে স্বাগতম </span></span></div>
+        <div class="page-bar"><ul class="page-breadcrumb"><li> <em class="icon-home"></em> <a href="~/Dashboard"><span class="ln-bangla">প্রথম পাতা</span></a> <em class="fa fa-angle-right"></em> </li><li><span><span class="ln-bangla">আমার পাতা</span></span></li></ul></div>
+
+
+        <div class="row">
+            <div class="col-lg-3 col-md-3 cold-sm-4 wow fadeInUp animated">
+                <div class="portlet bg-flat-color-1 clearfix counter-box">
+                    <div class="pull-left">
+                        <span class="counter-label">মাছ বিক্রি</span>
+                        <div class="counter counter-text" data-count="@ViewBag.TotalFishSell">0</div>
+                    </div>
+                    <div class="pull-right counter-icon"> <span class="icon-basket"></span></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 cold-sm-4 wow fadeInUp animated">
+                <div class="portlet bg-flat-color-2 clearfix counter-box">
+                    <div class="pull-left">
+                        <span class="counter-label">খাদ্য ক্রয়</span>
+                        <div class="counter counter-text" data-count="@ViewBag.TotalFeedBuy">0</div>
+                    </div>
+                    <div class="pull-right counter-icon"> <span class="icon-basket-loaded"></span></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 cold-sm-4 wow fadeInUp animated">
+                <div class="portlet bg-flat-color-3 clearfix counter-box">
+                    <div class="pull-left">
+                        <span class="counter-label">খাবার খাওয়ানো</span>
+                        <div class="counter counter-text" data-count="@ViewBag.TotalFeedDistribute">0</div>
+                    </div>
+                    <div class="pull-right counter-icon"> <span class="fa fa-hourglass-o"></span></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 cold-sm-4 wow fadeInUp animated">
+                <div class="portlet bg-flat-color-4 clearfix counter-box">
+                    <div class="pull-left">
+                        <span class="counter-label">মাছ বিক্রি</span>
+                        <div class="counter counter-text" data-count="@ViewBag.TotalRecord">0</div>
+                    </div>
+                    <div class="pull-right counter-icon"> <span class="icon-basket"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet light clearfix">
+                    <div class="col-sm-6 no-padding">
+                        <div id="divFishReportByDate"></div>
+                    </div>
+
+                    <div class="col-sm-6 no-padding">
+                        <div id="divIdFishSellingReport"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet light clearfix">
+                    <div class="col-sm-6 no-padding">
+                        <div id="divFeedBuyingGroupBy"></div>
+                    </div>
+
+                    <div class="col-sm-6 no-padding">
+                        <div id="divIdFeedBuyingReport"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#listLinkAdminDashboard").addClass("start open");
+        LoadFishSellingReportOverview();
+        LoadFishSellingReportGroupByProject();
+        LoadFeedBuyingChartForAdmin();
+        LoadFeedBuyingReportGroupByFeedCategory();
+
+        $("#divMyDashboard").addClass("active");
+    });
+
+
+    function LoadFeedBuyingReportGroupByFeedCategory() {
+
+        $.get("/SellOfFeed/GetFeedBuyingReportGroupByFeedCategoryForAdmin", function (data) {
+
+            $("#divFeedBuyingGroupBy").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    position: "bottom",
+                    text: "খাদ্য ক্রয়",
+
+                },
+                legend: {
+                    visible: false
+                },
+                chartArea: {
+                    background: ""
+                },
+                seriesDefaults: {
+                    labels: {
+                        visible: true,
+                        background: "transparent",
+                        template: "#= category #: \n #= value# টাকা"
+                    }
+                },
+                series: [{
+                    type: "pie",
+                    field: "SellingFeedTotalPrice",
+                    categoryField: "FeedCategory",
+                    startAngle: 250,
+                    animation: {
+                        type: "fadeIn",
+                        duration: 800
+                    }
+
+                }],
+                tooltip: {
+                    visible: true,
+                    format: "N0",
+                    template: "#= category # - #= kendo.format('{0:P}', percentage)#"
+                }
+            });
+        });
+
+
+    }
+
+    function LoadFeedBuyingChartForAdmin() {
+
+        $.get("/SellOfFeed/GetFeedBuyingChartForAdmin", function (data) {
+
+            $("#divIdFeedBuyingReport").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    text: "প্রতিদিনের খাদ্য ক্রয়"
+                },
+                legend: {
+                    position: "top"
+                },
+                seriesDefaults: {
+                    type: "column"
+                },
+                series:
+                [{
+                    field: "SellingFeedPricePerKg",
+                    categoryField: "CalculationDate"
+                }],
+                categoryAxis: {
+                    labels: {
+                        rotation: -45
+                    },
+                    majorGridLines: {
+                        visible: false
+                    }
+                },
+                valueAxis: {
+                    labels: {
+                        format: "N0"
+                    },
+                    majorUnit: 5000,
+                    line: {
+                        visible: false
+                    }
+                },
+                tooltip: {
+                    visible: true,
+                    format: "N0"
+                }
+            });
+        });
+
+
+    }
+
+    function LoadFishSellingReportOverview() {
+
+        $.get("/SellOfFish/GetFishSellingChartReportForAdmin", function (data) {
+
+            $("#divFishReportByDate").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    text: "প্রতিদিনের মাছ বিক্রয়"
+                },
+                legend: {
+                    position: "top"
+                },
+                seriesDefaults: {
+                    type: "column"
+                },
+                series:
+                [{
+                    field: "TotalSellPrice",
+                    categoryField: "CalculatedDate"
+                }],
+                categoryAxis: {
+                    labels: {
+                        rotation: -45
+                    },
+                    majorGridLines: {
+                        visible: false
+                    }
+                },
+                valueAxis: {
+                    labels: {
+                        format: "N0",
+                    },
+                    majorUnit: 70000,
+                    line: {
+                        visible: false
+                    }
+                },
+                tooltip: {
+                    visible: true,
+                    format: "N0"
+                }
+            });
+        });
+
+
+    }
+
+    function LoadFishSellingReportGroupByProject() {
+
+        $.get("/Dashboard/GetAdminDashBoardFishSellingReport", function (data) {
+
+            $("#divIdFishSellingReport").kendoChart({
+                dataSource: {
+                    data: data,
+                    schema: {
+                        model:
+                      {
+                          id: "TotalSell"
+
+                      }
+                    }
+                },
+                title: {
+                    position: "bottom",
+                    text: "বিক্রয় পরিদর্শন",
+
+                },
+                legend: {
+                    visible: false
+                },
+                chartArea: {
+                    background: ""
+                },
+                seriesDefaults: {
+                    labels: {
+                        visible: true,
+                        background: "transparent",
+                        template: "#= category #: \n #= value# টাকা"
+                    }
+                },
+                series: [{
+                    type: "pie",
+                    field: "TotalSell",
+                    categoryField: "ProjectName",
+                    startAngle: 250,
+                    animation: {
+                        type: "fadeIn",
+                        duration: 800
+                    }
+
+                }],
+                tooltip: {
+                    visible: true,
+                    format: "N0",
+                    template: "#= category # - #= kendo.format('{0:P}', percentage)#"
+                }
+            });
+        });
+
+
+    }
+
+
+
+</script>

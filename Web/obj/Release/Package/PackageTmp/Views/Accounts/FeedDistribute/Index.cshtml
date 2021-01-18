@@ -1,0 +1,595 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<div class="page-content-wrapper">
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <div class="page-title wow fadeInUp animated">
+            <div class="hidden-xs-title">
+                <span class="ln-english">Area list</span><span class="ln-bangla">হিসাবের তালিকা</span>
+            </div>
+        </div>
+
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li> <em class="icon-home"></em> <a href="~/ProjectDashboard"><span class="ln-bangla">প্রথম পাতা</span></a> <em class="fa fa-angle-right"></em> </li>
+                <li>
+                    <span class="ln-bangla">খাবার খাওয়ানোর হিসাব </span>
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class="page-bar" style="padding-top: 3px; padding-bottom: 5px;">
+
+            <div class="col-sm-12 search-responsive wow fadeInUp animated" style="padding-left: 8px; padding-top: 2px;">
+                <div class="input-group" style="width: 100%">
+                    <div class="form-group col-sm-3 col-md-2 col-xs-6 col-xxs-12 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">স্থান</span>
+                        </label>
+                        @(Html.Kendo().ComboBox()
+                            .Name("projectComboBox")
+                            .DataTextField("Name")
+                            .DataValueField("ID")
+                            .Placeholder("নির্ধারণ করুন")
+                            .HtmlAttributes(new { style = "width: 100%;", id = "txtCmbFilterAreaList" })
+                            .DataSource(source =>
+                            {
+                                source.Read(read =>
+                                {
+                                    read.Action("GetAllAreaList", "CreateSegment");
+                                });
+                            })
+                        )
+
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 col-xs-6 col-xxs-12 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">প্রকল্প</span>
+                        </label>
+                        <input type="text" id="txtCmbProjectsForSearchByAreaId" style="width: 100%;" />
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 col-xs-6 col-xxs-12  xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">খাদ্যের নাম</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+                       
+                        @(Html.Kendo().ComboBox()
+                          .Name("products")
+                          .DataTextField("Name")
+                          .DataValueField("ID")
+                          .HtmlAttributes(new { style = "width:100%;", id="txtCbFeedNameList" })
+                          .Filter("contains")
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("GetFeedAllList", "FeedDistribute");
+                              })
+                              .ServerFiltering(true);
+                          })
+                        )
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 col-xs-6 col-xxs-12  xs-nopadding-left wow fadeInUp animated">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-english">Area</span><span class="ln-bangla">খাদ্যের ধরন</span> <span class="required" aria-required="true"> * </span>
+                        </label>
+
+                        <input type="text" id="txtCmbFeedCategoryList" />
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 col-xs-6 col-xxs-12 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            <span class="ln-bangla">অন্যান্য</span>
+                        </label>
+                        <input type="text" id="txtCalculationName" class="form-control" autocomplete="off" />
+                    </div>
+                    <div class="form-group col-sm-3 col-md-2 xs-nopadding-left">
+                        <label class="control-label col-md-12 no-padding">
+                            &nbsp;
+                        </label>
+                        <div class="ln-bangla pull-left mr-5">
+                            <input type="button" value="খুঁজুন" id="btnFindFishBn" class="btn btn-outline green custom-btn-green" onclick="SearchFeedDistributionReport();" />
+                        </div>
+                        <div class="ln-bangla pull-left">
+                            <input type="button" value="পুন:স্থাপন" id="btnResetFishSearchBn" class="btn btn-outline green custom-btn-green" onclick="ResetFeedDistributeSearch();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 create-btn-responsive wow fadeInUp animated">
+                @*<a href="~/FeedDistribute/NewDistribution" class="btn green price-button sbold uppercase pull-right create-btn-responsive " style="margin-right: 4px;"><span class="ln-english">Add New Fish</span><span class="ln-bangla">নতুন হিসাব</span></a>*@
+                <button class="btn green price-button sbold uppercase pull-right create-btn-responsive" style="margin-right: 4px;" onclick="ShowProjectListComboBox();">নতুন হিসাব</button>
+            </div>
+
+        </div>
+
+
+        <div class="portlet box green">
+            <div class="portlet-title wow fadeInUp animated">
+                <div class="caption">
+                    <span class="ln-english">Manage Area</span><span class="ln-bangla">খাবার খাওয়ানোর হিসাব</span>
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body flip-scroll wow fadeInUp animated">
+                <div id="divDataGrid" style="height: 550px;"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div id="divDeleteModelApper" class="kendo-warning-popup">
+    <p>আপনি কি এই হিসাবটি নিশ্চিত মুছে ফেলবেন? আপনি হিসাবটি মুছে ফেললে তা সম্পূর্ণরূপে হারিয়ে যাবে। আপনার সিদ্ধান্ত নিশ্চিত করুন। </p>
+    <button type="button" class="btn btn-danger pull-right" onclick="DoDeleteYesComand();">নিশ্চিত</button>
+    <button class="btn btn green pull-left" onclick="ClosenNotificationWindowFromButton();">না</button>
+</div>
+
+
+<div id="divProjectListModal" class="kendo-warning-popup">
+    <label class="control-label col-md-12">
+        <span class="ln-bangla">স্থান </span>
+    </label>
+    <div class="form-group col-sm-12 col-md-11 xs-nopadding-left">
+        @(Html.Kendo().ComboBox()
+            .Name("projectComboBox")
+            .DataTextField("Name")
+            .DataValueField("ID")
+            .Placeholder("নির্ধারণ করুন")
+            .HtmlAttributes(new { style = "width: 85%;", id = "txtCmbAreaNameList" })
+            .DataSource(source =>
+            {
+                source.Read(read =>
+                {
+                    read.Action("GetAllAreaList", "CreateSegment");
+                });
+            })
+        )
+
+        <span class="validation-message-color" id="#spnAreaMessage"><span class="ln-bangla">স্থান নির্ধারণ করুন</span></span>
+    </div>
+
+    <label class="control-label col-md-12">
+        <span class="ln-bangla">প্রকল্প </span>
+    </label>
+    <div class="form-group col-sm-12 col-md-11 xs-nopadding-left">
+        <input type="text" id="txtCmbProjectNameList" style="width: 85%;" />
+        <span class="validation-message-color" id="#spnProjectMessage"><span class="ln-bangla">প্রকল্প নির্ধারণ করুন</span></span>
+    </div>
+
+
+    <div class="form-group col-sm-12 col-md-11 xs-nopadding-left" style="margin-top: 15px;">
+        <button type="button" class="btn btn green pull-right" onclick="DoRedirectToAddFishSellPage();">নিশ্চিত</button>
+        <button class="btn btn-danger pull-left" onclick="ClosenNotificationWindowFromButton();">না</button>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var feedNameListComboBox;
+    var feedId = "";
+    var startDate = "";
+    var endDate = "";
+    var calCulationName = "";
+    var isPartial = 1;
+    var deltedId = 0;
+    var feedCategoryList;
+    var feedIdForSearch = "";
+    var catIdForSearch = "";
+    var isLoadTime = true;
+    var areaNameList;
+    var projectNameListComboBox;
+    var prmAreaId = 0;
+    var fltAreaId = 0;
+    var filterProjectId = "";
+    var filterAreaListComboBox;
+    var filterProjectListComboBox;
+
+    $(document).ready(function () {
+
+        $("#lstFeedDistributeLink").addClass("active");
+        feedId = 0;
+        LoadFeedCategoryComboBox(feedId);
+        LoadProjectListByAreaId(prmAreaId);
+        LoadProjectListForFilterAreaId(fltAreaId);
+
+        filterAreaListComboBox = $("#txtCmbFilterAreaList").data("kendoComboBox");
+        filterAreaListComboBox.bind("change", function () {
+            filterProjectListComboBox.value("");
+            if ((filterAreaListComboBox.selectedIndex === -1 && filterAreaListComboBox.value()) || filterAreaListComboBox.value() == "") {
+                fltAreaId = 0;
+                LoadProjectListForFilterAreaId(fltAreaId);
+            }
+            else {
+                fltAreaId = filterAreaListComboBox.value();
+                LoadProjectListForFilterAreaId(fltAreaId);
+
+            }
+        });
+
+
+        feedNameListComboBox = $("#txtCbFeedNameList").data("kendoComboBox");
+        
+        feedNameListComboBox.bind("change", function () {
+            feedCategoryList.value("");
+            if ((feedNameListComboBox.selectedIndex === -1 && feedNameListComboBox.value()) || feedNameListComboBox.value() == "") {
+                feedId = 0;
+                LoadFeedCategoryComboBox(feedId);
+            }
+            else {
+                feedId = feedNameListComboBox.value();
+                LoadFeedCategoryComboBox(feedId);
+            }
+        });
+
+        areaNameList = $("#txtCmbAreaNameList").data("kendoComboBox");
+        projectNameListComboBox = $("#txtCmbProjectNameList").data("kendoComboBox");
+        areaNameList.bind("change", function () {
+            projectNameListComboBox.value("");
+            if ((areaNameList.selectedIndex === -1 && areaNameList.value()) || areaNameList.value() == "") {
+                prmAreaId = 0;
+                LoadProjectListByAreaId(prmAreaId);
+            }
+            else {
+                prmAreaId = areaNameList.value();
+                LoadProjectListByAreaId(prmAreaId);
+
+            }
+        });
+
+        SearchFeedDistributionReport();
+
+
+        document.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                $("#btnFindUser").click();
+                return false;
+            }
+        }
+
+        if ('@ViewBag.InformationMessage' != null && '@ViewBag.InformationMessage' != '') {
+            ShowAjaxNotificationMessage("সফল", '@ViewBag.InformationMessage', "success");
+        }
+
+        if ('@ViewBag.DeleteInformationMessage' != null && '@ViewBag.DeleteInformationMessage' != '') {
+            ShowAjaxNotificationMessage("দুঃখিত", '@ViewBag.DeleteInformationMessage', "warning");
+        }
+
+    });
+
+    function LoadProjectListForFilterAreaId(fltAreaId) {
+
+        $.get("/User/GetProjectListByAreaId", { areaID: fltAreaId }, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data,
+            });
+
+            $("#txtCmbProjectsForSearchByAreaId").kendoComboBox({
+                placeholder: "নির্ধারণ করুন",
+                dataTextField: "Name",
+                dataValueField: "ID",
+                filter: "contains",
+                autoBind: false,
+                dataSource: dataSourceGrid
+            });
+
+            filterProjectListComboBox = $("#txtCmbProjectsForSearchByAreaId").data("kendoComboBox");
+
+        });
+
+    }
+
+    function DoRedirectToAddFishSellPage() {
+        $(".validation-message-color").css("display", "none");
+        var isPopUpValid = true;
+        if (projectNameListComboBox.selectedIndex === -1 && projectNameListComboBox.value() || projectNameListComboBox.value() == "" || projectNameListComboBox.value() == null) {
+            $("#txtCmbProjectNameList").closest("div").find('span').css("display", "block");
+            isPopUpValid = false;
+        }
+
+        if (areaNameList.selectedIndex === -1 && areaNameList.value() || areaNameList.value() == "" || areaNameList.value() == null) {
+            $("#txtCmbAreaNameList").closest("div").find('span').css("display", "block");
+            isPopUpValid = false;
+        }
+
+        if (isPopUpValid == true) {
+            var selectedAreaId = areaNameList.value();
+            var selectedProjectId = projectNameListComboBox.value();
+            window.location.href = $.trim(domainURL + "/FeedDistribute/NewDistribution/" + selectedAreaId + "/" + selectedProjectId);
+        }
+
+    }
+
+    function ShowProjectListComboBox() {
+        areaNameList.value("");
+        projectNameListComboBox.value("");
+        $(".validation-message-color").css("display", "none");
+        var popUpWindow = $("#divProjectListModal");
+
+        popUpWindow.kendoWindow({
+            width: "400px",
+            height: "auto",
+            title: "প্রকল্পের নাম",
+            visible: false,
+            open: onOpenNotificationWindow,
+            close: onClosenNotificationForChildWindow,
+            deactivate: onClosenNotificationForChildWindow,
+            actions: [
+                "Close"
+            ]
+        }).data("kendoWindow").center().open();
+
+    }
+    function LoadProjectListByAreaId(prmAreaId) {
+
+        $.get("/User/GetProjectListByAreaId", { areaID: prmAreaId }, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data,
+            });
+
+            $("#txtCmbProjectNameList").kendoComboBox({
+                placeholder: "নির্ধারণ করুন",
+                dataTextField: "Name",
+                dataValueField: "ID",
+                filter: "contains",
+                autoBind: false,
+                dataSource: dataSourceGrid
+            });
+
+            projectNameListComboBox = $("#txtCmbProjectNameList").data("kendoComboBox");
+        });
+
+    }
+
+    function LoadFeedCategoryComboBox(feedId) {
+
+        $.get("/SellOfFeed/GetFeedCategoryListByFeedId", { feedId: feedId }, function (data) {
+            $("#txtCmbFeedCategoryList").empty();
+            var existingGrid = $('#txtCmbFeedCategoryList').data('kendoGrid');
+            if (typeof existingGrid !== "undefined") {
+                existingGrid.destroy();
+            }
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data,
+            });
+
+            $("#txtCmbFeedCategoryList").kendoComboBox({
+                placeholder: "",
+                dataTextField: "FeedCategoryName",
+                dataValueField: "FeedCategoryId",
+                filter: "contains",
+                autoBind: false,
+                dataSource: dataSourceGrid
+            });
+
+            feedCategoryList = $("#txtCmbFeedCategoryList").data("kendoComboBox");
+
+        });
+
+    }
+
+
+    function OnChangeSearchSwitch() {
+        if ($("#chkSearchSwitch").is(':checked')) {
+            feedNameListComboBox.value("");
+            feedNameListComboBox.enable(false);
+            feedCategoryList.value("");
+            feedCategoryList.enable(false);
+            $("#txtCalculationName").val("");
+            $("#txtCalculationName").prop("disabled", true);
+        } else {
+            feedNameListComboBox.enable();
+            feedCategoryList.enable();
+            $("#txtCalculationName").prop("disabled", false);
+        }
+    }
+
+    function SearchFeedDistributionReport() {
+        var areaFilterID = "";
+        var projectFilterId = "";
+
+        if (feedNameListComboBox) {
+            feedIdForSearch = feedNameListComboBox.value();
+        } else {
+            feedIdForSearch = "";
+        }
+
+        if (feedCategoryList) {
+            catIdForSearch = feedCategoryList.value();
+        } else {
+            catIdForSearch = "";
+        }
+
+        if (filterAreaListComboBox) {
+            areaFilterID = filterAreaListComboBox.value();
+        } else {
+            areaFilterID = "";
+        }
+
+        if (filterProjectListComboBox) {
+            projectFilterId = filterProjectListComboBox.value();
+        } else {
+            projectFilterId = "";
+        }
+
+        calCulationName = $.trim($("#txtCalculationName").val());
+
+        $.get("/FeedDistribute/GetFishSellingReportByParams", { areaId: areaFilterID, projectId: projectFilterId, feedId: feedIdForSearch, categoryId: catIdForSearch, calculationName: calCulationName}, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data.Data,
+                schema: {
+                    model:
+                  {
+                      id: "FeedDistributionReportId"
+
+                  }
+                },
+                pageSize: 5
+            });
+
+            $("#divDataGrid").empty();
+            var existingGrid = $('#divDataGrid').data('kendoGrid');
+            if (typeof existingGrid !== "undefined") {
+                existingGrid.destroy();
+            }
+
+            $("#divDataGrid").kendoGrid({
+                dataSource: dataSourceGrid,
+                height: 550,
+                reorderable: true,
+                resizable: true,
+                filterable: true,
+                columnMenu: true,
+                sortable: true,
+                scrollable: {
+                    virtual: true
+                },
+                selectable: "multiple cell",
+                allowCopy: true,
+                pageable: {
+                    refresh: true,
+                    numeric: true,
+                    previousNext: true
+                },
+                columns: [
+                 {
+                     field: "FeedDistributionDate",
+                     title: "তারিখ",
+                 },
+                 {
+                     field: "ProjectName",
+                     title: "প্রকল্প",
+                 },
+                 {
+                     field: "FeedDistributionName",
+                     title: "হিসাবের নাম",
+                 },
+                 {
+                     field: "FeedNameWithCat",
+                     title: "খাদ্য"
+                 },
+                 {
+                     field: "FeedDistributionName",
+                     title: "খাদ্য (বস্তায়)",
+                     template: "#: FeedDistributionName # কেজি"
+                 },
+                 {
+                     field: "FeedDistributionSakNumber",
+                     title: "বস্তার সংখ্যা",
+                     template: "#: FeedDistributionSakNumber # টা"
+                 },
+                 {
+                     field: "FeedDistributionTotalWeight",
+                     title: "মোট ওজন",
+                     template: "#: FeedDistributionTotalWeight # কেজি"
+                 },
+                 {
+                     field: "CreatedDate",
+                     title: "মোট মূল্য",
+                 },
+                 {
+                     template: '<a class="k-button k-button-icontext review-button" href="/FeedDistribute/Edit/#=FeedDistributionReportId#">সম্পাদন করুন</a> <a class="k-button k-button-icontext delete-button" onclick="DoDeleteThisId(#=FeedDistributionReportId# );">মুছুন</a>'
+                 }
+
+                ],
+                selectable: true
+
+            });
+
+            $("#divDataGrid .k-pager-refresh.k-link").click();
+        });
+    }
+
+
+    function DoDeleteYesComand() {
+
+        var deleteURL = "/FeedDistribute/DeleteFeedDistributionRecord/" + deltedId;
+
+        $.getJSON(deleteURL,
+            {
+                format: "json"
+            })
+         .done(function (result, status, xhr) {
+
+             ClosenNotificationWindowFromButton();
+
+             if (result == 1) {
+                 setTimeout(function () {
+                     ShowAjaxNotificationMessage("সফল", "এই হিসাবটি মুছে ফেলা হয়েছে। ", "success");
+                 }, 500);
+
+             } else {
+                 setTimeout(function () {
+                     ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, কিছু সমস্যা আছে।", "warning");
+                 }, 500);
+             }
+             SearchFeedDistributionReport();
+
+             $(".k-icon.k-i-refresh").click();
+
+         }).fail(function (data, status, xhr) {
+             ClosenNotificationWindowFromButton();
+             setTimeout(function () {
+                 ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, কিছু সমস্যা আছে।", "warning");
+             }, 500);
+             return false;
+         }).always(function () {
+             return false;
+         });
+    }
+
+    function DoDeleteThisId(id) {
+        deltedId = id;
+        var myWindow = $("#divDeleteModelApper"), undo = $("#undo");
+
+        undo.click(function () {
+            myWindow.data("kendoWindow").open();
+            undo.fadeOut();
+        });
+
+        myWindow.kendoWindow({
+            width: "500px",
+            title: "নিশ্চিত মুছে ফেলবেন",
+            visible: false,
+            open: onOpenNotificationWindow,
+            close: onClosenNotificationWindow,
+            deactivate: onClosenNotificationWindow,
+            actions: [
+                "Close"
+            ]
+        }).data("kendoWindow").center().open();
+
+        $("html").css("overflow-y", "scroll");
+    }
+
+    
+
+    function ResetFeedDistributeSearch() {
+        
+        feedNameListComboBox.value("");
+        feedCategoryList.value("");
+        filterAreaListComboBox.value("");
+        filterProjectListComboBox.value("");
+        $("#txtCalculationName").val("");
+        SearchFeedDistributionReport();
+    }
+
+
+
+</script>

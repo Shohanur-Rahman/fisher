@@ -1,0 +1,254 @@
+﻿@using Services.Domain
+@using Services.Domain.CreateSegement.SPModels
+@model SPCreateSegmentProjectList
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-content-wrapper">
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <div class="page-title wow fadeInUp animated">
+            <div class="hidden-xs-title">
+                <span class="ln-english">Project list</span><span class="ln-bangla">পুকুরের তালিকা</span>
+            </div>
+        </div>
+
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li> <em class="icon-home"></em> <a href="~/Dashboard"><span class="ln-english">Dashboard</span><span class="ln-bangla">প্রথম পাতা</span></a> <em class="fa fa-angle-right"></em> </li>
+                <li>
+                    <span><span class="ln-english">Project</span><span class="ln-bangla">পুকুর</span></span>
+                </li>
+            </ul>
+
+        </div>
+        <!-- END PAGE HEADER-->
+        <div class="page-bar" style="padding-top: 3px; padding-bottom: 5px;">
+
+            <div class="col-sm-5 col-md-5 search-responsive wow fadeInUp animated" style="padding-left: 8px; padding-top: 2px;">
+                <div class="input-group" style="width: 100%">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" id=""><i class=" fa fa-search"></i></button>
+                    </div>
+                    <div class="ln-bangla">
+                        <input type="text" class="form-control" placeholder="পুকুরের নাম খুঁজুন" id="txtSearchString" name="txtSearchBnString" width="100%" autocomplete="off" />
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-5 search-btn-area find-btn-responsive wow fadeInUp animated" style="padding-left: 0px;padding-top: 2px;">
+                <div class="ln-bangla pull-left mr-5">
+                    <input type="button" value="খুঁজুন" id="btnFindFishBn" class="btn btn-outline green custom-btn-green" onclick="SearchDataFromGrid();" />
+                </div>
+                <div class="ln-bangla pull-left">
+                    <input type="button" value="পুন:স্থাপন করুন" id="btnResetFishSearchBn" class="btn btn-outline green custom-btn-green" onclick="ResetSearchEvent();" />
+                </div>
+            </div>
+
+            <div class="col-sm-2 pull-right div-link-create-rams create-btn-responsive wow fadeInUp animated">
+                <a href="~/CreateSegment/AddProject" class="btn green price-button sbold uppercase pull-right create-btn-responsive " style="margin-right: 4px;"><span class="ln-english">Add New Project</span><span class="ln-bangla">নতুন পুকুর যুক্ত করুন</span></a>
+            </div>
+
+        </div>
+
+        <div class="portlet box green large-device-grid wow fadeInUp animated">
+            <div class="portlet-title">
+                <div class="caption">
+                    <span class="ln-english">Manage Project</span><span class="ln-bangla">পুকুরের তালিকা ব্যবহার করুন</span>
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                </div>
+            </div>
+            <div class="portlet-body flip-scroll wow fadeInUp animated">
+                <div id="divDataGrid" style="height: 550px;"></div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="divDeleteModelApper" class="kendo-warning-popup">
+    <p>আপনি কি এই পুকুরটি নিশ্চিত মুছে ফেলবেন? আপনি পুকুরটি মুছে ফেললে তা সম্পূর্ণরূপে হারিয়ে যাবে। আপনার সিদ্ধান্ত নিশ্চিত করুন। </p>
+    <button type="button" class="btn btn-danger pull-right" onclick="DoDeleteYesComand();">নিশ্চিত</button>
+    <button class="btn btn green pull-left" onclick="ClosenNotificationWindowFromButton();">না</button>
+</div>
+
+
+<script type="text/javascript">
+    var deltedId;
+    $(document).ready(function () {
+
+        $("#listCreate").addClass("active");
+        SearchDataFromGrid();
+
+        $(".k-grid table").addClass("table table-condensed");
+
+        document.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                $("#btnFindUser").click();
+                return false;
+            }
+        }
+
+        if ('@ViewBag.InformationMessage' != null && '@ViewBag.InformationMessage' != '') {
+            ShowAjaxNotificationMessage("সফল", '@ViewBag.InformationMessage', "success");
+        }
+
+        if ('@ViewBag.DeleteInformationMessage' != null && '@ViewBag.DeleteInformationMessage' != '') {
+            ShowAjaxNotificationMessage("দুঃখিত", '@ViewBag.DeleteInformationMessage', "warning");
+        }
+    });
+
+
+    function SearchDataFromGrid() {
+
+        var searchText = $.trim($("#txtSearchString").val());
+
+        $.get("/CreateSegment/GetSegmentProjectDataList", { searchText: searchText }, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data.Data,
+                schema: {
+                    model:
+                  {
+                      id: "ID"
+
+                  }
+                },
+                pageSize: 5
+                //data: data.Data
+            });
+
+            $("#divDataGrid").empty();
+            var existingGrid = $('#divDataGrid').data('kendoGrid');
+            if (typeof existingGrid !== "undefined") {
+                existingGrid.destroy();
+            }
+
+            $("#divDataGrid").kendoGrid({
+                dataSource: dataSourceGrid,
+                height: 550,
+                reorderable: true,
+                resizable: true,
+                filterable: true,
+                columnMenu: true,
+                sortable: true,
+                scrollable: {
+                    virtual: true
+                },
+                selectable: "multiple cell",
+                allowCopy: true,
+                pageable: {
+                    refresh: true,
+                    numeric: true,
+                    previousNext: true
+                },
+                columns: [
+                 {
+                     field: "ImageUrl",
+                     title: "ছবি",
+                     template: "<img src='" + domainURL + "/#: ImageUrl #' class='grid-photo'/>"
+                 },
+                 {
+                     field: "Name",
+                     title: "নাম",
+                 },
+                 //{
+                 //    field: "Union_Name",
+                 //    title: "বিবরণ",
+                 //    template: "<b>মূল্য </b> #: Cost #<b>, ল্যান্ড  </b> #: Land #<b>, টাইম  </b> #: Time #<b>মূল্য </b> #: Cost #<b>, ল্যান্ড  </b> #: Land #<b>, টাইম  </b> #: Time #"
+                 //},
+                 {
+                     field: "CreaetdDate",
+                     title: "সংযোজনের তারিখ",
+                 },
+                 {
+                     template: '<a class="k-button k-button-icontext review-button" href="/CreateSegment/EditProject/#=ID#">সম্পাদন করুন</a> <a class="k-button k-button-icontext delete-button" onclick="DoDeleteThisId(#=ID# );">মুছুন</a>'
+                 }
+
+                ],
+                selectable: true
+
+            });
+            $("#divDataGrid .k-pager-refresh.k-link").click();
+        });
+    }
+
+
+
+
+    function DoDeleteYesComand() {
+
+        var deleteURL = "/CreateSegment/DeleteProject/" + deltedId;
+        //console.log(dataURL);
+        $.getJSON(deleteURL,
+            {
+                format: "json"
+            })
+         .done(function (result, status, xhr) {
+
+             ClosenNotificationWindowFromButton();
+
+             if (result == 1) {
+                 setTimeout(function () {
+                     ShowAjaxNotificationMessage("সফল", "এই পুকুরটি মুছে ফেলা হয়েছে। ", "success");
+                 }, 500);
+
+             } else {
+                 setTimeout(function () {
+                     ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, কিছু সমস্যা আছে।", "warning");
+                 }, 500);
+             }
+             SearchDataFromGrid();
+
+             $(".k-icon.k-i-refresh").click();
+
+         }).fail(function (data, status, xhr) {
+             ClosenNotificationWindowFromButton();
+             setTimeout(function () {
+                 ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, কিছু সমস্যা আছে।", "warning");
+             }, 500);
+             return false;
+         }).always(function () {
+             return false;
+         });
+    }
+
+    function DoDeleteThisId(id) {
+        deltedId = id;
+        var myWindow = $("#divDeleteModelApper"), undo = $("#undo");
+
+        undo.click(function () {
+            myWindow.data("kendoWindow").open();
+            undo.fadeOut();
+        });
+
+        myWindow.kendoWindow({
+            width: "500px",
+            title: "নিশ্চিত মুছে ফেলবেন",
+            visible: false,
+            open: onOpenNotificationWindow,
+            close: onClosenNotificationWindow,
+            deactivate: onClosenNotificationWindow,
+            actions: [
+                "Close"
+            ]
+        }).data("kendoWindow").center().open();
+
+        $("html").css("overflow-y", "scroll");
+    }
+
+    function ResetSearchEvent() {
+        $("#txtSearchString").val("");
+        SearchDataFromGrid();
+    }
+
+
+</script>

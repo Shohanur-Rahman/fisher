@@ -1,0 +1,1551 @@
+.page-footer .page-footer-inner a {
+    color: #a1b2cf;
+    text-decoration: none;
+}
+
+/*.alert.alert-dismissable.alert-worning-msg {
+    display: none;
+}*/
+
+@media only screen and (max-width: 769px) {
+    .k-grid .k-pager-wrap a.k-link.k-pager-nav.k-pager-first.k-state-disabled {
+        display: block !important;
+        float: left !important;
+        width: 50px !important;
+        margin: 0 !important;
+    }
+
+    .k-grid .k-pager-wrap a.k-link.k-pager-nav.k-state-disabled {
+        display: block !important;
+        float: left !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 50px !important;
+    }
+
+    .k-grid .k-pager-wrap a.k-link.k-pager-nav {
+        display: block;
+        float: left;
+        margin: 0px;
+        width: 50px;
+    }
+
+        .k-grid .k-pager-wrap a.k-link.k-pager-nav.k-pager-last {
+            float: left;
+            margin: 0px !important;
+            padding: 0px !important;
+            width: 50px !important;
+        }
+
+    .k-grid .k-pager-wrap a.k-link.k-pager-nav {
+        float: left;
+        display: block;
+        width: 50px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .k-grid .k-pager-wrap a.k-pager-refresh.k-link {
+        float: right;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 50px !important;
+    }
+
+    .k-grid .k-pager-wrap ul.k-pager-numbers.k-reset.k-state-expanded {
+        width: 60px;
+    }
+}
+
+
+@media screen and (max-width: 667px) {
+
+    /**/
+
+    .responsive-coshh-image {
+        min-height: 250px;
+    }
+}
+
+@media only screen and (max-width: 812px) {
+
+    div[data-role="grid"].k-grid {
+        height: auto !important;
+        min-height: 360px;
+    }
+
+    .k-grid-content.k-auto-scrollable {
+        height: 315px !important;
+    }
+
+    table[role="grid"] {
+        display: table;
+        width: 100%;
+    }
+
+        table[role="grid"] thead[role="rowgroup"] {
+            display: table-header-group;
+            width: 100%;
+        }
+
+            table[role="grid"] thead[role="rowgroup"] tr {
+                display: table-row-group;
+                width: 100%;
+            }
+
+                table[role="grid"] thead[role="rowgroup"] tr th.k-header {
+                    display: table-cell;
+                    width: 100%;
+                }
+
+        table[role="grid"] tbody[role="rowgroup"] {
+            display: table;
+            width: 100%;
+        }
+
+            table[role="grid"] tbody[role="rowgroup"] tr[role="row"] {
+                display: table-row;
+                width: 100%;
+            }
+
+                table[role="grid"] tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+                    display: table-cell;
+                }
+
+
+
+    /*grid common*/
+
+    #divCoshDataGrid table td:first-child, #CoshhGrid table td:first-child {
+        width: 33px !important;
+        min-width: 80px !important;
+        max-width: 80px !important;
+    }
+
+    #divCoshDataGrid table th:first-child, #CoshhGrid table th:first-child {
+        width: 33px !important;
+        min-width: 60px !important;
+        max-width: 60px !important;
+    }
+
+
+    /*Start =========================== Cosh assessment data grid*/
+
+
+    #divCoshDataGrid table td:nth-child(2) {
+        min-width: 240px !important;
+        max-width: 240px !important;
+        white-space: pre-wrap;
+    }
+
+    #divCoshDataGrid table th:nth-child(2) {
+        min-width: 215px !important;
+        max-width: 215px !important;
+    }
+
+    #divCoshDataGrid table td:nth-child(3) {
+        min-width: 178px !important;
+        max-width: 178px !important;
+    }
+
+    #divCoshDataGrid table th:nth-child(3) {
+        min-width: 158px !important;
+        max-width: 158px !important;
+    }
+
+    #divCoshDataGrid table td:nth-child(4), #divCoshDataGrid table th:nth-child(4) {
+        min-width: 200px !important;
+        max-width: 200px !important;
+    }
+
+
+
+    /*End =========================== Cosh assessment data grid*/
+    /*Start =========================== Cosh Substance Register data grid*/
+    #CoshhGrid table td:nth-child(2) {
+        min-width: 270px !important;
+        max-width: 270px !important;
+        white-space: pre-wrap;
+    }
+
+    #CoshhGrid table th:nth-child(2) {
+        min-width: 244px !important;
+        max-width: 244px !important;
+    }
+
+    #CoshhGrid table td:nth-child(3) {
+        min-width: 200px !important;
+        max-width: 200px !important;
+        white-space: pre-line;
+    }
+
+    #CoshhGrid table th:nth-child(3) {
+        min-width: 178px !important;
+        max-width: 178px !important;
+    }
+
+    #CoshhGrid table td:nth-child(4), #CoshhGrid table th:nth-child(4) {
+        width: 33px !important;
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    /*End =========================== Cosh Substance Register data grid*/
+
+
+    /* Cosh and Risk assessment grid*/
+
+    #CoshhAssessmentGrid table td:nth-child(1), #RiskAssessmentGrid table td:nth-child(1) {
+        min-width: 230px !important;
+        max-width: 230px !important;
+    }
+
+    #CoshhAssessmentGrid table th:nth-child(1), #RiskAssessmentGrid table th:nth-child(1) {
+        min-width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    #CoshhAssessmentGrid table td:nth-child(2), #RiskAssessmentGrid table td:nth-child(2) {
+        min-width: 130px !important;
+        max-width: 130px !important;
+    }
+
+    #CoshhAssessmentGrid table th:nth-child(2), #RiskAssessmentGrid table th:nth-child(2) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    /*Risk data grid*/
+
+    #riskDataGrid table td:nth-child(1) {
+        min-width: 232px !important;
+        max-width: 232px !important;
+    }
+
+    #riskDataGrid table th:nth-child(1) {
+        min-width: 222px !important;
+        max-width: 222px !important;
+    }
+
+    #riskDataGrid table td:nth-child(2) {
+        min-width: 185px !important;
+        max-width: 185px !important;
+    }
+
+    #riskDataGrid table th:nth-child(2) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    #riskDataGrid table td:nth-child(3) {
+        min-width: 275px !important;
+        max-width: 275px !important;
+    }
+
+    #riskDataGrid table th:nth-child(3) {
+        min-width: 245px !important;
+        max-width: 245px !important;
+    }
+
+    /*Risk archived*/
+    #gridArchived table td {
+        min-width: 230px !important;
+        max-width: 230px !important;
+    }
+
+    #gridArchived table th {
+        min-width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    /*Cosh activity*/
+
+    #divCOSHH table td:nth-child(1) {
+        min-width: 230px !important;
+        max-width: 230px !important;
+    }
+
+    #divCOSHH table th:nth-child(1) {
+        min-width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    #divCOSHH table td:nth-child(2) {
+        min-width: 152px !important;
+        max-width: 152px !important;
+    }
+
+    #divCOSHH table th:nth-child(2) {
+        min-width: 130px !important;
+        max-width: 130px !important;
+    }
+
+    #divCOSHH table td:nth-child(3) {
+        min-width: 225px !important;
+        max-width: 225px !important;
+    }
+
+    #divCOSHH table th:nth-child(3) {
+        min-width: 195px !important;
+        max-width: 195px !important;
+    }
+
+    #divCOSHH table td:nth-child(4) {
+        min-width: 285px !important;
+        max-width: 285px !important;
+    }
+
+    #divCOSHH table th:nth-child(4) {
+        min-width: 255px !important;
+        max-width: 255px !important;
+    }
+
+    #divCOSHH table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    #divCOSHH table th:nth-child(5) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .toolbox-grid table td:nth-child(1) {
+        min-width: 525px !important;
+        max-width: 525px !important;
+    }
+
+    .toolbox-grid table th:nth-child(1) {
+        min-width: 490px !important;
+        max-width: 490px !important;
+    }
+
+    .toolbox-grid table td:nth-child(2) {
+        min-width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    .toolbox-grid table th:nth-child(2) {
+        min-width: 210px !important;
+        max-width: 210px !important;
+    }
+
+    /*
+        =========================================================
+        Admin grids
+        =========================================================
+    */
+
+    .hazard-responsive-grid table td:nth-child(1) {
+        min-width: 80px !important;
+        max-width: 80px !important;
+    }
+
+    .hazard-responsive-grid table th:nth-child(1) {
+        min-width: 70px !important;
+        max-width: 70px !important;
+    }
+
+    .hazard-responsive-grid table td:nth-child(2) {
+        min-width: 185px !important;
+        max-width: 185px !important;
+    }
+
+    .hazard-responsive-grid table th:nth-child(2) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .hazard-responsive-grid table td:nth-child(3) {
+        min-width: 120px !important;
+        max-width: 120px !important;
+    }
+
+    .hazard-responsive-grid table th:nth-child(3) {
+        min-width: 95px !important;
+        max-width: 95px !important;
+    }
+
+    .hazard-responsive-grid table td:nth-child(4) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .hazard-responsive-grid table th:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .hazard-responsive-grid table td:nth-child(5) {
+        min-width: 235px !important;
+        max-width: 235px !important;
+    }
+
+    .hazard-responsive-grid table th:nth-child(5) {
+        min-width: 175px !important;
+        max-width: 175px !important;
+    }
+
+    /*Hazard Group*/
+
+    .hazard_group_grid table td:nth-child(1) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .hazard_group_grid table th:nth-child(1) {
+        min-width: 95px !important;
+        max-width: 95px !important;
+    }
+
+    .hazard_group_grid table td:nth-child(2) {
+        min-width: 275px !important;
+        max-width: 275px !important;
+    }
+
+    .hazard_group_grid table th:nth-child(2) {
+        min-width: 245px !important;
+        max-width: 245px !important;
+    }
+
+    .hazard_group_grid table td:nth-child(3) {
+        min-width: 145px !important;
+        max-width: 145px !important;
+    }
+
+    .hazard_group_grid table td:nth-child(4) {
+        min-width: 198px !important;
+        max-width: 198px !important;
+    }
+
+    .hazard_group_grid table td:nth-child(5) {
+        min-width: 198px !important;
+        max-width: 198px !important;
+    }
+
+    .hazard_group_grid table th:nth-child(3) {
+        min-width: 120px !important;
+        max-width: 120px !important;
+    }
+
+    .hazard_group_grid table th:nth-child(4) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .hazard_group_grid table th:nth-child(5) {
+        min-width: 240px !important;
+        max-width: 240px !important;
+    }
+
+    /*risk assessment*/
+
+    .risk_assessment_grid table td:nth-child(1) {
+        min-width: 445px !important;
+        max-width: 445px !important;
+    }
+
+    .risk_assessment_grid table th:nth-child(1) {
+        min-width: 435px !important;
+        max-width: 435px !important;
+    }
+
+    .risk_assessment_grid table td:nth-child(2) {
+        min-width: 80px !important;
+        max-width: 80px !important;
+    }
+
+    .risk_assessment_grid table th:nth-child(2) {
+        min-width: 45px !important;
+        max-width: 45px !important;
+    }
+
+    .risk_assessment_grid table td:nth-child(3) {
+        min-width: 380px !important;
+        max-width: 380px !important;
+    }
+
+    .risk_assessment_grid table th:nth-child(3) {
+        min-width: 345px !important;
+        max-width: 345px !important;
+    }
+
+    .risk_assessment_grid table td:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .risk_assessment_grid table th:nth-child(4) {
+        min-width: 90px !important;
+        max-width: 90px !important;
+    }
+
+    .risk_assessment_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .risk_assessment_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+
+    /*trade group*/
+
+    .trade_group_grid table td:nth-child(1) {
+        min-width: 75px !important;
+        max-width: 75px !important;
+    }
+
+    .trade_group_grid table th:nth-child(1) {
+        min-width: 60px !important;
+        max-width: 60px !important;
+    }
+
+    .trade_group_grid table td:nth-child(2) {
+        min-width: 390px !important;
+        max-width: 390px !important;
+    }
+
+    .trade_group_grid table th:nth-child(2) {
+        min-width: 365px !important;
+        max-width: 365px !important;
+    }
+
+    .trade_group_grid table td:nth-child(3) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .trade_group_grid table th:nth-child(3) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .trade_group_grid table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .trade_group_grid table th:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .trade_group_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .trade_group_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+    /*GHS image*/
+
+    .ghs_image_grid table td:nth-child(1) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .ghs_image_grid table th:nth-child(1) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    .ghs_image_grid table td:nth-child(2) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .ghs_image_grid table th:nth-child(2) {
+        min-width: 85px !important;
+        max-width: 85px !important;
+    }
+
+    .ghs_image_grid table td:nth-child(3) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .ghs_image_grid table th:nth-child(3) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .ghs_image_grid table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .ghs_image_grid table th:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .ghs_image_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .ghs_image_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+
+
+    /*image section*/
+
+
+    .image_grid table td:nth-child(1) {
+        min-width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    .image_grid table th:nth-child(1) {
+        min-width: 265px !important;
+        max-width: 265px !important;
+    }
+
+    .image_grid table td:nth-child(2) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .image_grid table th:nth-child(2) {
+        min-width: 85px !important;
+        max-width: 85px !important;
+    }
+
+    .image_grid table td:nth-child(3) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .image_grid table th:nth-child(3) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .image_grid table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .image_grid table th:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .image_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .image_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+
+    /*hazard statement section*/
+
+    .hazard_statement_grid table td:nth-child(1) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .hazard_statement_grid table th:nth-child(1) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    .hazard_statement_grid table td:nth-child(2) {
+        min-width: 408px !important;
+        max-width: 408px !important;
+    }
+
+    .hazard_statement_grid table th:nth-child(2) {
+        min-width: 375px !important;
+        max-width: 375px !important;
+    }
+
+    .hazard_statement_grid table td:nth-child(3) {
+        min-width: 190px !important;
+        max-width: 190px !important;
+    }
+
+    .hazard_statement_grid table th:nth-child(3) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .hazard_statement_grid table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .hazard_statement_grid table th:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .hazard_statement_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .hazard_statement_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+
+
+    /*precaution statement section*/
+
+    .precaution_statement_grid table td:nth-child(1) {
+        min-width: 170px !important;
+        max-width: 170px !important;
+    }
+
+    .precaution_statement_grid table th:nth-child(1) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+    .precaution_statement_grid table td:nth-child(2) {
+        min-width: 500px !important;
+        max-width: 500px !important;
+    }
+
+    .precaution_statement_grid table th:nth-child(2) {
+        min-width: 475px !important;
+        max-width: 475px !important;
+    }
+
+    .precaution_statement_grid table td:nth-child(3) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    .precaution_statement_grid table th:nth-child(3) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .precaution_statement_grid table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .precaution_statement_grid table th:nth-child(4) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .precaution_statement_grid table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .precaution_statement_grid table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+    /*substance Activities */
+
+    .substance_activity_grid table td:nth-child(1) {
+        min-width: 375px !important;
+        max-width: 375px !important;
+    }
+
+    .substance_activity_grid table th:nth-child(1) {
+        min-width: 355px !important;
+        max-width: 355px !important;
+    }
+
+    .substance_activity_grid table td:nth-child(2) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .substance_activity_grid table th:nth-child(2) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .substance_activity_grid table td:nth-child(3) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .substance_activity_grid table th:nth-child(3) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+
+
+    /*coshh assessment section*/
+
+
+    .coshh_assessment_gird table td:nth-child(1) {
+        min-width: 65px !important;
+        max-width: 65px !important;
+    }
+
+    .coshh_assessment_gird table th:nth-child(1) {
+        min-width: 55px !important;
+        max-width: 55px !important;
+    }
+
+    .coshh_assessment_gird table td:nth-child(2) {
+        min-width: 340px !important;
+        max-width: 340px !important;
+    }
+
+    .coshh_assessment_gird table th:nth-child(2) {
+        min-width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    .coshh_assessment_gird table td:nth-child(3) {
+        min-width: 165px !important;
+        max-width: 165px !important;
+    }
+
+    .coshh_assessment_gird table th:nth-child(3) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+
+    .coshh_assessment_gird table td:nth-child(4) {
+        min-width: 181px !important;
+        max-width: 181px !important;
+    }
+
+    .coshh_assessment_gird table th:nth-child(4) {
+        min-width: 152px !important;
+        max-width: 152px !important;
+    }
+
+
+    /*substance image grid*/
+    .substance_image_grid table td:nth-child(1) {
+        min-width: 520px !important;
+        max-width: 520px !important;
+    }
+
+    .substance_image_grid table th:nth-child(1) {
+        min-width: 500px !important;
+        max-width: 500px !important;
+    }
+
+    .substance_image_grid table td:nth-child(2) {
+        min-width: 110px !important;
+        max-width: 110px !important;
+    }
+
+    .substance_image_grid table th:nth-child(2) {
+        min-width: 90px !important;
+        max-width: 90px !important;
+    }
+
+    .substance_image_grid table td:nth-child(3) {
+        min-width: 165px !important;
+        max-width: 165px !important;
+    }
+
+    .substance_image_grid table th:nth-child(3) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+
+    .substance_image_grid table td:nth-child(4) {
+        min-width: 181px !important;
+        max-width: 181px !important;
+    }
+
+    .substance_image_grid table th:nth-child(4) {
+        min-width: 152px !important;
+        max-width: 152px !important;
+    }
+
+
+
+    /*toolbox talks*/
+
+    .tolbox_talks_gird table td:nth-child(1) {
+        min-width: 371px !important;
+        max-width: 371px !important;
+    }
+
+    .tolbox_talks_gird table th:nth-child(1) {
+        min-width: 350px !important;
+        max-width: 350px !important;
+    }
+
+    .tolbox_talks_gird table td:nth-child(2) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    .tolbox_talks_gird table th:nth-child(2) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .tolbox_talks_gird table td:nth-child(3) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .tolbox_talks_gird table th:nth-child(3) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    /*method-statement-grid*/
+
+    .method-statement-grid table td:nth-child(1) {
+        min-width: 106px !important;
+        max-width: 106px !important;
+    }
+
+    .method-statement-grid table th:nth-child(1) {
+        min-width: 90px !important;
+        max-width: 90px !important;
+    }
+
+    .method-statement-grid table td:nth-child(2) {
+        min-width: 345px !important;
+        max-width: 345px !important;
+    }
+
+    .method-statement-grid table th:nth-child(2) {
+        min-width: 325px !important;
+        max-width: 325px !important;
+    }
+
+    .method-statement-grid table td:nth-child(3) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    .method-statement-grid table th:nth-child(3) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    .method-statement-grid table td:nth-child(4) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    .method-statement-grid table th:nth-child(4) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    .method-statement-grid table td:nth-child(5) {
+        min-width: 200px !important;
+        max-width: 200px !important;
+    }
+
+    .method-statement-grid table th:nth-child(5) {
+        min-width: 175px !important;
+        max-width: 175px !important;
+    }
+
+    /*user gird in admin section*/
+
+    .user_grid table td:nth-child(1) {
+        min-width: 70px !important;
+        max-width: 70px !important;
+    }
+
+    .user_grid table th:nth-child(1) {
+        min-width: 58px !important;
+        max-width: 58px !important;
+    }
+
+    .user_grid table td:nth-child(2) {
+        min-width: 275px !important;
+        max-width: 275px !important;
+    }
+
+    .user_grid table th:nth-child(2) {
+        min-width: 250px !important;
+        max-width: 250px !important;
+    }
+
+
+
+
+    .user_grid table td:nth-child(3) {
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
+
+    .user_grid table th:nth-child(3) {
+        min-width: 235px !important;
+        max-width: 235px !important;
+    }
+
+    .user_grid table td:nth-child(4) {
+        min-width: 155px !important;
+        max-width: 155px !important;
+    }
+
+    .user_grid table th:nth-child(4) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+    .user_grid table td:nth-child(5) {
+        min-width: 220px !important;
+        max-width: 220px !important;
+    }
+
+    .user_grid table th:nth-child(5) {
+        min-width: 175px !important;
+        max-width: 175px !important;
+    }
+
+
+
+   /*legislation-grid*/
+
+    .legislation-grid table td:nth-child(1) {
+        min-width: 140px !important;
+        max-width: 140px !important;
+    }
+
+    .legislation-grid table th:nth-child(1) {
+        min-width: 120px !important;
+        max-width: 120px !important;
+    }
+
+    .legislation-grid table td:nth-child(2) {
+        min-width: 275px !important;
+        max-width: 275px !important;
+    }
+
+    .legislation-grid table th:nth-child(2) {
+        min-width: 250px !important;
+        max-width: 250px !important;
+    }
+
+
+    .legislation-grid table td:nth-child(3) {
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
+
+    .legislation-grid table th:nth-child(3) {
+        min-width: 235px !important;
+        max-width: 235px !important;
+    }
+
+
+
+
+    /*admin section end*/
+
+
+
+    /*havs and noise */
+
+    .assessment_gird table td:nth-child(1) {
+        min-width: 248px !important;
+        max-width: 150px !important;
+    }
+
+    .assessment_gird table th:nth-child(1) {
+        min-width: 216px !important;
+        max-width: 165px !important;
+    }
+
+    .assessment_gird table td:nth-child(2) {
+        min-width: 180px !important;
+        max-width: 135px !important;
+    }
+
+    .assessment_gird table th:nth-child(2) {
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .assessment_gird table td:nth-child(3) {
+        min-width: 190px !important;
+        max-width: 190px !important;
+    }
+
+    .assessment_gird table th:nth-child(3) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .assessment_gird table td:nth-child(4) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .assessment_gird table th:nth-child(4) {
+        min-width: 136px !important;
+        max-width: 110px !important;
+    }
+
+    .assessment_gird table td:nth-child(5) {
+        min-width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .assessment_gird table th:nth-child(5) {
+        min-width: 160px !important;
+        max-width: 160px !important;
+    }
+
+
+    /*end havs and noise*/
+
+
+
+
+
+    
+}
+
+
+/*havs and noise media query*/
+
+@media only screen and (max-width: 766px) {
+
+    .noise_grid table td:nth-child(1) {
+        min-width: 132px !important;
+        max-width: 150px !important;
+    }
+
+    .noise_grid table th:nth-child(1) {
+        min-width: 136px !important;
+        max-width: 135px !important;
+    }
+
+
+    .noise_grid table td:nth-child(2) {
+        min-width: 176px !important;
+        max-width: 420px !important;
+    }
+
+    .noise_grid table th:nth-child(2) {
+        min-width: 149px !important;
+        max-width: 135px !important;
+    }
+
+
+    .noise_grid table td:nth-child(3) {
+        min-width: 136px !important;
+        max-width: 150px !important;
+    }
+
+    .noise_grid table th:nth-child(3) {
+        min-width: 142px !important;
+        max-width: 135px !important;
+    }
+
+
+    .noise_grid table td:nth-child(4) {
+        min-width: 161px !important;
+        max-width: 420px !important;
+    }
+
+    .noise_grid table th:nth-child(4) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+}
+
+
+@media screen and (min-width: 767px) and (max-width: 812px) {
+
+    .noise_grid table td:nth-child(1) {
+        min-width: 125px !important;
+        max-width: 125px !important;
+    }
+
+    .noise_grid table th:nth-child(1) {
+        min-width: 130px !important;
+        max-width: 130px !important;
+    }
+
+
+    .noise_grid table td:nth-child(2) {
+        min-width: 166px !important;
+        max-width: 166px !important;
+    }
+
+    .noise_grid table th:nth-child(2) {
+        min-width: 149px !important;
+        max-width: 135px !important;
+    }
+
+
+    .noise_grid table td:nth-child(3) {
+        min-width: 146px !important;
+        max-width: 150px !important;
+    }
+
+    .noise_grid table th:nth-child(3) {
+        min-width: 142px !important;
+        max-width: 135px !important;
+    }
+
+
+    .noise_grid table td:nth-child(4) {
+        min-width: 161px !important;
+        max-width: 150px !important;
+    }
+
+    .noise_grid table th:nth-child(4) {
+        min-width: 135px !important;
+        max-width: 135px !important;
+    }
+
+}
+
+
+
+
+
+    @media only screen and (min-device-width: 769px) and (max-device-width: 812px) {
+        div[data-role="grid"].k-grid {
+            max-width: 731px !important;
+            border: 1px solid #ddd !important;
+        }
+    }
+
+    div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        display: inline-table;
+        float: left;
+        border: none !important;
+    }
+
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(odd) {
+            width: 134px !important;
+            float: left;
+            overflow: hidden;
+        }
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: left;
+            width: 58%;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+
+    div.horizantal-header-grid div.k-grid-header {
+        display: none;
+    }
+
+
+    .horizantal-header-grid.k-grid tbody .k-button {
+        margin-bottom: 5px !important;
+    }
+
+    .horizantal-header-grid.k-grid tbody ul {
+        padding-left: 18px !important;
+    }
+
+    div.horizantal-header-grid tbody[role="rowgroup"] {
+        min-width: 320px;
+    }
+
+    div.horizantal-header-grid table[role="grid"] {
+        display: block;
+        width: auto;
+    }
+
+    div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"]:nth-child(odd) {
+        background: #f4f4f4 !important
+    }
+
+    div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"]:nth-child(even) {
+        background: #fff !important;
+    }
+
+
+    @media screen and (max-width: 350px) {
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(odd) {
+            width: 100% !important;
+            float: none;
+            overflow: hidden;
+            display: block;
+        }
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: none;
+            width: 80% !important;
+            display: block;
+        }
+
+        div.horizantal-header-grid tbody[role="rowgroup"] {
+            max-width: 320px;
+        }
+    }
+
+    @media screen and (min-width: 667px) and (max-width: 767px) {
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(odd) {
+            width: 134px !important;
+            float: left;
+            overflow: hidden;
+        }
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: left;
+            width: 63%;
+        }
+    }
+
+
+    div.horizantal-header-grid.toolbox-mobile-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 100% !important;
+        float: none;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+
+    div.horizantal-header-grid#LegislationsGridForMobile tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 100% !important;
+        float: none;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+    }
+
+    div.horizantal-header-grid.precaution_statement_grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 100% !important;
+        float: none;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+
+
+
+    div.horizantal-header-grid.hazard-group-mobile-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 100% !important;
+        float: none;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+
+    div.horizantal-header-grid.hazard-mobile-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 48% !important;
+        float: left !important;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+
+    div.horizantal-header-grid.admin-hazard-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 49% !important;
+        float: left !important;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+    div.horizantal-header-grid.precaution-statement-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+        width: 100% !important;
+        float: none !important;
+        overflow: hidden;
+        display: block;
+        word-wrap: break-word;
+        white-space: pre-line;
+    }
+
+    @media screen and (min-width: 667px) and (max-width: 767px) {
+        div.horizantal-header-grid.precaution-statement-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+            width: 49% !important;
+            float: left !important;
+            overflow: hidden;
+            display: block;
+            word-wrap: break-word;
+            white-space: pre-line;
+        }
+    }
+
+    @media screen and (max-width: 414px) {
+        div.horizantal-header-grid.admin-hazard-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+            width: 100% !important;
+            float: left !important;
+            overflow: hidden;
+            display: block;
+            word-wrap: break-word;
+            white-space: pre-line;
+        }
+
+        .responsive-method-btn .btn i.fa, .responsive-method-btn .btn em {
+            display: none;
+        }
+
+        .user-login-5 .login-container > .login-content {
+            margin-top: 10px !important;
+        }
+
+        body .create-vartical-btn-responsive .btn.create-btn-responsive {
+            font-size: 10px !important;
+            margin-top: 3px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .create-vartical-btn-responsive {
+            padding-top: 0px !important;
+        }
+    }
+
+
+    @media screen and (max-width: 375px) {
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: left;
+            width: 56%;
+            white-space: pre-line;
+            word-break: break-word;
+        }
+
+        div.horizantal-header-grid.cosh-mobile-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: left;
+            width: 50%;
+            white-space: pre-line;
+        }
+
+        div.horizantal-header-grid.cosh-activity-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"]:nth-child(even) {
+            float: left;
+            width: 50%;
+            white-space: pre-line;
+        }
+    }
+
+    @media screen and (max-width: 767px) {
+
+        .mobile-grid-area {
+            display: block;
+        }
+
+        .large-device-grid {
+            display: none;
+        }
+
+        .mobile-grid-btn {
+            min-width: 90px !important;
+        }
+    }
+
+    @media screen and (min-width: 767px) {
+
+        .mobile-grid-area {
+            display: none;
+        }
+
+        .large-device-grid {
+            display: block;
+        }
+    }
+
+
+    @media screen and (min-width : 768px) and (max-width : 1280px) {
+        .large-device-grid .k-grid tbody .k-button {
+            margin-bottom: 3px !important;
+            min-width: 80px !important;
+        }
+    }
+
+
+    @media screen and (min-width : 768px) and (max-width : 1280px) {
+        .project-large-device-grid .k-grid tbody .k-button {
+            margin-bottom: 3px !important;
+            min-width: 90px !important;
+        }
+    }
+
+
+    @media screen and (min-width: 280px) and (max-width: 350px) {
+
+        div.horizantal-header-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+            width: 100% !important;
+            float: none !important;
+            overflow: hidden;
+            display: block;
+            word-wrap: break-word;
+            white-space: pre-line;
+        }
+
+        .horizantal-header-grid.k-grid tbody .k-button {
+            float: none !important;
+            display: block;
+            max-width: 100px;
+        }
+
+        .xs320-btn {
+            padding: 6px;
+        }
+
+        div.horizantal-header-grid.hazard-mobile-grid tbody[role="rowgroup"] tr[role="row"] td[role="gridcell"] {
+            width: 43% !important;
+            float: left !important;
+            overflow: hidden;
+            display: block;
+            word-wrap: break-word;
+            white-space: pre-line;
+            padding-left: 5px !important;
+        }
+
+        body .btn.create-btn-responsive {
+            font-size: 11px !important;
+            margin-top: 3px;
+        }
+
+        body .create-vartical-btn-responsive .btn.create-btn-responsive {
+            font-size: 10px !important;
+            margin-top: 3px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .create-vartical-btn-responsive {
+            padding-top: 0px !important;
+        }
+    }
+
+    /*.live-rams-grid-btn {
+    text-transform: none;
+    background-color: transparent !important;
+    color: transparent !important;
+    width: 100% !important;
+    height: 3px !important;
+    padding: 0px;
+    border: navajowhite;
+    pointer-events: none !important;
+}*/

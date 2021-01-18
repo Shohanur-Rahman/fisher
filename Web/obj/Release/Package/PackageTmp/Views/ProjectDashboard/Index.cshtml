@@ -1,0 +1,303 @@
+﻿@using Services.Domain.SPModels
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<div class="page-content-wrapper dashboar-responsive">
+    <div class="page-content">
+
+
+        @*-------------------UserDashboard: Page Content Start---------------------------*@
+        <div class="page-title">
+
+            <div class="alert alert-dismissable alert-worning-msg" id="TrialExpiredMessage"><strong></strong>Your trial has expired. Please log in and upgrade your account to a paid version to continue using RAMs App.</div>
+            <div class="alert alert-dismissable alert-worning-msg" id="paidExpiredMessage"><strong></strong>Your account has expired. Please log in and update your payment details to continue using RAMs App.</div>
+
+            <span class="responsive-time-hide"><span class="ln-english">Welcome To Chabang Fish</span><span class="ln-bangla">চা বাগান মাছের প্রকল্পে আপনাকে স্বাগতম </span></span>
+        </div>
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li> <em class="icon-home"></em> <a href="~/Dashboard"><span class="ln-english">Dashboard</span><span class="ln-bangla">প্রথম পাতা</span></a> <em class="fa fa-angle-right"></em> </li>
+                <li>
+                    <span><span class="ln-english">My Dashboard</span><span class="ln-bangla">আমার পাতা</span></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet light clearfix wow fadeInUp animated">
+                    <div class="col-sm-6 no-padding wow fadeInUp animated">
+                        <div id="divIdFishSellingReport"></div>
+                    </div>
+
+                    <div class="col-sm-6 no-padding wow fadeInUp animated">
+                        <div id="divFishSellByFishName"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row" style="margin-top: 25px;">
+            <div class="col-lg-12">
+                <div class="portlet light clearfix wow fadeInUp animated">
+                    <div class="col-sm-6 no-padding wow fadeInUp animated">
+                        <div id="divFeedBuyingGroupBy"></div>
+                    </div>
+                    <div class="col-sm-6 no-padding wow fadeInUp animated">
+                        <div id="divIdFeedSellingReport"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+       
+        $("#divMyDashboard").addClass("active");
+        $(".div-dashboard-project").css("display", "none");
+        $(".div-dashboard-coshh").css("display", "none");
+
+        LoadFishSellingReportOverview();
+        LoadFishSellingGroupByFishName();
+        LoadFeedSellingReportOverview();
+        LoadFeedBuyingReportGroupByFeedCategory();
+    });
+
+
+    function LoadFishSellingGroupByFishName() {
+
+        $.get("/SellOfFish/GetFishSellingReportGroupByFishName", function (data) {
+
+            $("#divFishSellByFishName").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    position: "bottom",
+                    text: "বিক্রয় পরিদর্শন",
+
+                },
+                legend: {
+                    visible: false
+                },
+                chartArea: {
+                    background: ""
+                },
+                seriesDefaults: {
+                    labels: {
+                        visible: true,
+                        background: "transparent",
+                        template: "#= category #: \n #= value# টাকা"
+                    }
+                },
+                series: [{
+                    type: "pie",
+                    field: "TotalSellPrice",
+                    categoryField: "FishName",
+                    startAngle: 250,
+                    animation: {
+                        type: "fadeIn",
+                        duration: 800
+                    }
+
+                }],
+                tooltip: {
+                    visible: true,
+                    format: "N0",
+                    template: "#= category # - #= kendo.format('{0:P}', percentage)#"
+                }
+            });
+        });
+
+
+    }
+
+
+
+    function LoadFeedBuyingReportGroupByFeedCategory() {
+
+        $.get("/SellOfFeed/GetFeedBuyingReportGroupByFeedCategory", function (data) {
+          
+            $("#divFeedBuyingGroupBy").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    position: "bottom",
+                    text: "খাদ্য ক্রয়",
+
+                },
+                legend: {
+                    visible: false
+                },
+                chartArea: {
+                    background: ""
+                },
+                seriesDefaults: {
+                    labels: {
+                        visible: true,
+                        background: "transparent",
+                        template: "#= category #: \n #= value# টাকা"
+                    }
+                },
+                series: [{
+                    type: "pie",
+                    field: "SellingFeedTotalPrice",
+                    categoryField: "FeedCategory",
+                    startAngle: 250,
+                    animation: {
+                        type: "fadeIn",
+                        duration: 800
+                    }
+
+                }],
+                tooltip: {
+                    visible: true,
+                    format: "N0",
+                    template: "#= category # - #= kendo.format('{0:P}', percentage)#"
+                }
+            });
+        });
+
+
+    }
+
+
+
+    function LoadFishSellingReportOverview() {
+
+        $.get("/SellOfFish/GetFishSellingDashboardOverview", function (data) {
+            
+            $("#divIdFishSellingReport").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    text: "প্রতিদিনের মাছ বিক্রয়"
+                },
+                legend: {
+                    position: "top"
+                },
+                seriesDefaults: {
+                    type: "column"
+                },
+                series:
+                [{
+                    field: "TotalSellPrice",
+                    categoryField: "CalculatedDate"
+                }],
+                categoryAxis: {
+                    labels: {
+                        rotation: -45
+                    },
+                    majorGridLines: {
+                        visible: false
+                    }
+                },
+                valueAxis: {
+                    labels: {
+                        format: "N0"
+                    },
+                    majorUnit: 50000,
+                    line: {
+                        visible: false
+                    }
+                },
+                tooltip: {
+                    visible: true,
+                    format: "N0"
+                }
+            });
+        });
+
+
+    }
+
+
+
+    function LoadFeedSellingReportOverview() {
+
+        $.get("/SellOfFeed/GetFeedSellingDashboardOverview", function (data) {
+
+            $("#divIdFeedSellingReport").kendoChart({
+                dataSource: {
+                    data: data.Data
+                },
+                title: {
+                    text: "প্রতিদিনের খাদ্য ক্রয়"
+                },
+                legend: {
+                    position: "top"
+                },
+                seriesDefaults: {
+                    type: "column"
+                },
+                series:
+                [{
+                    field: "SellingFeedPricePerKg",
+                    categoryField: "CalculationDate"
+                }],
+                categoryAxis: {
+                    labels: {
+                        rotation: -45
+                    },
+                    majorGridLines: {
+                        visible: false
+                    }
+                },
+                valueAxis: {
+                    labels: {
+                        format: "N0"
+                    },
+                    majorUnit: 3500,
+                    line: {
+                        visible: false
+                    }
+                },
+                tooltip: {
+                    visible: true,
+                    format: "N0"
+                }
+            });
+        });
+
+
+    }
+
+    function KendoGridDataBound(arg) {
+        var count = $('#grid').data('kendoGrid').dataSource.total();
+
+        if (count == 0) {
+            $(".dummy_Coshh_no_found").show().fadeOut(5000);
+        } else {
+            $(".dummy_Coshh_no_found").hide();
+        }
+
+    }
+
+
+    function SearchDataFromExternalInput() {
+
+        return {
+            searchText: $.trim($("#txtSearchString").val())
+        };
+
+    }
+
+    function DecodehtmlDecode(value) {
+        return $('<div/>').html(value).text();
+    }
+
+
+
+</script>

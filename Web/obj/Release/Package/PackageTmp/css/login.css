@@ -1,0 +1,61 @@
+﻿span.text-danger.field-validation-error {
+    margin-left: -12px;
+}
+
+.form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 5px !important;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-color: #fff;
+}
+
+    .form-horizontal .form-group::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #fff;
+        opacity: 1; /* Firefox */
+    }
+
+    .form-horizontal .form-group:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #fff;
+    }
+
+    .form-horizontal .form-group::-ms-input-placeholder { /* Microsoft Edge */
+        color: #fff;
+    }
+
+.btn.green {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-color: #fff !important;
+    border-radius: 1px !important;
+}
+
+    .btn.green:hover {
+        background: rgba(255,255,255,.8) !important;
+        color: #444 !important;
+    }
+
+
+
+@media (min-width : 461px) and (max-width : 667px) and (orientation : portrait) {
+    .login-area {
+        margin-top: 190px;
+        max-width: 400px;
+    }
+}
+
+@media (min-width : 280px) and (max-width : 667px) and (orientation : landscape) {
+    .login-area {
+        margin-top: 15px;
+        max-width: 400px;
+    }
+}
+
+
+
+@media (min-width : 280px) and (max-width : 460px) and (orientation : portrait) {
+    .login-area {
+        margin-top: 90px;
+        max-width: 295px;
+    }
+}

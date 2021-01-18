@@ -1,0 +1,198 @@
+﻿@using Services.Domain.UserBilling
+@using Web.AppCode;
+@model BillingAmountHistoryBySellerId
+@{
+    ViewBag.Title = "GenerateFishSellerFullOpenHisabPDF";
+    Layout =null;
+}
+
+<style type="text/css">
+    body {
+        font-family: 'Play', sans-serif;
+        font-size: 12pt !important;
+        font-weight: normal !important;
+        background: #fff !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header-wraper {
+        display: block;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #32c5d2;
+    }
+
+    .left {
+        float: left;
+        width: 46%;
+        display: block;
+    }
+
+    .right {
+        display: block;
+        width: 45%;
+        float: right;
+        margin-right: 60px;
+    }
+
+    .sller-name {
+        background: #32c5d2;
+        padding: 8px 15px;
+        color: #fff;
+        text-transform: uppercase;
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+        .sller-name h1 {
+            margin: 0;
+        }
+
+    .repeat-report {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+    }
+
+    .full-row {
+        padding: 10px 5px;
+        border-bottom: 1px dotted #32c5d2;
+        border-left: 1px solid #32c5d2;
+        border-right: 1px solid #32c5d2;
+    }
+
+        .full-row.first {
+            border-top: 1px solid #32c5d2;
+            border-bottom: 1px solid #32c5d2;
+        }
+
+        .full-row.last {
+            border-top: 1px solid #32c5d2;
+            border-bottom: 1px solid #32c5d2;
+        }
+
+    .one-six {
+        display: inline-block;
+        width: 13%;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .signatured {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+    }
+
+    .signatured-caption {
+        padding: 50px 15px 8px;
+        border-bottom: 1px dotted #32c5d2;
+        width: 22%;
+        margin-bottom: 40px;
+    }
+</style>
+
+<body>
+    <header>
+        <div class="header-wraper">
+            <div class="left">
+                <strong style="display: block; font-weight: 700; margin-bottom: 15px; font-size: 50px;" class="company-name">নবীন ট্রেডার্স</strong>
+                <span style="display: block; margin-bottom: 6px;">
+                    @Model.BillingList[0].SellerName (মাছ বিক্রির বকেয়া হিসাব) 
+                </span>
+                <span style="display: block; margin-bottom: 20px;">@DateTime.Now.ToString("dd MMM yy")</span>
+            </div>
+
+            <div class="right">
+                <img src="~/assets/layouts/layout2/img/logo-default.png" style="max-width: 250px !important; max-height:140px !important; float: right;" />
+            </div>
+        </div>
+    </header>
+
+    <div class="sller-name">
+        <h1>মাছ বিক্রির বকেয়া হিসাব</h1>
+    </div>
+
+    <div class="repeat-report">
+        <div class="full-row first">
+            <div class="one-six">তারিখ</div>
+            <div class="one-six">মাছ</div>
+            <div class="one-six">কেজি</div>
+            <div class="one-six">মূল্য</div>
+            <div class="one-six">মোট</div>
+            <div class="one-six">প্রদান</div>
+            <div class="one-six">বকেয়া</div>
+        </div>
+        @for (var sellCount = 0; sellCount < Model.BillingList.Count; sellCount++)
+        {
+            for (var mapperCount = 0; mapperCount < Model.BillingList[sellCount].SellListMapperItems.Count; mapperCount++)
+            {
+                if (mapperCount == 0)
+                {
+                    <div class="full-row">
+                        <div class="one-six">@Model.BillingList[sellCount].SellDate </div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].FishName </div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].TotalFishkg কেজি</div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].PricePerKG টাকা</div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].TotalSellPrice টাকা</div>
+                        <div class="one-six">&nbsp;</div>
+                        <div class="one-six">&nbsp;</div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="full-row">
+                        <div class="one-six">&nbsp;</div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].FishName </div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].TotalFishkg কেজি</div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].PricePerKG টাকা</div>
+                        <div class="one-six">@Model.BillingList[sellCount].SellListMapperItems[mapperCount].TotalSellPrice টাকা</div>
+                        <div class="one-six">&nbsp;</div>
+                        <div class="one-six">&nbsp;</div>
+                    </div>
+                }
+            }
+
+            <div class="full-row" style="background: #ede2e2">
+                <div class="one-six">&nbsp;</div>
+                <div class="one-six">&nbsp;</div>
+                <div class="one-six">@Model.BillingList[sellCount].TotalSellInKG কেজি</div>
+                <div class="one-six">&nbsp;</div>
+                <div class="one-six">@Model.BillingList[sellCount].TotalSellPrice টাকা</div>
+                <div class="one-six">@Model.BillingList[sellCount].FishAmountPaid টাকা</div>
+                <div class="one-six">@Model.BillingList[sellCount].FishAmountDue টাকা</div>
+            </div>
+
+        }
+        <div class="full-row" style="height: 80px;">
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">&nbsp;</div>
+        </div>
+
+        <div class="full-row last" style="background: #ede2e2;">
+            <div class="one-six">@DateTime.Now.ToString("dd MMM yy")</div>
+            <div class="one-six">সম্পূর্ণ হিসাব</div>
+            <div class="one-six">@Model.TotalBilling.TotalSellInKGString কেজি</div>
+            <div class="one-six">&nbsp;</div>
+            <div class="one-six">@Model.TotalBilling.TotalSellPriceString টাকা</div>
+            <div class="one-six">@Model.TotalBilling.FishAmountPaidString টাকা</div>
+            <div class="one-six">@Model.TotalBilling.FishAmountDueString টাকা</div>
+        </div>
+    </div>
+    <div class="signatured">
+        <div class="signatured-caption">
+            স্বাক্ষর
+        </div>
+
+    </div>
+
+</body>
+

@@ -1,0 +1,209 @@
+﻿@using Services.Domain.Models.User.EditorModel
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Chabagan Fishing | A Model Fish House| Account Verification Email";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<style type="text/css">
+    .login-danger-message {
+        margin-left: -16px;
+        margin-bottom: -16px;
+        margin-top: -5px;
+    }
+</style>
+
+<div class="user-login-5">
+    <div class="row bs-reset">
+        <div class="col-md-6 bs-reset hidden-lg">
+            <div class="login-bg"> </div>
+        </div>
+        <div class="col-md-6 login-container bs-reset">
+            <div class="login-content" style="margin-top: 160px;">
+                <div class="row">
+                    <h1>Resend Account Verification Email</h1>
+                </div>
+                <div class="row">
+                    <p>Risk Assessments, Method Statements, COSHH Assessments</p>
+                </div>
+
+                @using (Html.BeginForm("AccountVerification", "Login", FormMethod.Post, new { role = "form", @autocomplete = "off", id = "frmForgotPassword", @class = "form-horizontal", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row alert alert-danger" style="display:none; margin-right: 0;" id="divExistingEmailMessage">
+                        <button class="close" data-close="alert"></button>
+                        <span class="text-danger field-validation-valid">Email address not found, please enter your registered email address.</span>
+                    </div>
+
+                    <div class="row alert alert-danger" style="display:none; margin-right: 0;" id="divActiveEmailMessage">
+                        <button class="close" data-close="alert"></button>
+                        <span class="text-danger field-validation-valid">Account already activated. Please login to your account.</span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 right-pad0" style="padding-right: 0px">
+                            @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control form-group", placeholder = "Enter Your Registered Email Address", id = "dummy_User_Registration_Email", required = "required", title = "Email address is required." })
+                            @Html.ValidationMessageFor(m => m.EmailAddress, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-6 text-left">
+                            <button class="btn green" type="submit" onclick="return CheekIfEmailAlreadyActive();" style="margin-bottom: 10px;margin-left: -15px;">Resend Verification Email</button>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <a href="~/Login/Index" class="btn btn-outline purple">Back to Sign In</a>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="login-footer ">
+                <div class="row bs-reset">
+                    <div class="col-xs-5 bs-reset">
+                        <ul class="login-social">
+                            <li>
+                                <a href="https://www.facebook.com/ramsapp/" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_facebook.png" />*@
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                    @*<i class="icon-social-facebook"></i>*@
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/company/18112592/" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_linkedin.png" />*@
+                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/rams_app" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_twitter.png" />*@
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                    @*<i class="icon-social-twitter"></i>*@
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-7 bs-reset">
+                        <div class="login-copyright text-right login-copyright-section">
+                            <p class="">Copyright &copy; RAMs App @DateTime.Now.Year</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 bs-reset hidden-sm hidden-md hidden-xs">
+            <div class="login-bg"> </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#dummy_User_Registration_Email").keyup(function () {
+            var email = $("#dummy_User_Registration_Email").val();
+
+            IsUserActive();
+            $("#divActiveEmailMessage").hide();
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "/SignUp/UserRegistrationCheck",
+                data: { email: email },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.CHKStatus == true) {
+
+                        $("#divExistingEmailMessage").hide();
+                    }
+                    if (response.CHKStatus == false) {
+
+                        $("#divExistingEmailMessage").show();
+                    }
+                }
+            });
+        });
+
+    });//end document ready
+
+
+    $('#frmForgotPassword').submit(function () {
+
+        $("#divExistingEmailMessage").hide();
+        $("#divActiveEmailMessage").hide();
+        var isValid = false;
+        var email = $("#dummy_User_Registration_Email").val();
+
+        if (email.length > 0) {
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "/SignUp/UserRegistrationCheck",
+                data: { email: email },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.CHKStatus == true) {
+
+                        $("#divExistingEmailMessage").hide();
+                        isValid = true;
+                    }
+                    if (response.CHKStatus == false) {
+
+                        $("#divExistingEmailMessage").show();
+                        $("html, body").animate({ scrollTop: 550 }, "slow");
+                        isValid = false;
+                    }
+                }
+            });
+
+            if (!isValid)
+                return false;
+        }
+    });
+
+    var userIsActive = false;;
+    function IsUserActive() {
+
+        var email = $.trim($("#dummy_User_Registration_Email").val());
+        if (email != null && email != "") {
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "/Login/UserEmailActivationCheck" ,
+                data: { email: email },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.UserActive == true) {
+
+                        userIsActive = true;
+                    }
+                    else { userIsActive = false; }
+                }
+            });
+        }
+
+    }
+
+
+    function CheekIfEmailAlreadyActive() {
+        if (userIsActive == false)
+            return true;
+        else
+            $("#divActiveEmailMessage").show();
+        return false;
+
+
+    }
+
+</script>

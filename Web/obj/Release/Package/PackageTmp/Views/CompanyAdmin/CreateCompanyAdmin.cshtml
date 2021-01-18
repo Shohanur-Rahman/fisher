@@ -1,0 +1,929 @@
+﻿
+@using Services.Domain.Company.Models.CompanyAdmin.EditorModel
+@model CompanyManagementModel
+
+@{
+    ViewData["Title"] = "CreateNewCompanyAdmin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style type="text/css">
+    table.k-widget.k-editor.k-header.k-editor-widget {
+        border: 1px solid #c2cad8;
+    }
+
+    tr {
+        background-color: white;
+    }
+    /*For Kendo Text Editor*/
+
+
+
+
+    span.k-numeric-wrap.k-state-default {
+        border: 1px solid #c2cad8;
+    }
+
+    span.k-widget.k-numerictextbox {
+        width: 99.5% !important;
+        /*border: 1px solid #c2cad8;*/
+    }
+
+    .k-upload-button.btn.btn-circle.green.btn-sm {
+        width: 195px !important;
+        cursor: pointer !important;
+        font-size: 15px !important;
+    }
+
+    .k-dropzone {
+        text-align: center;
+    }
+
+
+    .k-button.k-upload-button {
+        margin-left: -7px;
+        margin-right: -5px;
+    }
+
+    .k-upload-button.btn.btn-circle.green.btn-sm {
+        width: 195px !important;
+        cursor: pointer !important;
+        font-size: 15px !important;
+    }
+
+    .k-dropzone {
+        text-align: center;
+    }
+
+    .demo-hint {
+        line-height: 22px;
+        color: #aaa;
+        font-size: .9em;
+        padding-top: 1em;
+    }
+
+    input#ConfirmPassword {
+        display: block !important;
+    }
+
+    .pass-colorbar {
+        max-width: 90% !important;
+        margin-top: -22px !important;
+        margin-left: 15px !important;
+    }
+
+    .validation-message-color {
+        display: none;
+    }
+</style>
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <h1 class="page-title">
+            <div style="display:none;" class="alert alert-dismissable alert-worning-msg" id="divForProfileImageValidation">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong></strong><span id="ProfileImageValidationMessage"></span>
+            </div>
+        </h1>
+
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/Dashboard">Home</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/CompanyAdmin">Company Admin</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span>Create</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet ">
+
+                        <div class="div-add-logo-header">
+                            <span class="spn-add-logo-title"> Company LOGO </span>
+                        </div>
+
+                        <div class="profile-userpic">
+
+                            @{
+                                var imageURL =  "/rams-logo.png";
+                                var imageTitle = "rams-logo.png";
+                            }
+
+                            <div class="dummy_UserImageContainerDiv">
+                                <img src="@Url.Content("~/assets/global/img/rams-logo.jpeg")" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo" title="@imageTitle">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-12">
+                                <div>
+                                    <br />
+                                    @using (Html.BeginForm("CreateCompanyAdminImageUpload", "CompanyAdmin", FormMethod.Post, new { @class = "form-horizontal", id = "frmC", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                    {
+                                        @(Html.Kendo().Upload()
+                                                        .Name("files")
+                                                        .Async(a => a
+                                                            .Save("CreateCompanyAdminImageUpload", "CompanyAdmin")
+                                                            .AutoUpload(true)
+                                                        )
+                                                        .Multiple(false)
+                                                        .DropZone("CompanyAdminImageUploader")
+                                                        .Events(events => events
+                                                        .Select("onSelect")
+                                                        .Success("onSuccess")
+                                                        )
+                                                        .Messages(mess => mess.Select("Upload company logo here"))
+                                                        .HtmlAttributes(new { id = "CompanyAdminUploader_UP" })
+                                                        .Validation(validation =>
+                                                        {
+                                                            validation.AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif" });
+                                                            validation.MaxFileSize(512000);//500KB max
+                                                        })
+                                        )
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="profile-userbuttons" style="display:inline-block;">
+
+                        </div>
+
+                        <div class="profile-usermenu">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> New Company Account Create
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase">Create New Company Admin</span>
+
+
+                                    </div>
+                                    <div style="display:none; margin-top: 33px;" class="alert alert-danger" id="divForCompanyValidation">
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <strong></strong><span id="companyValidationMessage"></span>
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("CreateCompanyAdmin", "CompanyAdmin", FormMethod.Post, new { @class = "form-horizontal", id = "frmCOSHHInfo", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+
+                                                        @Html.HiddenFor(m => m.CompanyAdmin.CompanyLogoPath, new { id = "dummy_userImagePath" })
+                                                        @Html.HiddenFor(m => m.CompanyAdmin.CompanyLogoCaption, new { id = "dummy_userImageCaption" })
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Company Name <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.CompanyName, new { @class = "form-control", id = "CompanyName", autocomplete = "off" })
+                                                            <span class="validation-message-color">Provide a company name.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Email <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.EmailAddress, new { @class = "form-control", id = "EmailAddress", autocomplete = "off" })
+                                                            <span class="validation-message-color" id="divEmailMessage">Provide an email address.</span>
+                                                            <span style="display: none;" id="divExistingEmailMessage" class="text-danger validation-message-color">Email already exist, please try with different email address.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Password <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.Password, new { @class = "form-control", type = "Password", id = "password", autocomplete = "new-password" })
+                                                            <span id="divPasswordMsg" class="validation-message-color">Provide a strong password.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Confirm Password <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.ConfirmPassword, new { @class = "form-control", type = "Password", id = "ConfirmPassword", autocomplete = "nope" })
+                                                            <span id="divConfirmPasswordMsg" class="validation-message-color">Provide confirm password.</span>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Phone 1 <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.Phone1, new { @class = "form-control", id = "Phone1", autocomplete = "nope" })
+                                                            <span class="validation-message-color">Provide phone 1.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Phone 2 
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.Phone2, new { @class = "form-control", id = "Phone2", autocomplete = "nope" })
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Address Line 1 <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.Address1, new { @class = "form-control", id = "Address1", autocomplete = "nope" })
+                                                            <span class="validation-message-color">Provide address line 1.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Address Line 2 
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.Address2, new { @class = "form-control", id = "Address2", autocomplete = "nope" })
+                                                           
+                                                        </div>
+                                                    </div>
+
+                                               
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Town/City <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.CompanyTown, new { @class = "form-control", id = "CompanyTown", autocomplete = "nope" })
+                                                            <span class="validation-message-color">Provide town/city.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Postcode <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.CompanyPostCode, new { @class = "form-control", id = "CompanyPostCode", autocomplete = "nope" })
+                                                            <span class="validation-message-color">Provide postcode.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Web site 
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.TextBoxFor(m => m.CompanyAdmin.WebAddress, new { @class = "form-control", id = "WebAddress", autocomplete = "nope" })
+                                                           
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Company Details
+                                                            
+                                                        </label>
+                                                        <div class="col-md-5">
+
+                                                            @(Html.Kendo().EditorFor(m => m.CompanyAdmin.CompanyDetails)
+                                                             .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                                             .Resizable(resizable => resizable.Content(false).Toolbar(true))                                                        
+                                                             .Tools(tools => tools.Clear()
+                                                             .InsertUnorderedList()
+                                                             .Bold().Italic().Underline()
+                                                             .InsertOrderedList().CreateLink()
+                                                             ))
+
+
+                                                          
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4 ">
+                                                            License Start Date <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+
+                                                            @*<input id="LicenseStartDate" date="true" name="CompanyAdmin.LicenseStartDate" style="width: 100%;" />*@
+
+                                                            <input id="dtpkLicenseStartDate" isNotTextField="true" name="LicenseStartDate" style="width: 100%;" />
+
+                                                          
+                                                                <span id="divLicenseStartDateMsg" class="validation-message-color">Provide license start date.</span>
+                                                           
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4 ">
+                                                            License End Date <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            <input id="dtpkLicenseEndDate" isNotTextField="true" name="LicenseEndDate" style="width: 100%;" />
+                                                        
+                                                                <span class="validation-message-color" id="divLicenseEndDateMsg" >Provide license end date.</span>
+                                                                <span class="validation-message-color" id="divLicenseEndDateGreaterMsg">License end date should be greater than start date.</span>
+                                                           
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            How Many License
+                                                            <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-5">
+
+                                                            <input id="HowManyLicense" class="" isNotTextField="true" name="CompanyAdmin.HowManyLicense" type="number" style="width: 100%; " />
+
+                                                            <span id="divHowManyLicenseMsg" class="validation-message-color">Provide how many license.</span>
+
+                                                        </div>
+                                                    </div>
+
+                                     
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Active
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.CheckBoxFor(x => x.IsActive, new { @class = "checkbox switch", id = "IsActive" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Custom URL
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.CheckBoxFor(x => x.CustomURL, new { @class = "checkbox switch", id = "CustomURL" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group col-sm-12 xs-nopadding-left">
+                                                        <label class="control-label col-md-4">
+                                                            Allow Data Upload for Hazard and Trade
+                                                        </label>
+                                                        <div class="col-md-5">
+                                                            @Html.CheckBoxFor(x => x.DataUploadForHazardAndTrade, new { @class = "checkbox switch", id = "DataUploadForHazardAndTrade" })
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            @*<button class="btn btn-outline green button-next pull-right" type="submit" >Continue <em class="fa fa-angle-right"></em></button>*@
+                                                            <a class="btn btn-outline green dummy_save_btn pull-right"   id="btnSave" onclick="return CompanyAdminCreateValidation();" ><span id="spnSave">Save </span><span id="spnDataGenerate" style="display:none;">Data is generating for company admin </span>  <i style="display:none;" class="fa fa-spinner fa-spin btnLoader"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link type="text/css" href="~/css/password.css" rel="stylesheet" />
+<script src="~/Scripts/password.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#divCompany").addClass("active");
+
+        $(".k-upload-button").removeClass("k-button");
+        $(".k-upload-button").addClass("btn btn-circle green btn-sm");
+
+        $('#password').password({
+            animate: false
+        });
+
+        OnLoadedSwitchAndDatePickerEvent();
+        OnchangeInputControl();
+
+
+    });//end document ready
+
+    $(window).load(function () {
+        $("#CompanyDetails").data("kendoEditor").body.style.wordBreak = "break-word";
+
+    });
+
+
+    function OnLoadedSwitchAndDatePickerEvent() {
+
+        $(".switch").bootstrapSwitch({
+            onText: "Yes",
+            offText: "No",
+            onColor: "primary",
+            offColor: "primary",
+             onSwitchChange: SwitchChangeEvent
+        });
+
+        $("#HowManyLicense").kendoNumericTextBox({
+            format: "0",
+            decimals: 0,
+            min: 0,
+            max: 100000,
+            step: 1,
+            change: HowManyLicenseChangeEvent,
+
+        });
+
+
+
+        $("#dtpkLicenseStartDate").kendoDatePicker({
+            value: new Date(),
+            format: "dd/MM/yyyy",
+            dateInput: true,
+            change: StartDateOnchangeEvent
+        });
+
+        var myDate = new Date();
+        myDate.setFullYear(myDate.getFullYear() + 1);
+
+        $("#dtpkLicenseEndDate").kendoDatePicker({
+            value: myDate,
+            format: "dd/MM/yyyy",
+            dateInput: true,
+            change: EndDateOnchangeEvent
+        });
+
+        $("#IsActive").bootstrapSwitch('state', true);
+    }
+
+    function SwitchChangeEvent(elem)
+    {
+
+        var switchName = elem.target.name;
+        var state = $(this).bootstrapSwitch('state');
+        if (state) {
+
+            $("input:hidden[name="+switchName+"]").val(true);
+        } else {
+            $("input:hidden[name="+switchName+"]").val(false);
+        }
+
+
+    }
+
+    function StartDateOnchangeEvent() {
+        var licenseStartDate = $("#dtpkLicenseStartDate").data("kendoDatePicker").value();
+        if (typeof licenseStartDate === 'undefined' || licenseStartDate == null) {
+            $("#divLicenseStartDateMsg").show();
+        }
+        else
+        {
+            $("#divLicenseStartDateMsg").hide();
+        }
+    }
+
+    function EndDateOnchangeEvent() {
+        var licenseEndDate = $("#dtpkLicenseEndDate").data("kendoDatePicker").value();
+        $("#divLicenseEndDateGreaterMsg").hide();
+        if (typeof licenseEndDate === 'undefined' || licenseEndDate == null) {
+            $("#divLicenseEndDateMsg").show();
+
+        }
+        else
+        {
+            $("#divLicenseEndDateMsg").hide();
+        }
+    }
+
+    function HowManyLicenseChangeEvent()
+    {
+        var value = this.value();
+
+        if (value === null || value === "") {
+            $("#divHowManyLicenseMsg").show();
+        } else {
+
+            $("#divHowManyLicenseMsg").hide();
+
+        }
+    }
+
+
+
+    function OnchangeInputControl() {
+        $('input[type=text]').on("keyup", function (e) {
+            var date = $(this).attr('isNotTextField');
+            if (typeof date === 'undefined' || date == "false") {
+                var id = $(this).attr('id');
+                var value = $(this).val();
+                if (value != null && value != "") {
+
+                    $(this).closest("div").find('span').css("display", "none");
+                }
+                else {
+                    $(this).closest("div").find('span').css("display", "block");
+                }
+
+            }
+
+
+        });
+
+        $("#ConfirmPassword").keyup(function () {
+
+            var password = $.trim($("#password").val());
+            var confPassword = $.trim($("#ConfirmPassword").val());
+            $("#divConfirmPasswordMsg").text("Provide confirm password.");
+            if (confPassword != "" && password != "") {
+                if (confPassword != password) {
+
+                    $("#ConfirmPassword").closest("div").find('span').css("display", "block");
+                    $("#divConfirmPasswordMsg").text("Password and Confirmation Password must match.");
+                }
+                else {
+                    $("#divConfirmPasswordMsg").text("Provide confirm password.");
+                    $("#ConfirmPassword").closest("div").find('span').css("display", "none");
+                }
+
+            }
+        });
+
+        $("#EmailAddress").keyup(function () {
+
+            $("#divExistingEmailMessage").hide();
+            $("#divEmailMessage").hide();
+            var email = $.trim($("#EmailAddress").val());
+            var regExpEmail = /^\w+([-+.]\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+            if (email != "") {
+                if (!regExpEmail.test(email)) {
+                    $("#divEmailMessage").css("display", "block");
+                }
+                else {
+                    $.ajax({
+                        type: "GET",
+                        url: "/SignUp/CheckEmailExistInCompanyAndUser",
+                        data: { email: email, userId: 0, companyId: 0 },
+                        success: function (response) {
+
+                            if (response.CHKStatus == true) {
+
+                                $("#divExistingEmailMessage").show();
+                            }
+                            if (response.CHKStatus == false) {
+
+                                $("#divExistingEmailMessage").hide();
+                            }
+                        }
+                    });
+                    $("#divEmailMessage").css("display", "none");
+                }
+            }
+            else
+            {
+                $("#divEmailMessage").css("display", "block");
+            }
+
+        });
+        $("#password").keyup(function () {
+            var password = $.trim($("#password").val());
+
+            if (password != null && password != "") {
+                $("#divPasswordMsg").hide();
+            }
+            else {
+                $("#divPasswordMsg").show();
+            }
+        });
+    }
+
+
+
+    function addPreview(file) {
+        var raw = file.rawFile;
+        var reader = new FileReader();
+
+        if (raw) {
+            reader.onloadend = function () {
+                var preview = $("<img class='image-preview img-responsive dummy_divUplodedUserImg'>").attr("src", this.result);
+                $(".dummy_UserImageContainerDiv").append(preview);
+                $('#divDefaultUploadedUserImg').hide();
+            };
+
+            reader.readAsDataURL(raw);
+        }
+    }
+
+
+    function onSelect(e) {
+
+        $("#divForProfileImageValidation").hide();
+        var files = e.files;
+
+        var fullImageName = e.files["0"].name;
+        var imageExtension = e.files["0"].extension;
+        var exactImageName = fullImageName.replace(imageExtension, "");
+        var fileInfo = e.files[0];
+        setTimeout(function () {
+            addPreview(fileInfo);
+        });
+
+        $.each(files, function () {
+           
+            if (this.size > 512000 && exactImageName.length > 90) {
+
+                //image & name validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB in size and 90 characters name are allowed for company logo.");
+                $('#divForProfileImageValidation').show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size > 512000 && exactImageName.length <= 90) {
+
+                //image validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB image allowed for company logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size <= 512000 && exactImageName.length > 90) {
+
+                //name validation
+                $('#ProfileImageValidationMessage').text("Maximum 90 characters name allowed for company logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+        });
+    }
+
+
+    function onSuccess(e) {
+        try {
+
+            if (typeof e.response.DynamicHtml !== 'undefined' && e.response.DynamicHtml != null) {
+                setTimeout(function () {
+
+                    $('#divDefaultUploadedUserImg').hide();
+                    //$('.dummy_divUplodedUserImg').hide();
+                    //this code will execute after 4 sec
+                    //$(".dummy_UserImageContainerDiv").append($(e.response.DynamicHtml));
+
+                    //$("#dummy_userImagePath").val(e.response.userUploadedImagePath);
+                    //$("#dummy_userImageCaption").val(e.response.userUploadedImageCaption);
+                }, 4000);
+            }
+
+        }
+        catch (err) {
+
+        }
+    }
+
+
+    function CompanyAdminCreateValidation() {
+
+        var isAllValid = true;
+        var regExpEmail = /^\w+([-+.]\w+)*@@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        var companyName = $.trim($("#CompanyName").val());
+        var email = $.trim($("#EmailAddress").val());
+        var password = $.trim($("#password").val());
+        var confPassword = $.trim($("#ConfirmPassword").val());
+        var phone1 = $.trim($("#Phone1").val());
+        var address1 = $.trim($("#Address1").val());
+        var companyTown = $.trim($("#CompanyTown").val());
+        var postCode = $.trim($("#CompanyPostCode").val());
+
+        var licenseStartDate = $("#dtpkLicenseStartDate").data("kendoDatePicker").value();
+        var licenseEndDate = $("#dtpkLicenseEndDate").data("kendoDatePicker").value();
+        var howManyLicense = $.trim($("#HowManyLicense").val());
+
+
+
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage").hide();
+        $("#divEmailMessage").hide();
+        $("#divLicenseEndDateGreaterMsg").hide();
+        $("#divConfirmPasswordMsg").text("Provide confirm password.");
+
+        if (typeof companyName === 'undefined' || companyName == "") {
+            isAllValid = false;
+            $("#CompanyName").closest("div").find('span').css("display", "block");
+        }
+
+
+        if (email != "") {
+            if (!regExpEmail.test(email)) {
+                isAllValid = false;
+                $("#divEmailMessage").css("display", "block");
+            }
+            else {
+                $.ajax({
+                    async: false,
+                    type: "GET",
+                    url: "/SignUp/CheckEmailExistInCompanyAndUser",
+                    data: { email: email, userId: 0, companyId: 0 },
+                    success: function (response) {
+
+                        if (response.CHKStatus == true) {
+                            isAllValid = false;
+                            $("#divExistingEmailMessage").show();
+                        }
+                        if (response.CHKStatus == false) {
+
+                            $("#divExistingEmailMessage").hide();
+                        }
+                    }
+                });
+                $("#divEmailMessage").css("display", "none");
+            }
+        }
+        else {
+            isAllValid = false;
+            $("#divEmailMessage").css("display", "block");
+        }
+
+        if (typeof password === 'undefined' || password == "") {
+            isAllValid = false;
+            $("#password").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof confPassword === 'undefined' || confPassword == "") {
+            isAllValid = false;
+            $("#ConfirmPassword").closest("div").find('span').css("display", "block");
+        }
+
+        if (password != "" && confPassword != "") {
+            if (password != confPassword) {
+                isAllValid = false;
+                $("#ConfirmPassword").closest("div").find('span').css("display", "block");
+                $("#divConfirmPasswordMsg").text("Password and Confirmation Password must match.");
+            }
+
+        }
+
+        if (typeof phone1 === 'undefined' || phone1 == "") {
+            isAllValid = false;
+            $("#Phone1").closest("div").find('span').css("display", "block");
+        }
+
+
+
+        if (typeof address1 === 'undefined' || address1 == "") {
+            isAllValid = false;
+            $("#Address1").closest("div").find('span').css("display", "block");
+        }
+
+
+        if (typeof companyTown === 'undefined' || companyTown == "") {
+            isAllValid = false;
+            $("#CompanyTown").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof postCode === 'undefined' || postCode == "") {
+            isAllValid = false;
+            $("#CompanyPostCode").closest("div").find('span').css("display", "block");
+        }
+
+
+
+        if (typeof licenseStartDate === 'undefined' || licenseStartDate == null) {
+            isAllValid = false;
+            $("#divLicenseStartDateMsg").show();
+        }
+
+        if (typeof licenseEndDate === 'undefined' || licenseEndDate == null) {
+            isAllValid = false;
+            $("#divLicenseEndDateMsg").show();
+        }
+
+        if (licenseStartDate != null && licenseEndDate != null && licenseEndDate.valueOf() <= licenseStartDate.valueOf()) {
+            $("#divLicenseEndDateGreaterMsg").show();
+            isAllValid = false;
+        }
+
+        if (typeof howManyLicense === 'undefined' || howManyLicense == "") {
+            isAllValid = false;
+            $("#divHowManyLicenseMsg").css("display", "block");
+        }
+
+
+
+        if (isAllValid == false) {
+
+            $('#companyValidationMessage').text("Please complete all of the required fields.");
+            $("#divForCompanyValidation").show();
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+            $("#divForCompanyValidation").fadeOut(10000);
+        }
+        var isLoaderShowed = false;
+        if (isAllValid == true) {               
+            $(".btnLoader").show();
+            $("#spnSave").hide();
+            $("#spnDataGenerate").show();
+            $('#btnSave').addClass("disabled");
+            isLoaderShowed = true;        
+        }
+        if (isLoaderShowed == true)
+        {
+            setTimeout(function () { ProcessCompanyAdmin(); }, 3000);
+           
+        }
+
+        return false;
+      
+    }
+
+    function ProcessCompanyAdmin()
+    {
+        //alert("test");
+        var data = $('#frmCOSHHInfo').serialize();
+
+            $.ajax({
+                async: false,
+                type: 'POST',
+                url: "/CompanyAdmin/ProcessCompanyAdmin",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    window.location.href = "/CompanyAdmin/Index";
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    window.location.href = "/CompanyAdmin/Index";
+                }
+            });
+    }
+
+
+</script>

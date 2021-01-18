@@ -1,0 +1,51 @@
+﻿@using Services.Helper;
+@{
+    Layout = "~/Views/Shared/_ErrorPageLayout.cshtml";
+
+}
+<html lang="en">
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+
+
+    <div class=" ">
+
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content" style="min-height: 1434px;">
+
+
+                <!-- END PAGE HEADER-->
+                <div class="row">
+                    <div class="col-md-12 page-404" style="margin-top:15%">
+                        <div class="number font-green"> 404 </div>
+                        <div class="details">
+                            <h3>Oops! You're lost.</h3>
+                            <p>
+                                We can not find the page you're looking for.
+                            </p>
+                            <p>
+                                @using (Html.BeginForm("RedirectToDashboard", "Home", FormMethod.Post, new { role = "form", @autocomplete = "off" }))
+                                {
+                                    <a href="~/login" class="btn grey-salsa btn-outline " style="width: 134px;">Contact Us</a>
+                                    
+                                }
+                                <br />
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+
+    </div>
+
+
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+</body>
+</html>
+

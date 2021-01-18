@@ -1,0 +1,721 @@
+﻿i @using Services.Domain.Accounts.Models.Fish
+@model FishSellingReportTableDataModal
+@using Web.AppCode
+@{
+    ViewBag.Title = "NewFishSellCalculation";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/ProjectDashboard"><span class="ln-english">Dashboard</span><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/SellOfFish"><span class="ln-english">Project</span><span class="ln-bangla">মাছ বিক্রির হিসাব</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-english">Add New Project</span><span class="ln-bangla">নতুন হিসাব যুক্ত করুন </span>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="row operation-page">
+            @using (Html.BeginForm("AddFishSellingCalculationTemp", "SellOfFish", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+            {
+                <div class="col-md-12">
+                    <div class="profile-sidebar">
+                        <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+                            @Html.HiddenFor(m => m.FishSellingReportTableDomain.ProjectId, new { Value = ViewBag.ProjectId })
+                            @Html.HiddenFor(m => m.FishSellingReportTableDomain.AreaId, new { Value = ViewBag.AreaId })
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-english">Area Name</span><span class="ln-bangla">হিসাবের নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.FishSellingReportTableDomain.HisabName, new { @class = "form-control", id = "Name", autocomplete = "off", vldid = "#Name" })
+                                    <span class="validation-message-color" id="#spnFishNameInString"><span class="ln-bangla">হিসাবের নাম লিখুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-english">Time</span><span class="ln-bangla">বিক্রেতার নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().ComboBoxFor(m => m.FishSellingReportTableDomain.FishSellerId)
+                                      .DataTextField("Name")
+                                      .DataValueField("ID")
+                                      .HtmlAttributes(new { style = "width: 100%;", id = "cmbFishSellerId" })
+                                      .DataSource(source =>
+                                      {
+                                          source.Read(read =>
+                                          {
+                                              read.Action("GetAllFishSellerNameList", "SellOfFish");
+                                          });
+                                      })
+                                    )
+                                    <span class="validation-message-color" id="#spnMainFishSellerName"><span class="ln-bangla">বিক্রেতার নাম নিশ্চিত করুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">গাড়ির নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.FishSellingReportTableDomain.GarirName, new { @class = "form-control", id = "txtNameOfCar", autocomplete = "off", vldid = "#Name" })
+                                    <span class="validation-message-color" id="#spnTheNameOfCar"><span class="ln-bangla">গাড়ির নাম লিখুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মাছের নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().MultiSelect()
+                                    .Name("cmbFishNameId")
+                                    .DataTextField("Name")
+                                    .DataValueField("ID")
+                                    .HtmlAttributes(new { style = "width: 100%;", id = "cmbFishNameId" })
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetAllFishList", "SellOfFish");
+                                        });
+                                    })
+                                    .Events(e =>
+                                        {
+                                            e.Change("OnChangeFishNameList");
+                                        })
+                                    )
+                                    @Html.HiddenFor(m => m.FishIdListWithComma, new { id="dummy_FishIdListString"})
+                                    <span class="validation-message-color" id="spnMainFishNameList"><span class="ln-bangla">মূলত যেই মাছটি বিক্রি করেছেন তার নাম নিশ্চিত করুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">বিক্রির তারিখ</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().DatePicker()
+                                      .Name("SellDate")
+                                      .Format("dd/MM/yyyy")
+                                      .Value(DateTime.Now)
+                                      .Max(DateTime.Now)
+                                      .HtmlAttributes(new { style = "width: 100%", title = "monthpicker" })
+                                    )
+                                    @Html.HiddenFor(m => m.FishSellingReportTableDomain.SellDate, new { id = "hdnSellDate" })
+                                    <span class="validation-message-color" id="spnFishSellingDate"><span class="ln-bangla">বিক্রির তারিখ লিখুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মোট বিক্রি</span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingReportTableDomain.TotalSellInKG)
+                                    .Format("#.00 কেজি")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 কেজি")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAllFishTotalSellCalculation", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">বকেয়া মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মোট মূল্য</span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingReportTableDomain.TotalSellPrice)
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAllFishCalculationPrice", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">বকেয়া মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                  <span class="ln-bangla">পরিশোধিত মূল্য</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingReportTableDomain.FishAmountPaid)
+                                    .Events(e => e
+                                            .Change("OnChangeDoCalculationFishAmountPaid")
+                                            .Spin("OnChangeDoCalculationFishAmountPaid")
+                                    )
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAmountPaid"})
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">পরিশোধিত মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">বকেয়া মূল্য</span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingReportTableDomain.FishAmountDue)
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAmountToDue", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">বকেয়া মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">নোট </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().EditorFor(m => m.FishSellingReportTableDomain.SellNote)
+                                     .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                     .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                     .Tools(tools => tools.Clear()
+                                     .InsertUnorderedList()
+                                     .Bold().Italic().Underline()
+                                     .InsertOrderedList().CreateLink()
+                                     ))
+                                </div>
+                            </div>
+
+                            <div class="profile-usermenu wow fadeInUp animated">
+                                <ul class="nav">
+                                    <li class="active">
+                                        <a style="cursor:default !important" href="javascript:;">
+                                            <i class="icon-settings"></i><span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-content">
+                        <div class="row">
+                            <div class="col-md-12 portlet light">
+                                <div class="portlet light right-panelbar">
+                                    <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                        <div class="caption caption-md">
+                                            <span class="caption-subject font-blue-madison bold uppercase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class="ln-bangla">নতুন হিসাব</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="tab-content">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+                                                    <div class="clear-div row" style="min-height: 250px;">
+
+                                                        @for (var fishItem = 0; fishItem < ViewBag.AllFishNameList.Count; fishItem++)
+                                                        {
+                                                            @Html.HiddenFor(m => m.FishSellingMapperList[fishItem].SellFishId, new { Value = ViewBag.AllFishNameList[fishItem].ID })
+                                                            <div class="col-sm-6 dummy_toggle_fish_controll_area" id="divfishReportForFishId_@ViewBag.AllFishNameList[fishItem].ID" style="display: none;">
+                                                                <div class="row">
+                                                                    <label class="control-label col-md-12">
+                                                                        <span style="font-weight: bold; font-size: 16px; color: darkgoldenrod;">@ViewBag.AllFishNameList[fishItem].Name</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="row">
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-english">Land</span><span class="ln-bangla">মোট বিক্রি</span> <span class="required" aria-required="true"> * </span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingMapperList[fishItem].TotalFishkg)
+                                                                                .Events(e => e
+                                                                                     .Change("OnChangeDoCalculationKgAndPricePerKg")
+                                                                                     .Spin("OnChangeDoCalculationKgAndPricePerKg")
+                                                                                )
+                                                                                .Format("#.00 কেজি")
+                                                                                .Min(0)
+                                                                                .Max(99999999)
+                                                                                .Step(1)
+                                                                                .Placeholder("0.00 কেজি")
+                                                                                .HtmlAttributes(new { style = "width: 100%", @class="dummy_totalSellInKG_"+ ViewBag.AllFishNameList[fishItem].ID, title = "numeric", id = "txtNumTotalSellInKG" + ViewBag.AllFishNameList[fishItem].ID, @fishid= ViewBag.AllFishNameList[fishItem].ID })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnTotalFishInKg"><span class="ln-bangla">মোট মাছ বিক্রি (কেজি) নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-english">Time</span><span class="ln-bangla">মূল্য/কেজি</span> <span class="required" aria-required="true"> * </span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingMapperList[fishItem].PricePerKG)
+                                                                                .Events(e => e
+                                                                                     .Change("OnChangeDoCalculationKgAndPricePerKg")
+                                                                                     .Spin("OnChangeDoCalculationKgAndPricePerKg")
+                                                                                )
+                                                                                .Format("#.00 টাকা")
+                                                                                .Min(0)
+                                                                                .Max(99999999)
+                                                                                .Step(1)
+                                                                                .Placeholder("0.00 টাকা")
+                                                                                .HtmlAttributes(new { style = "width: 100%", @class = "dummy_pricePerKG_" + ViewBag.AllFishNameList[fishItem].ID, title = "numeric", id = "txtNumPricePerKG" + ViewBag.AllFishNameList[fishItem].ID, @fishid = ViewBag.AllFishNameList[fishItem].ID })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">প্রতি কেজির মূল্য বিক্রি মূল্য নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-english">Time</span><span class="ln-bangla">মোট মূল্য</span> <span class="required" aria-required="true"> * </span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingMapperList[fishItem].TotalSellPrice)
+                                                                                .Events(e => e
+                                                                                        .Change("OnChangeDoCalculationFromTotalPrice")
+                                                                                        .Spin("OnChangeDoCalculationFromTotalPrice")
+                                                                                )
+                                                                                .Format("#.00 টাকা")
+                                                                                .Min(0)
+                                                                                .Max(99999999)
+                                                                                .Step(1)
+                                                                                .Placeholder("0.00 টাকা")
+                                                                                .HtmlAttributes(new { style = "width: 100%", @class = "dummy_totalSellPrice_" + ViewBag.AllFishNameList[fishItem].ID, title = "numeric", id = "txtNumTotalSellPrice" + ViewBag.AllFishNameList[fishItem].ID, @fishid = ViewBag.AllFishNameList[fishItem].ID })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnTotalSellPrice"><span class="ln-bangla">মোট বিক্রি মূল্য নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-english">Time</span><span class="ln-bangla">পিছ/কেজি</span> <span class="required" aria-required="true"> * </span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.FishSellingMapperList[fishItem].PiecesPerKG)
+                                                                                .Events(e => e
+                                                                                     .Change("OnChangeDoCalculatForPicesesOfFish")
+                                                                                     .Spin("OnChangeDoCalculatForPicesesOfFish")
+                                                                                )
+                                                                                .Format("#.00 টা")
+                                                                                .Min(0)
+                                                                                .Max(99999999)
+                                                                                .Step(1)
+                                                                                .Placeholder("0.00 টা")
+                                                                                .HtmlAttributes(new { style = "width: 100%", @class = "dummy_picesPerKG_" + ViewBag.AllFishNameList[fishItem].ID, title = "numeric", id = "txtNumPiecesPerKg" + ViewBag.AllFishNameList[fishItem].ID, @fishid = ViewBag.AllFishNameList[fishItem].ID })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnFishPiecesPerKg"><span class="ln-bangla">প্রতি কেজিতে মাছের সংখ্যা নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!--- Gap -->
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-english">Time</span><span class="ln-bangla">মোট মাছ</span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+
+                                                                                @Html.TextBoxFor(m => m.FishSellingMapperList[fishItem].TotalPiecesFish, new { @class = "form-control dummy_totalPicesOfFish_" + ViewBag.AllFishNameList[fishItem].ID, id = "txtTotalPiecesFish" + ViewBag.AllFishNameList[fishItem].ID, autocomplete = "off", vldid = "#TotalPiecesFish", @readonly = "true", @placeholder = "0", @fishid = ViewBag.AllFishNameList[fishItem].ID })
+
+                                                                            </div>
+                                                                        </div>
+                                                                </div>
+
+
+                                                            </div>
+
+                                                        }
+                                                    </div>
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/SellOfFish" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoThisFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- END PROFILE CONTENT -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var cmbFishSellerComboBox;
+    var amountPaidByBuyerPicker;
+    var dueAmountForBuyerPicker;
+    $(document).ready(function () {
+        cmbFishSellerComboBox = $("#cmbFishSellerId").data("kendoComboBox");
+        amountPaidByBuyerPicker = $("#txtNumAmountPaid").data("kendoNumericTextBox");
+        dueAmountForBuyerPicker = $("#txtNumAmountToDue").data("kendoNumericTextBox");
+        $("#lstFishSellingLink").addClass("active");
+    });
+
+
+    function OnChangeFishNameList(e) {
+
+        var value = this.value();
+        $(".dummy_toggle_fish_controll_area").hide();
+        var idList = $.trim($("#dummy_FishIdListString").val());
+
+        for (var i = 0; i < value.length; i++) {
+            $("#divfishReportForFishId_" + value[i]).show();
+        }
+
+        var removeId = IsFishIdExistInCurrentList();
+        if (removeId > 0) {
+            $($.trim("#txtNumTotalSellInKG" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumPricePerKG" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumTotalSellPrice" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumPiecesPerKg" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtTotalPiecesFish" + removeId)).val("");
+        }
+
+        $("#dummy_FishIdListString").val(value);
+
+        DoAllCalculationCheck();
+    }
+
+
+    function IsFishIdExistInCurrentList() {
+        var idList = $.trim($("#dummy_FishIdListString").val());
+
+        var returnFalue = 0;
+        if (idList != "") {
+            var arrayList = idList.split(",");
+            for (index = 0; index < arrayList.length; index++) {
+                var moveId = CheckNewChangeExist(arrayList[index]);
+                if (moveId > 0) {
+                    returnFalue = moveId;
+                }
+            }
+        }
+        return returnFalue;
+    }
+
+    function CheckNewChangeExist(loopValue) {
+        var value = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        var returnID = loopValue;
+        for (var i = 0; i < value.length; i++) {
+            if (value[i] == loopValue) {
+                returnID = 0;
+            }
+        }
+
+        return returnID;
+    }
+
+
+    function DoAllCalculationCheck() {
+
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        var totalPrice = "";
+        
+        for (var i = 0; i < multiSelectVal.length; i++) {
+            var fishID = multiSelectVal[i];
+            if (fishID) {
+                var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishID)).data("kendoNumericTextBox").value();
+                var pricePerKG = $($.trim("#txtNumPricePerKG" + fishID)).data("kendoNumericTextBox").value();
+
+                if (sellInKG && pricePerKG) {
+                    var calCulatedValue = (sellInKG * pricePerKG);
+                    $($.trim("#txtNumTotalSellPrice" + fishID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+            }
+        }
+
+        DoCalculationTotalSellInKG();
+        DoCalculationTotalPriceForAllFish();
+        DoCalculationTotalPicesFish();
+        OnChangeDoCalculationFishAmountPaid();
+    }
+
+    function OnChangeDoCalculationKgAndPricePerKg(e) {
+      
+        var elementAttr = this.element.context;
+        var fishID;
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.fishid) {
+            fishID = elementAttr.attributes.fishid.value;
+            if (fishID) {
+                var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishID)).data("kendoNumericTextBox").value();
+                var pricePerKG = $($.trim("#txtNumPricePerKG" + fishID)).data("kendoNumericTextBox").value();
+
+                if (sellInKG && pricePerKG) {
+                    var calCulatedValue = (sellInKG * pricePerKG);
+                    $($.trim("#txtNumTotalSellPrice" + fishID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+
+                DoCalculationTotalSellInKG();
+                DoCalculationTotalPriceForAllFish();
+                DoCalculationTotalPicesFish();
+                OnChangeDoCalculationFishAmountPaid();
+            }
+        }
+
+    }
+
+
+    function DoCalculationTotalSellInKG() {
+
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        var totalPrice = "";
+
+        for (var i = 0; i < multiSelectVal.length; i++) {
+
+            var fishId = multiSelectVal[i];
+            var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishId)).data("kendoNumericTextBox").value();
+            if (totalPrice == "") {
+                totalPrice = sellInKG;
+            } else {
+                totalPrice = (totalPrice + sellInKG);
+            }
+        }
+
+        $($.trim("#txtNumAllFishTotalSellCalculation")).data("kendoNumericTextBox").value(totalPrice);
+
+    }
+
+
+    function OnChangeDoCalculationFromTotalPrice(e) {
+        var elementAttr = this.element.context;
+        var fishID;
+
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.fishid) {
+            fishID = elementAttr.attributes.fishid.value;
+            if (fishID) {
+                var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishID)).data("kendoNumericTextBox").value();
+                var totalPrice = $($.trim("#txtNumTotalSellPrice" + fishID)).data("kendoNumericTextBox").value();
+
+                if (sellInKG && totalPrice) {
+                    var calCulatedValue = (totalPrice / sellInKG);
+                    $($.trim("#txtNumPricePerKG" + fishID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+            }
+        }
+
+        DoCalculationTotalPriceForAllFish();
+    }
+
+    function DoCalculationTotalPriceForAllFish() {
+
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        var totalPrice = "";
+
+        for (var i = 0; i < multiSelectVal.length; i++) {
+
+            var fishId = multiSelectVal[i];
+            var sellInKG = $($.trim("#txtNumTotalSellPrice" + fishId)).data("kendoNumericTextBox").value();
+            if (totalPrice == "") {
+                totalPrice = sellInKG;
+            } else {
+                totalPrice = (totalPrice + sellInKG);
+            }
+        }
+
+        $($.trim("#txtNumAllFishCalculationPrice")).data("kendoNumericTextBox").value(totalPrice);
+        OnChangeDoCalculationFishAmountPaid();
+    }
+
+
+    function OnChangeDoCalculationFishAmountPaid() {
+        
+        var totalPrice = $("#txtNumAllFishCalculationPrice").data("kendoNumericTextBox").value();
+        var amountPaid = $("#txtNumAmountPaid").data("kendoNumericTextBox").value();
+
+        if (totalPrice && amountPaid) {
+            var calCulatedValue = (totalPrice - amountPaid);
+            var toFixedValue = calCulatedValue.toFixed(2);
+            if (amountPaid > totalPrice) {
+                ShowAjaxNotificationMessage("চমৎকার", "আপনি বিক্রি মূল্যের সব টাকা পরিশোধ করেছেন। আপনাকে ধন্যবাদ।", "success");
+                $("#txtNumAmountToDue").data("kendoNumericTextBox").value(toFixedValue);
+            } else {
+                $("#txtNumAmountToDue").data("kendoNumericTextBox").value(toFixedValue);
+            }
+        } else {
+            $("#txtNumAmountToDue").data("kendoNumericTextBox").value(totalPrice);
+        }
+    }
+
+
+    function OnChangeDoCalculatForPicesesOfFish(e) {
+
+        var elementAttr = this.element.context;
+        var fishID;
+
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.fishid) {
+            fishID = elementAttr.attributes.fishid.value;
+            if (fishID) {
+                var picesPerKG = $($.trim("#txtNumPiecesPerKg" + fishID)).data("kendoNumericTextBox").value();
+                var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishID)).data("kendoNumericTextBox").value();
+
+                if (picesPerKG && sellInKG) {
+                    var calCulatedValue = (sellInKG * picesPerKG);
+                    $($.trim("#txtTotalPiecesFish" + fishID)).val(calCulatedValue);
+                }
+            }
+        }
+    }
+
+    function DoCalculationTotalPicesFish() {
+        var isThisFishValid = true;
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        for (var i = 0; i < multiSelectVal.length; i++) {
+            var fishID = multiSelectVal[i];
+            if (fishID) {
+                var picesPerKG = $($.trim("#txtNumPiecesPerKg" + fishID)).data("kendoNumericTextBox").value();
+                var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishID)).data("kendoNumericTextBox").value();
+
+                if (picesPerKG && sellInKG) {
+                    var calCulatedValue = (sellInKG * picesPerKG);
+                    $($.trim("#txtTotalPiecesFish" + fishID)).val(calCulatedValue);
+                } else {
+                    $($.trim("#txtTotalPiecesFish" + fishID)).val("0");
+                }
+            }
+        }
+
+    }
+
+
+
+    function DoValidationForEveryFish() {
+      
+        var isThisFishValid = true;
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        for (var i = 0; i < multiSelectVal.length; i++) {
+            var fishId = multiSelectVal[i];
+            var sellInKG = $($.trim("#txtNumTotalSellInKG" + fishId)).data("kendoNumericTextBox").value();
+            var pricePerKG = $($.trim("#txtNumPricePerKG" + fishId)).data("kendoNumericTextBox").value();
+            var totalPrice = $($.trim("#txtNumTotalSellPrice" + fishId)).data("kendoNumericTextBox").value();
+            var element = $($.trim("#txtNumPiecesPerKg" + fishId));
+            var picesOfFish = $($.trim(element.selector)).data("kendoNumericTextBox").value();
+
+            if (typeof sellInKG === 'undefined' || sellInKG == null || sellInKG <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumTotalSellInKG" + fishId)).closest("div").find('span').css("display", "block");
+            }
+
+            if (typeof pricePerKG === 'undefined' || pricePerKG == null || pricePerKG <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumPricePerKG" + fishId)).closest("div").find('span').css("display", "block");
+            }
+            if (typeof totalPrice === 'undefined' || totalPrice == null || totalPrice <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumTotalSellPrice" + fishId)).closest("div").find('span').css("display", "block");
+            }
+            if (typeof picesOfFish === 'undefined' || picesOfFish == null || picesOfFish <= 0) {
+                isThisFishValid = false;
+                $($.trim(element.selector)).closest("div").find('span').css("display", "block");
+            }
+        }
+
+        return isThisFishValid;
+    }
+
+
+    function DoThisFormValidation() {
+       
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage,.validation-message-color").hide();
+        
+        var isFormValid = true;
+        var fishName = $.trim($("#Name").val());
+        var carName = $.trim($("#txtNameOfCar").val());
+        var sellDate = $("#SellDate").data("kendoDatePicker").value();
+        var multiSelectVal = $("#cmbFishNameId").data("kendoMultiSelect").value();
+        var txtNumAmountPaid = $("#txtNumAmountPaid").data("kendoNumericTextBox").value();
+
+        if (sellDate) {
+            var dateString = kendo.toString(new Date(sellDate), "MM/dd/yyyy");
+            $("#hdnSellDate").val(dateString);
+        } else {
+            $("#hdnSellDate").val("");
+        }
+        var dateText = $.trim($("#hdnSellDate").val());
+
+        if (typeof fishName === 'undefined' || fishName == "") {
+            isFormValid = false;
+            $("#Name").closest("div").find('span').css("display", "block");
+        }
+
+        if (cmbFishSellerComboBox.selectedIndex === -1 && cmbFishSellerComboBox.value() || cmbFishSellerComboBox.value() == "" || cmbFishSellerComboBox.value() == null) {
+            isFormValid = false;
+            $("#cmbFishSellerId").closest("div").find('span').css("display", "block");
+        }
+        if (typeof carName === 'undefined' || carName == "") {
+            isFormValid = false;
+            $("#txtNameOfCar").closest("div").find('span').css("display", "block");
+        }
+
+        if (multiSelectVal == "" || multiSelectVal.length <= 0) {
+            isFormValid = false;
+            $("#spnMainFishNameList").css({ "display": "block"});
+        }
+        
+        if (typeof txtNumAmountPaid === 'undefined' || txtNumAmountPaid == null || txtNumAmountPaid < 0) {
+            isFormValid = false;
+            $("#txtNumAmountPaid").closest("div").find('span').css("display", "block");
+        }
+        if (typeof dateText === 'undefined' || dateText == "") {
+            isFormValid = false;
+            $("#spnFishSellingDate").css("display", "block");
+        }
+
+        if (isFormValid == true) {
+
+            var isReturn = DoValidationForEveryFish();
+
+            if (isReturn == false) {
+                ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, আপনি নির্ধারিত সব মাছের জন্য হিসাব সম্পূর্ণ করেন নাই!", "warning");
+            }
+
+            isFormValid = isReturn;
+
+        }
+
+
+        if (isFormValid == true) {
+
+            ShowAjaxNotificationMessage("প্রসেসিং", "<img src='" + domainURL + "/images/loading-indicator.gif' draggable='false' class='disable-image' /> ", "success");
+            $(".k-button-icon.k-window-action").css({ "display": "none" });
+
+            DoAllCalculationCheck();
+        }
+
+
+        return isFormValid;;
+    }
+
+</script>

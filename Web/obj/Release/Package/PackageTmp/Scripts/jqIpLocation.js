@@ -1,0 +1,1 @@
+!function (c) { c.jqIpLocation = function (n) { var s = { ip: "null", success: null }; n && c.extend(s, n); var i = "http://ip-api.com/json/" + s.ip + "?callback=?"; c.getJSON(i, function (n) { c.isFunction(s.success) && s.success.call(this, n) }) } }(jQuery);

@@ -1,0 +1,550 @@
+﻿@using Services.Domain.Accounts.Models.FeedDistribute;
+@model FeedDistributionTableDataModal
+@{
+    ViewBag.Title = "NewDistribution";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb wow fadeInUp animated">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/ProjectDashboard"><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/SellOfFeed"><span class="ln-bangla">খাদ্য ক্রয়ের হিসাব</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row operation-page">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                            <div class="col-md-12">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">তারিখ</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().DatePicker()
+                                    .Name("datepiker")
+                                    .Value(DateTime.Now)
+                                    .Max(DateTime.Now)
+                                    .HtmlAttributes(new { style = "width: 100%", title = "datepicker", id = "txtClnDistributionDate" }))
+                                    @Html.HiddenFor(m => m.feedDistributionTableDoamain.FeedDistributionDate, new { id = "hdnFeedDistributionDate" })
+                                    <span class="validation-message-color" id="#spnDistributionDate"><span class="ln-bangla">হিসাবের নাম লিখুন</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                            <div class="col-md-12">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">খাদ্যের নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().MultiSelect()
+                                    .Name("cmbFeedNameId")
+                                    .DataTextField("Name")
+                                    .DataValueField("ID")
+                                    .HtmlAttributes(new { style = "width: 100%;", id = "cmbFeedNameId" })
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetFeedAllList", "FeedDistribute");
+                                        });
+                                    })
+                                    .Events(e =>
+                                        {
+                                            e.Change("OnChangeFeedNameList");
+                                        })
+                                    )
+                                    @Html.HiddenFor(m => m.FeedDistribuinIdsList, new { id = "dummy_FeedIdListString" })
+                                    <span class="validation-message-color" id="spnMainFeedNameList"><span class="ln-bangla">মূলত খাদ্যের নাম নিশ্চিত করুন</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                            <div class="col-md-12">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মোট ওজন</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.feedDistributionTableDoamain.FeedDistributionTotalWeight)
+                                                            .Format("#.00 কেজি")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 কেজি")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFeedTotalWeight", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট ওজন নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                            <div class="col-md-12">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">নোট </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().EditorFor(m => m.feedDistributionTableDoamain.FeedDistributionDescription)
+                                                             .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                                             .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                                             .Tools(tools => tools.Clear()
+                                                             .InsertUnorderedList()
+                                                             .Bold().Italic().Underline()
+                                                             .InsertOrderedList().CreateLink()
+                                                             ))
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+
+
+                        <div class="profile-usermenu wow fadeInUp animated">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase"><span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span></span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("AddFeedDistributionReport", "FeedDistribute", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(m => m.feedDistributionTableDoamain.ProjectId, new { Value = ViewBag.ProjectId })
+                                            @Html.HiddenFor(m => m.feedDistributionTableDoamain.AreaId, new { Value = ViewBag.AreaId })
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+                                                    @for (var item = 0; item < ViewBag.FeedList.Count; item++)
+                                                    {
+                                                        <div class="row">
+                                                            <div class="col-md-12 no-padding dummy_all_feedNameData" id="dummy_feeName_@ViewBag.FeedList[item].ID" style="display: none;">
+                                                                @Html.HiddenFor(m => m.feedIdAndMapperIdTable[item].FeedDistributionFeedId, new { Value = ViewBag.AllFeedCategory[item] })
+                                                                <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                    <label class="control-label col-md-12">
+                                                                        <span class="ln-bangla" style="color: brown">খাদ্যের ধরন: @ViewBag.FeedList[item].Name</span> <span class="required" aria-required="true"> * </span>
+                                                                    </label>
+                                                                    <div class="col-md-12">
+                                                                        @(Html.Kendo().MultiSelect()
+                                                                            .Name("cmbTxtFeedCat" + ViewBag.FeedList[item].ID)
+                                                                            .HtmlAttributes(new { style = "width: 100%;", id = "cmbTxtFeedCat" + ViewBag.FeedList[item].ID, toggle = "dummy_allFeedCatName_" + ViewBag.FeedList[item].ID, feedid= ViewBag.FeedList[item].ID })
+                                                                            .BindTo(new SelectList(ViewBag.AllFeedCategory[item], "FeedCategoryId", "FeedCategoryName"))
+                                                                        )
+                                                                        @Html.HiddenFor(m => m.DistributionMapperIdList, new { id = "dummy_FeedNameIdListString"+ ViewBag.FeedList[item].ID })
+
+                                                                        <script type="text/javascript">
+                                                                            $(document).ready(function () {
+                                                                                var multiselect = $("#cmbTxtFeedCat" + @ViewBag.FeedList[item].ID).data("kendoMultiSelect");
+                                                                                multiselect.bind("change", OnChangeFeedCatNameList);
+                                                                            });
+                                                                        </script>
+
+                                                                        <span class="validation-message-color" id="spnMainFishNameList"><span class="ln-bangla">মূলত খাদ্যের ধরন নিশ্চিত করুন</span></span>
+                                                                    </div>
+                                                                </div>
+
+                                                                @for (var cat = 0; cat < ViewBag.AllFeedCategory[item].Count; cat++)
+                                                                {
+                                                                    var data = ViewBag.AllFeedCategory[item];
+                                                                    <div class="col-md-12 no-padding dummy_allFeedCatName_@ViewBag.FeedList[item].ID" id="dummy_toggle_CatMaper_@data[cat].FeedCategoryId" style="display: none;">
+                                                                        @Html.HiddenFor(m => m.feedMapperTable[cat].FeedDistributionFeedIdReportMapperId, new { Value = ViewBag.AllFeedCategory[item] })
+                                                                        <div class="col-md-12 hidden">
+                                                                            @data[cat].FeedCategoryId;
+                                                                        </div>
+                                                                        <div class="col-md-12 margin-top-10 margin-bottom-20">
+                                                                            <span style="color: brown" >@data[cat].FeedCategoryName </span>
+                                                                        </div>
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-bangla">বস্তার সংখ্যা</span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.feedMapperTable[cat].FeedDistributionSakNumber)
+                                                                        .Format("#0.0 টা")
+                                                                        .Events(e => e
+                                                                             .Change("DoCalculationSackWeight")
+                                                                             .Spin("DoCalculationSackWeight")
+                                                                        )
+                                                                        .Min(0)
+                                                                        .Max(99999999)
+                                                                        .Step(1)
+                                                                        .Placeholder("0.0 টা")
+                                                                        .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumCatSack_" + data[cat].FeedCategoryId, catid= data[cat].FeedCategoryId })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">বস্তার সংখ্যা নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-bangla">পরিমান</span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.feedMapperTable[cat].FeedDistributionQuantityId)
+                                                                        .Format("#.00 কেজি")
+                                                                        .Events(e => e
+                                                                             .Change("DoCalculationSackWeight")
+                                                                             .Spin("DoCalculationSackWeight")
+                                                                        )
+                                                                        .Min(0)
+                                                                        .Max(99999999)
+                                                                        .Step(1)
+                                                                        .Placeholder("0.00 কেজি")
+                                                                        .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumCatQT_" + data[cat].FeedCategoryId, catid = data[cat].FeedCategoryId })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">পরিমান নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                            <label class="control-label col-md-4">
+                                                                                <span class="ln-bangla">ওজন</span>
+                                                                            </label>
+                                                                            <div class="col-md-8">
+                                                                                @(Html.Kendo().NumericTextBoxFor(m => m.feedMapperTable[cat].FeedDistributionTotalWeight)
+                                                                        .Format("#.00 কেজি")
+                                                                        .Min(0)
+                                                                        .Max(99999999)
+                                                                        .Step(1)
+                                                                        .Placeholder("0.00 কেজি")
+                                                                        .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumCatTotalWt_" + data[cat].FeedCategoryId, catid = data[cat].FeedCategoryId, @readonly = "true" })
+                                                                                )
+                                                                                <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">ওজন নির্ধারণ করুন</span></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                    }
+
+
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/FeedDistribute" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoThisFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function DoThisFormValidation() {
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage,.validation-message-color").hide();
+
+        var isFormValid = true;
+        var sellDate = $("#txtClnDistributionDate").data("kendoDatePicker").value();
+        var multiSelectVal = $("#cmbFeedNameId").data("kendoMultiSelect").value();
+        var totalFeed=$("#txtNumFeedTotalWeight").data("kendoNumericTextBox").value();
+
+        if (sellDate) {
+            var dateString = kendo.toString(new Date(sellDate), "MM/dd/yyyy");
+            $("#hdnFeedDistributionDate").val(dateString);
+        } else {
+            $("#hdnFeedDistributionDate").val("");
+        }
+        var dateText = $.trim($("#hdnFeedDistributionDate").val());
+
+
+
+        if (multiSelectVal == "" || multiSelectVal.length <= 0) {
+            isFormValid = false;
+            $("#spnMainFeedNameList").css({ "display": "block"});
+        }
+
+        //if (typeof totalFeed === 'undefined' || totalFeed == null || totalFeed <= 0) {
+        //    isFormValid = false;
+        //    $($.trim("#txtNumFeedTotalWeight")).closest("div").find('span').css("display", "block");
+        //}
+
+
+        if (typeof dateText === 'undefined' || dateText == "") {
+            isFormValid = false;
+            $("#spnDistributionDate").css("display", "block");
+        }
+
+        if (isFormValid == true) {
+
+            var isReturn = DoValidationForEveryFeedName();
+
+            if (isReturn == false) {
+                ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, আপনি নির্ধারিত সব হিসাব সম্পূর্ণ করেন নাই!", "warning");
+            }
+
+            isFormValid = isReturn;
+
+        }
+
+
+        if (isFormValid == true) {
+
+            ShowAjaxNotificationMessage("দুঃখিত", "এখনো সম্পূর্ণ কাজ শেষ হই নাই এই সপ্তাহ হবে!", "warning");
+
+            //ShowAjaxNotificationMessage("প্রসেসিং", "<img src='" + domainURL + "/images/loading-indicator.gif' draggable='false' class='disable-image' /> ", "success");
+            //$(".k-button-icon.k-window-action").css({ "display": "none" });
+
+            //DoAllCalculationCheck();
+        }
+
+        
+        return false;
+    }
+
+    function DoValidationForEveryFeedName() {
+    
+        var isThisFeedValid = true;
+        var multiSelectVal = $("#cmbFeedNameId").data("kendoMultiSelect").value();
+        for (var i = 0; i < multiSelectVal.length; i++) {
+            var feedValue = multiSelectVal[i];
+           
+            var catValue=$("#cmbTxtFeedCat"+feedValue).data("kendoMultiSelect").value();
+            if (catValue == "" || catValue.length <= 0) {
+                isThisFeedValid = false;
+                $("#cmbTxtFeedCat"+feedValue).closest("div").find('span').css("display", "block");
+            }else{
+                for (j = 0; j < catValue.length; j++) {
+
+                    var catSack = $("#txtNumCatSack_"+catValue[j]).data("kendoNumericTextBox").value();
+                    if (typeof catSack === 'undefined' || catSack == null || catSack <= 0) {
+                        isThisFeedValid = false;
+                        $("#txtNumCatSack_"+catValue[j]).closest("div").find('span').css("display", "block");
+                    }
+
+                    var qtCat = $("#txtNumCatQT_"+catValue[j]).data("kendoNumericTextBox").value();
+                    if (typeof qtCat === 'undefined' || qtCat == null || qtCat <= 0) {
+                        isThisFeedValid = false;
+                        $("#txtNumCatQT_"+catValue[j]).closest("div").find('span').css("display", "block");
+                    }
+
+                    var wt = $("#txtNumCatTotalWt_"+catValue[j]).data("kendoNumericTextBox").value();
+                    if (typeof wt === 'undefined' || wt == null || wt <= 0) {
+                        isThisFeedValid = false;
+                       $("#txtNumCatTotalWt_"+catValue[j]).closest("div").find('span').css("display", "block");
+                    }
+                }
+            }
+        }
+
+        return isThisFeedValid;
+    }
+
+
+    var feedId;
+    var feedListComboBox;
+    var feedCategoryList;
+    var feedWeightPerSackList;
+    var distributionDatePicker;
+    var sackNumberPicker;
+    var totalWeightPicker;
+    $(document).ready(function () {
+        $(".dummy_default_0").val("5");
+        $("#lstFeedDistributeLink").addClass("active");
+
+    });
+
+
+    function DoCalculationSackWeight(e){
+       
+        var elem = e.sender.element[0];
+        var feedId=$(elem).attr("catid");
+        var sackNumber = $("#txtNumCatSack_"+feedId).data("kendoNumericTextBox").value();
+        var sackQT = $("#txtNumCatQT_"+feedId).data("kendoNumericTextBox").value();
+        var totalWtThisCat = $("#txtNumCatTotalWt_"+feedId).data("kendoNumericTextBox");
+
+        if(sackNumber && sackQT){
+            var total=(sackNumber*sackQT);
+            totalWtThisCat.value(total);
+        }else{
+            totalWtThisCat.value("0");
+        }
+
+        CalculateTotalWeight();
+    }
+
+
+    function CalculateTotalWeight(){
+        var feedValue= $("#cmbFeedNameId").data("kendoMultiSelect").value();
+        var totalWt=0;
+
+        for (i = 0; i < feedValue.length; i++) {
+            var catValue=$("#cmbTxtFeedCat"+feedValue[i]).data("kendoMultiSelect").value();
+            for (j = 0; j < catValue.length; j++) {
+                var wt = $("#txtNumCatTotalWt_"+catValue[j]).data("kendoNumericTextBox").value();
+                if(wt){
+                    totalWt +=wt;
+                }
+            }
+        }
+
+        $("#txtNumFeedTotalWeight").data("kendoNumericTextBox").value(totalWt);
+    }
+
+
+
+
+    
+    function OnChangeFeedCatNameList(e) {
+        
+        var value = this.value();
+        var elem = e.sender.element[0];
+        var elem_id=$(elem).attr("id");
+        var toggle_class=$(elem).attr("toggle");
+        var feedId=$(elem).attr("feedid");
+        $("."+toggle_class).hide();
+        var idList = $.trim($("#dummy_FeedNameIdListString"+feedId).val());
+
+        for (var i = 0; i < value.length; i++) {
+            $("#dummy_toggle_CatMaper_" + value[i]).show();
+        }
+        
+        var removeId = IsCatIdExistInCurrentList(feedId,elem_id);
+        if (removeId > 0) {
+            $($.trim("#txtNumCatSack_" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumCatQT_" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumCatTotalWt_" + removeId)).data("kendoNumericTextBox").value("");
+        }
+
+        $("#dummy_FeedNameIdListString"+feedId).val(value);
+    }
+
+    function IsCatIdExistInCurrentList(feedId,elem_id) {
+        var idList = $.trim($("#dummy_FeedNameIdListString"+feedId).val());
+        var returnFalue = 0;
+        if (idList != "") {
+            var arrayList = idList.split(",");
+            for (index = 0; index < arrayList.length; index++) {
+                var moveId = CheckNewChangeExistInThisCat(arrayList[index],elem_id);
+                if (moveId > 0) {
+                    returnFalue = moveId;
+                }
+            }
+        }
+        return returnFalue;
+    }
+
+    function CheckNewChangeExistInThisCat(loopValue,elem_id) {
+        var value = $("#"+elem_id).data("kendoMultiSelect").value();
+        var returnID = loopValue;
+        for (var i = 0; i < value.length; i++) {
+            if (value[i] == loopValue) {
+                returnID = 0;
+            }
+        }
+        return returnID;
+    }
+
+
+
+    function OnChangeFeedNameList(e) {
+        var value = this.value();
+        $(".dummy_all_feedNameData").hide();
+        var idList = $.trim($("#dummy_FeedIdListString").val());
+
+        for (var i = 0; i < value.length; i++) {
+            $("#dummy_feeName_" + value[i]).show();
+        }
+
+        var removeId = IsFeedIdExistInCurrentList();
+        if (removeId > 0) {
+            var catValue = $("#cmbTxtFeedCat" + removeId).data("kendoMultiSelect").value();
+            for (var i = 0; i < catValue.length; i++) {
+                $("#dummy_toggle_CatMaper_" + catValue[i]).hide();
+                var catRemoveId = catValue[i];
+                if (catRemoveId > 0) {
+                    $($.trim("#txtNumCatSack_" + catRemoveId)).data("kendoNumericTextBox").value("");
+                    $($.trim("#txtNumCatQT_" + catRemoveId)).data("kendoNumericTextBox").value("");
+                    $($.trim("#txtNumCatTotalWt_" + catRemoveId)).data("kendoNumericTextBox").value("");
+                    $("#dummy_FeedNameIdListString"+catRemoveId).val("");
+                }
+            }
+            
+            $("#cmbTxtFeedCat" + removeId).data("kendoMultiSelect").value("");
+        }
+
+        $("#dummy_FeedIdListString").val(value);
+
+        CalculateTotalWeight();
+    }
+
+    function IsFeedIdExistInCurrentList() {
+        var idList = $.trim($("#dummy_FeedIdListString").val());
+
+        var returnFalue = 0;
+        if (idList != "") {
+            var arrayList = idList.split(",");
+            for (index = 0; index < arrayList.length; index++) {
+                var moveId = CheckNewChangeExist(arrayList[index]);
+                if (moveId > 0) {
+                    returnFalue = moveId;
+                }
+            }
+        }
+        return returnFalue;
+    }
+
+    function CheckNewChangeExist(loopValue) {
+        var value = $("#cmbFeedNameId").data("kendoMultiSelect").value();
+        var returnID = loopValue;
+        for (var i = 0; i < value.length; i++) {
+            if (value[i] == loopValue) {
+                returnID = 0;
+            }
+        }
+        return returnID;
+    }
+
+</script>

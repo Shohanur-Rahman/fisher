@@ -1,0 +1,66 @@
+﻿<html>
+<head>
+    <style type="text/css">
+        @page {
+            @top {
+                content: flow(header);
+            }
+
+            @bottom {
+                content: flow(footer);
+            }
+        }
+
+        header {
+            flow: static(header);
+        }
+
+        footer {
+            flow: static(footer);
+        }
+
+        hr {
+            page-break-after: always;
+        }
+
+        #contentPageCount {
+        display: table;
+       }
+
+     #divCurrentPageNumber {
+       display: table-footer-group;
+     }
+
+      #divCurrentPageNumber:after {
+       counter-increment: page;
+       content: counter(page);
+      }
+
+        #divTotalPageCount:after {
+            content: counter(pages);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="http://i.imgur.com/MtMwkBX.png" />
+    </header>
+    <footer>
+        <img src="http://i.imgur.com/ZZw85mx.png" />
+        
+        <div id="contentPageCount">
+            <div id="divCurrentPageNumber">Page: </div>
+            of
+
+            <div id="divTotalPageCount"></div>
+
+        </div>
+    </footer>
+    <p>This is the first page.</p>
+    <hr />
+    <p>This is the second page.</p>
+    <hr />
+    <p>This is the third page.</p>
+</body>
+</html>

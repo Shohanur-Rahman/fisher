@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ErrorPageLayout.cshtml";
+
+}
+<html lang="en">
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+
+
+    <div class=" ">
+
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content" style="min-height: 1434px;">
+
+
+                <!-- END PAGE HEADER-->
+                <div class="row">
+                    <div class="col-md-12 page-404" style="margin-top:15%">
+                        <div class="number font-green"> 404 </div>
+                        <div class="details">
+                            <h3>Oops! You're lost.</h3>
+                            <p>
+                                We can not find the page you're looking for.
+                            </p>
+                            <p>
+                                @using (Html.BeginForm("RedirectToDashboard", "Home", FormMethod.Post, new { role = "form", @autocomplete = "off" }))
+                                {
+                                    <a href="@ViewBag.PreviousPageURL" class="btn btn green btn-outline"> Return to Back </a>
+                                }
+                                <br />
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+
+    </div>
+
+
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var userIP;
+
+    $(document).ready(function () {
+        $('#clickmewow').click(function () {
+            $('#radio1003').attr('checked', 'checked');
+        });
+
+        setTimeout(function () {
+            $(".k-input, input").attr("autocomplete", "nope");
+        }, 500);
+
+        addToHomescreen();
+        GetClientIPAddress();
+    })
+
+    function GetClientIPAddress() {
+        $.get("https://ipinfo.io", function (response) {
+            userIP = response.ip;
+        }, "jsonp");
+    }
+
+    function ValidateIPBlock() {
+
+        var isValid = false;
+        if (userIP != null) {
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "/SignUp/CheekIfUserIPIsBlocked",
+                data: { ip: userIP },
+                success: function (data) {
+
+                    if (data.result == true) {
+
+                    }
+                    else
+                    { isValid = true; }
+                },
+                error: function (e) {
+                    //alert("failed");
+                }
+            });
+
+        }
+        return isValid;
+    }
+
+</script>

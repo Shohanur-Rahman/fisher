@@ -1,0 +1,272 @@
+﻿@using Services.Domain.Models.User.EditorModel
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Chabagan Fishing | A Model Fish House";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="login-layout">
+
+    <div class="login-area @ViewBag.ErrorClass">
+        <div class="login-content login-content-responsive">
+            @if (TempData["Message"] != null)
+            {
+                <div class="row alert alert-success alert-dismissable" style="margin-right: 0;">
+                    <button class="close" data-close="alert" onclick="RemoveErrorClassFromContainer();"></button>
+                    <strong></strong>@TempData["Message"]
+                </div>
+
+            }
+
+            @if (ViewBag.LoginFailed != null)
+            {
+                <div class="row alert alert-danger alert-dismissable" style="margin-right: 0;">
+                    <button class="close" data-close="alert"></button>
+                    <strong></strong>@ViewBag.LoginFailed
+                </div>
+
+            }
+
+                    @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+                    {
+                        @Html.HiddenFor(m => m.CookieUserId, new { @id = "CookieUserId" })
+                        @Html.HiddenFor(m => m.UserIP, new { @id = "UserIP" })
+                        if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="row alert alert-danger" style="margin-right: 0;">
+                                <button class="close" data-close="alert"></button>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger login-danger-message" })
+                            </div>
+                        }
+                        <div class="row" style="margin: 0px;">
+                            <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;">
+                                <img src="~/assets/layouts/layout2/img/logo-default.png" class="img-responsive" />
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control form-group", @placeholder = "ই-মেইল", @required = "required", title = "আপনার ই-মেইল দিন", @value = "" })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control form-group", @placeholder = "পাসওয়ার্ড", @required = "required", title = "আপনার পাসওয়ার্ড দিন", @type = "password", @value = "" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn green col-xs-12" type="submit" id="btnSignIn">প্রবেশ করুন</button>
+                                <button type="reset" value="Reset" class="dummy_Reset" style="display: none;">Reset</button>
+                            </div>
+                        </div>
+                    }
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--
+<div class="user-login-5">
+    <div class="row bs-reset">
+        <div class="col-md-6 bs-reset hidden-lg">
+            <div class="login-bg"> </div>
+        </div>
+
+        <div class="col-sm-5 login-container bs-reset">
+
+            <div class="login-content login-content-responsive">
+
+
+                @if (TempData["Message"] != null)
+                {
+                    <div class="row alert alert-success alert-dismissable" style="margin-right: 0;">
+                        <button class="close" data-close="alert"></button>
+                        <strong></strong>@TempData["Message"]
+                    </div>
+
+                }
+
+                @if (ViewBag.LoginFailed != null)
+                {
+                    <div class="row alert alert-danger alert-dismissable" style="margin-right: 0;">
+                        <button class="close" data-close="alert"></button>
+                        <strong></strong>@ViewBag.LoginFailed
+                    </div>
+
+                }
+
+                <div class="row">
+                    <h1>Login and Create</h1>
+                </div>
+                <div class="row">
+                    <p>Fish, Feed, Project, Area</p>
+                </div>
+
+                @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+
+                {
+                    @Html.HiddenFor(m => m.CookieUserId, new { @id = "CookieUserId" })
+                    @Html.HiddenFor(m => m.UserIP, new { @id = "UserIP" })
+                    if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="row alert alert-danger" style="margin-right: 0;">
+                            <button class="close" data-close="alert"></button>
+                            @Html.ValidationSummary(true, "", new {@class = "text-danger login-danger-message"})
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-xs-6 right-pad0" style="padding-right: 0px">
+                            @Html.TextBoxFor(m => m.UserName, new {@class = "form-control form-group", @placeholder = "Username" , @required="required", title="Username is required" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new {@class = "text-danger"})
+                        </div>
+                        <div class="col-xs-6 right-pad0" style="padding-right: 0px">
+                            @Html.PasswordFor(m => m.Password, new {@class = "form-control form-group", @placeholder = "Password", @required = "required", title = "Password is required", @type = "password" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-12" style="margin-left: -15px;">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                        <div class="col-sm-12 text-right responsive-left-side" style="margin-left: 15px;">
+                            <a href="~/Login/ForgotPassword" id="forget-password" class="forget-password" style="margin-right: -4px;">Can’t access your account?</a>
+                            <br />
+                            <a href="~/Login/AccountVerification" id="forget-password" class="forget-password">Re-send Account Verification</a>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-12 text-right responsive-left-side">
+                            <button class="btn green" type="submit" id="btnSignIn">Sign In</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <!--
+
+                <div class="login-footer ">
+                <div class="row bs-reset">
+                    <div class="col-xs-5 bs-reset">
+                        <ul class="login-social">
+                            <li>
+                                <a href="https://www.facebook.com/ramsapp/" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_facebook.png" />*@
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                    @*<i class="icon-social-facebook"></i>*@
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/company/18112592/" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_linkedin.png" />*@
+                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/rams_app" target="_blank">
+                                    @*<img src="~/assets/pages/media/email/social_twitter.png" />*@
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                    @*<i class="icon-social-twitter"></i>*@
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-7 bs-reset">
+                        <div class="login-copyright text-right login-copyright-section">
+                            <p class="">Copyright &copy; RAMs App @DateTime.Now.Year</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7 bs-reset hidden-sm hidden-md hidden-xs">
+            <div class="login-bg"> </div>
+            @*<div style="position: fixed; z-index: -99; width: 87.5%; height: 100%;">
+                <iframe frameborder="0" height="100%" width="100%"
+                        src="https://www.youtube.com/embed/4JC0SsP8JWA?autoplay=1&loop=1&showinfo=0&controls=0&rel=0&mute=1&playlist=4JC0SsP8JWA&amp;theme=light" allow="autoplay; encrypted-media"></iframe>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+-->
+
+<script type="text/javascript">
+
+    $("#CookieUserId").val('0');
+    $("#UserIP").val('');
+
+    $(document).ready(function () {
+        $(".dummy_Reset").click();
+        document.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                $("#btnSignIn").click();
+                return false;
+            }
+        }
+        GetuserIdfromCokie();
+        GetClientIPAddress();
+    });
+
+
+    function RemoveErrorClassFromContainer() {
+        $(".login-area").removeClass("error-content");
+    }
+
+    function GetuserIdfromCokie() {
+
+        var key, value, i;
+        var cookieArray = document.cookie.split(';');
+
+        for (i = 0; i < cookieArray.length; i++) {
+            key = $.trim(cookieArray[i].substr(0, cookieArray[i].indexOf("=")));
+            value = cookieArray[i].substr(cookieArray[i].indexOf("=") + 1);
+
+            if (key == 'UserId') {
+                $("#CookieUserId").val(value);
+            }
+        }
+    }
+
+    function GetClientIPAddress() {
+        $.get("https://ipinfo.io", function (response) {
+            $("#UserIP").val(response.ip);
+            CheekIfUserIPIsBlocked();
+        }, "jsonp");
+    }
+    function CheekIfUserIPIsBlocked() {
+        var userIp = $.trim($("#UserIP").val());
+        if (userIp != null) {
+
+            $.ajax({
+                type: "GET",
+                url: "/SignUp/CheekIfUserIPIsBlocked",
+                data: { ip: userIp },
+                success: function (data) {
+
+                    //if (data.result == true) {
+                    //    if (data.RedirectUrl != null && data.RedirectUrl != "") {
+
+                    //        var prefix = 'http://';
+                    //        if (data.RedirectUrl.substr(0, prefix.length) !== prefix) {
+                    //            data.RedirectUrl = prefix + data.RedirectUrl;
+                    //        }
+                    //        window.location.href = data.RedirectUrl;
+                    //    }
+                    //    else { window.location.href = 'https://www.google.com/'; }
+
+                    //}
+                },
+                error: function (e) {
+                    //alert("failed");
+                }
+            });
+        }
+
+
+    }
+</script>

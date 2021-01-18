@@ -1,0 +1,2 @@
+1=> Feed Id nia aste hobe add e
+2=> FeedDistribution feedcategory multiselect add korte hobe

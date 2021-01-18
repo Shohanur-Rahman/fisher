@@ -1,0 +1,328 @@
+﻿@using Services.Domain.CostReport
+@model CostReportDomains
+@{
+    ViewBag.Title = "AddCost";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar">
+            <ul class="page-breadcrumb wow fadeInUp animated">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/Dashboard"><span class="ln-english">Dashboard</span><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/CostReport"><span class="ln-english">Area</span><span class="ln-bangla">খরচ</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-bangla">নতুন খরচ যুক্ত করুন </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+
+                        <div class="div-add-logo-header wow fadeInUp animated">
+                            <span class="spn-add-logo-title"><span class="ln-english">Area Image</span><span class="ln-bangla">প্রকল্পের ছবি</span></span>
+                        </div>
+
+                        <div class="profile-userpic wow fadeInUp animated">
+
+                            @{
+                                var imageURL = "/rams-logo.png";
+                                var imageTitle = "rams-logo.png";
+                            }
+
+                            <div class="dummy_UserImageContainerDiv wow fadeInUp animated">
+                                <img src="@Url.Content("~/assets/global/img/rams-logo.jpeg")" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo" title="@imageTitle">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            <div class="col-sm-12 wow fadeInUp animated">
+                                <div>
+                                    <br />
+                                    @using (Html.BeginForm("UploadFishImage", "CostReport", FormMethod.Post, new { @class = "form-horizontal", id = "frmC", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                    {
+                                        @(Html.Kendo().Upload()
+                                                        .Name("files")
+                                                        .Async(a => a
+                                                            .Save("UploadFishImage", "CostReport")
+                                                            .AutoUpload(true)
+                                                        )
+                                                        .Multiple(false)
+                                                        .DropZone("CompanyAdminImageUploader")
+                                                        .Events(events => events
+                                                        .Select("onSelect")
+                                                        .Success("onSuccess")
+                                                        .Error("OErrorHandle")
+                                                        )
+                                                        .Messages(mess => mess.Select("প্রকল্পের ছবি যুক্ত করুন"))
+                                                        .HtmlAttributes(new { id = "CompanyAdminUploader_UP" })
+                                                        .Validation(validation =>
+                                                        {
+                                                            validation.AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif" });
+                                                            validation.MaxFileSize(512000);//500KB max
+                                                        })
+                                        )
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="profile-userbuttons" style="display:inline-block;">
+
+                        </div>
+
+                        <div class="profile-usermenu wow fadeInUp animated">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> <span class="ln-english">New Area Segment Create</span><span class="ln-bangla">নতুন খরচ যুক্ত করুন</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase"><span class="ln-english">Create New Area Item</span><span class="ln-bangla">নতুন প্রকল্প যুক্ত করুন</span></span>
+
+
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("AddCostName", "CostReport", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+
+                                                    @Html.HiddenFor(m => m.costExpandTable.ImageUrl, new { id = "dummy_userImagePath" })
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-bangla">খরচের নাম </span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(m => m.costExpandTable.Name, new { @class = "form-control", id = "FishName", autocomplete = "off", vldid = "#spnFishName" })
+                                                            <span class="validation-message-color" id="#spnFishName"><span class="ln-bangla">খরচের নাম লিখুন</span></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-bangla">খরচের বর্ণনা</span>
+                                                        </label>
+                                                        <div class="col-md-8">
+
+                                                            @(Html.Kendo().EditorFor(m => m.costExpandTable.Description)
+                                                             .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "FishDetails" })
+                                                             .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                                             .Tools(tools => tools.Clear()
+                                                             .InsertUnorderedList()
+                                                             .Bold().Italic().Underline()
+                                                             .InsertOrderedList().CreateLink()
+                                                             ))
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/CostReport" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("li#listLinkCostReport").addClass("active");
+        $("#divCompany").addClass("active");
+
+        $(".k-upload-button").removeClass("k-button");
+        $(".k-upload-button").addClass("btn btn-circle green btn-sm");
+
+
+        OnchangeInputControl();
+
+
+    });//end document ready
+
+
+    function OnchangeInputControl() {
+        $('input[type=text]').on("keyup", function (e) {
+            var date = $(this).attr('isNotTextField');
+            if (typeof date === 'undefined' || date == "false") {
+                var id = $(this).attr('id');
+                var value = $(this).val();
+                if (value != null && value != "") {
+
+                    $(this).closest("div").find('span').css("display", "none");
+                }
+                else {
+                    $(this).closest("div").find('span').css("display", "block");
+                }
+
+            }
+
+
+        });
+
+    }
+
+
+
+    function addPreview(file) {
+        var raw = file.rawFile;
+        var reader = new FileReader();
+
+        if (raw) {
+            reader.onloadend = function () {
+                var preview = $("<img class='image-preview img-responsive dummy_divUplodedUserImg'>").attr("src", this.result);
+                $(".dummy_UserImageContainerDiv").html(preview);
+                $('#divDefaultUploadedUserImg').hide();
+            };
+            reader.readAsDataURL(raw);
+        }
+    }
+
+
+    function onSelect(e) {
+
+        $("#divForProfileImageValidation").hide();
+        var files = e.files;
+
+        var fullImageName = e.files["0"].name;
+        var imageExtension = e.files["0"].extension;
+        var exactImageName = fullImageName.replace(imageExtension, "");
+        var fileInfo = e.files[0];
+        setTimeout(function () {
+            addPreview(fileInfo);
+        });
+
+        $.each(files, function () {
+            if (this.size > 512000 && exactImageName.length > 90) {
+
+                //image & name validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB in size and 90 characters name are allowed for company logo.");
+                $('#divForProfileImageValidation').show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size > 512000 && exactImageName.length <= 90) {
+
+                //image validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB image allowed for company logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size <= 512000 && exactImageName.length > 90) {
+
+                //name validation
+                $('#ProfileImageValidationMessage').text("Maximum 90 characters name allowed for company logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+        });
+    }
+
+    function OErrorHandle(e) {
+        try {
+            if (e.XMLHttpRequest.status == 200) {
+                $(".k-upload-files.k-reset").remove();
+            }
+
+            if (e.XMLHttpRequest.response) {
+                $("#dummy_userImagePath").val(e.XMLHttpRequest.response);
+
+            }
+
+        } catch (err) {
+
+        }
+    }
+
+    function onSuccess(e) {
+        try {
+            if (typeof e.response.DynamicHtml !== 'undefined' && e.response.DynamicHtml != null) {
+                setTimeout(function () {
+                    $('#divDefaultUploadedUserImg').hide();
+                }, 4000);
+            }
+        }
+        catch (err) {
+
+        }
+    }
+
+
+    function DoFormValidation() {
+
+        var isAllValid = true;
+        var fishName = $.trim($("#FishName").val());
+
+        $(".dummy_fields_error_msg").hide();
+        if (typeof fishName === 'undefined' || fishName == "") {
+            isAllValid = false;
+            $("#FishName").closest("div").find('span').css("display", "block");
+        }
+
+
+        return isAllValid;
+
+    }
+
+
+</script>
+
+

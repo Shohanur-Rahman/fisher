@@ -1,0 +1,359 @@
+﻿@using Services.Domain.Accounts.Models.FarmRents
+@model FarmRentsCostsTableDomain
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/Dashboard"><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/FarmRentals"><span class="ln-bangla">খামার ভাড়ার হিসাব</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+
+                        <div class="div-add-logo-header wow fadeInUp animated">
+                            <span class="spn-add-logo-title"><span class="ln-english">Area Image</span><span class="ln-bangla">হিসাবের ছবি</span></span>
+                        </div>
+
+                        <div class="profile-userpic wow fadeInUp animated">
+
+                            <div class="dummy_UserImageContainerDiv">
+                                <img src="@Url.Content("~/assets/global/img/rams-logo.jpeg")" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo">
+                            </div>
+
+                        </div>
+
+                        <div class="profile-usermenu wow fadeInUp animated">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a style="cursor:default !important" href="javascript:;">
+                                        <i class="icon-settings"></i> <span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12 portlet light">
+                            <div class="portlet light right-panelbar">
+                                <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase"><span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span></span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        @using (Html.BeginForm("AddFarmRentReport", "FarmRentals", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+                                                    @Html.HiddenFor(m => m.farmRentsCostsTable.FarmRentalReportID, new { @class = "dummy_default_0" })
+                                                    @Html.HiddenFor(m => m.farmRentsCostsTable.ProjectId, new { Value = ViewBag.ProjectId })
+                                                    @Html.HiddenFor(m => m.farmRentsCostsTable.AreaId, new { Value = ViewBag.AreaId })
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">জমির পরিমান</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.farmRentsCostsTable.FarmRentalLandAmount)
+                                                            .Format("#.00 শতাংশ")
+                                                            .Events(e => e
+                                                                 .Change("OnChangeCalculateTotalPrice")
+                                                                 .Spin("OnChangeCalculateTotalPrice")
+                                                            )
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 শতাংশ")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFarmRentalLandAmount" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">জমির পরিমান নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">সার্ভিস চার্জ</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.farmRentsCostsTable.FarmRentalServieFee)
+                                                            .Format("#.00 টাকা")
+                                                            .Events(e => e
+                                                                 .Change("OnChangeCalculateTotalPrice")
+                                                                 .Spin("OnChangeCalculateTotalPrice")
+                                                            )
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFarmRentalServieFee" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">সার্ভিস চার্জ নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">প্রকৃত ভাড়া</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.farmRentsCostsTable.FarmRentalMainFee)
+                                                            .Format("#.00 টাকা")
+                                                            .Events(e => e
+                                                                 .Change("OnChangeCalculateTotalPrice")
+                                                                 .Spin("OnChangeCalculateTotalPrice")
+                                                            )
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFarmRentalMainFee" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">প্রকৃত ভাড়া নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">সর্বমোট ভাড়া</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.farmRentsCostsTable.FarmRentalTotalFee)
+                                                            .Format("#.00 টাকা")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFarmRentalTotalFee", @readonly = "true" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">সর্বমোট ভাড়া নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">প্রতি শতাংশে ভাড়া</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().NumericTextBoxFor(m => m.farmRentsCostsTable.FarmRentalCostPerAmount)
+                                                            .Format("#.00 টাকা")
+                                                            .Min(0)
+                                                            .Max(99999999)
+                                                            .Step(1)
+                                                            .Placeholder("0.00 টাকা")
+                                                            .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumFarmRentalCostPerAmount", @readonly = "true" })
+                                                            )
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">প্রতি শতাংশে ভাড়া নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Area Name</span><span class="ln-bangla">তারিখ</span> <span class="required" aria-required="true"> * </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().DatePicker()
+                                                              .Name("SellDate")
+                                                              .Format("dd/MM/yyyy")
+                                                              .Value(DateTime.Now)
+                                                              .Max(DateTime.Now)
+                                                              .HtmlAttributes(new { style = "width: 100%", id = "txtClnSellDate" })
+                                                            )
+                                                            @Html.HiddenFor(m => m.farmRentsCostsTable.FarmRentalDate, new { id = "hdnSellDate" })
+                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">তারিখ নির্ধারণ করুন</span></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                        <label class="control-label col-md-4">
+                                                            <span class="ln-english">Time</span><span class="ln-bangla">বিবরণ </span>
+                                                        </label>
+                                                        <div class="col-md-8">
+                                                            @(Html.Kendo().EditorFor(m => m.farmRentsCostsTable.FarmRentalDetails)
+                                                             .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                                             .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                                             .Tools(tools => tools.Clear()
+                                                             .InsertUnorderedList()
+                                                             .Bold().Italic().Underline()
+                                                             .InsertOrderedList().CreateLink()
+                                                             ))
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/FarmRentals" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoThisFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- END PROFILE CONTENT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var ProjectNameListComboBox;
+    var LandAmountPicker;
+    var servieCostPicker;
+    var mainCosttPicker;
+    var totalCostPicker;
+    var costPerAmountPicker;
+    var sellDatePicker;
+    $(document).ready(function () {
+        $("#listLinkFarmeRants").addClass("active");
+        $(".dummy_default_0").val("5");
+        LandAmountPicker = $("#txtNumFarmRentalLandAmount").data("kendoNumericTextBox");
+        servieCostPicker = $("#txtNumFarmRentalServieFee").data("kendoNumericTextBox");
+        mainCosttPicker = $("#txtNumFarmRentalMainFee").data("kendoNumericTextBox");
+        totalCostPicker = $("#txtNumFarmRentalTotalFee").data("kendoNumericTextBox");
+        costPerAmountPicker = $("#txtNumFarmRentalCostPerAmount").data("kendoNumericTextBox");
+        sellDatePicker = $("#txtClnSellDate").data("kendoDatePicker");
+
+        ProjectNameListComboBox = $("#txtCmbProjectNameList").data("kendoComboBox");
+        ProjectNameListComboBox.bind("change", function () {
+       
+            if ((ProjectNameListComboBox.selectedIndex === -1 && ProjectNameListComboBox.value()) || ProjectNameListComboBox.value() == "") {
+                $("#divDefaultUploadedUserImg").attr("src", "/assets/global/img/rams-logo.jpeg");
+            }
+            else {
+                var selectedItem = ProjectNameListComboBox.dataItem(ProjectNameListComboBox.select());
+                if (selectedItem) {
+                    $("#divDefaultUploadedUserImg").attr("src", "/" + selectedItem.ImageUrl);
+                }
+            }
+        });
+
+
+
+
+    });
+
+    function OnChangeCalculateTotalPrice() {
+        var land = LandAmountPicker.value();
+        var servie = servieCostPicker.value();
+        var main = mainCosttPicker.value();
+        
+        if (land != null && servie != null && main != null) {
+            var total = (servie + main);
+            var toFixedValue = total.toFixed(2);
+            totalCostPicker.value(toFixedValue);
+            var perArea = (total / land);
+            costPerAmountPicker.value(perArea.toFixed(2));
+        }
+    }
+
+
+    function DoThisFormValidation() {
+        var isFormValid = true;
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage,.validation-message-color").hide();
+
+        
+        var land = LandAmountPicker.value();
+        var service = servieCostPicker.value();
+        var cost = mainCosttPicker.value();
+        var totalCost = totalCostPicker.value();
+        var costPerArea = costPerAmountPicker.value();
+
+
+        var sellDate = sellDatePicker.value()
+        if (sellDatePicker && sellDate) {
+            var dateString = kendo.toString(new Date(sellDate), "MM/dd/yyyy");
+            $("#hdnSellDate").val(dateString);
+        } else {
+            $("#hdnSellDate").val("");
+        }
+
+        //var calcilationName = $.trim($("#txtFarmRentalReportName").val());
+        var dateText = $.trim($("#hdnSellDate").val());
+
+
+        //if (typeof calcilationName === 'undefined' || calcilationName == "") {
+        //    isFormValid = false;
+        //    $("#txtFarmRentalReportName").closest("div").find('span').css("display", "block");
+        //}
+
+        if (ProjectNameListComboBox.selectedIndex === -1 && ProjectNameListComboBox.value() || ProjectNameListComboBox.value() == "" || ProjectNameListComboBox.value() == null) {
+            isFormValid = false;
+            $("#txtCmbProjectNameList").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof land === 'undefined' || land == null || land <= 0) {
+            isFormValid = false;
+            $("#txtNumFarmRentalLandAmount").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof service === 'undefined' || service == null) {
+            isFormValid = false;
+            $("#txtNumFarmRentalServieFee").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof cost === 'undefined' || cost == null || cost <= 0) {
+            isFormValid = false;
+            $("#txtNumFarmRentalMainFee").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof totalCost === 'undefined' || totalCost == null || totalCost <= 0) {
+            isFormValid = false;
+            $("#txtNumFarmRentalTotalFee").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof costPerArea === 'undefined' || costPerArea == null || costPerArea <= 0) {
+            isFormValid = false;
+            $("#txtNumFarmRentalCostPerAmount").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof dateText === 'undefined' || dateText == "") {
+            isFormValid = false;
+            $("#txtClnSellDate").closest("div").find('span').css("display", "block");
+        }
+
+        return isFormValid;
+
+    }
+
+
+
+</script>

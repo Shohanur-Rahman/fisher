@@ -1,0 +1,151 @@
+﻿@using Services.Utilities;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>RAMs App | Error page</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta content="Chabagan Fishing - Create your business store" name="description" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    
+    <meta content="" name="author" />
+
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+
+
+    <link href="~/assets/global/css/addtohomescreen.css?v=@SiteSettings.UploadVersion" rel="stylesheet" />
+    <script src="~/assets/global/scripts/addtohomescreen.js?v=@SiteSettings.UploadVersion"></script>
+
+    <link href="~/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
+
+
+    <link href="~/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="~/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/css/plugins.css" rel="stylesheet" />
+    
+
+    <!-- Kendo UI related css end-->
+
+
+    <link href="~/assets/layouts/layout2/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/layouts/layout2/css/themes/blue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="~/assets/layouts/layout2/css/custom.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/error.min.css" rel="stylesheet" />
+    <link href="~/assets/global/css/app.css?v=@SiteSettings.UploadVersion" rel="stylesheet" />
+    <link rel="shortcut icon" href="@Url.Content("~/16px.png")" />
+    
+    <link href="~/css/site.css?v=@SiteSettings.UploadVersion" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" type="text/javascript"></script>
+
+    <script src="~/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+
+
+    <script src="~/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js" type="text/javascript"></script>
+
+    <script src="~/assets/global/scripts/app.min.js" type="text/javascript"></script>
+    <script src="~/assets/pages/scripts/form-wizard.min.js" type="text/javascript"></script>
+    
+    <!-- Kendo UI Related javascript file -->
+    @*<script src="~/lib/kendo-ui/js/kendo.all.min.js" type="text/javascript"></script>
+        <script src="~/lib/kendo-ui/js/kendo.aspnetmvc.min.js" type="text/javascript"></script>*@
+
+    <script src="~/Scripts/kendo/2018.1.221/kendo.all.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/kendo/2018.1.221/kendo.aspnetmvc.min.js" type="text/javascript"></script>
+    <!--- Kendo UI javascript section end-->
+
+    <script src="~/lib/user-dashboard/js/demo.min.js"></script>
+    <script src="~/lib/user-dashboard/js/layout.min.js"></script>
+    <script src="~/lib/user-dashboard/js/quick-nav.min.js"></script>
+    <script src="~/lib/user-dashboard/js/quick-sidebar.min.js"></script>
+
+ 
+</head>
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
+<div class="page-header navbar navbar-fixed-top">
+    <div class="page-header-inner ">
+        <div class="page-logo">
+            <a href="~/login" style="margin-top: -60px;">
+                <img src="~/assets/layouts/layout2/img/logo-default.png" alt="logo" class="logo-default header-logo-width" />
+            </a>
+            <div class="menu-toggler sidebar-toggler">
+            </div>
+        </div>
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+
+        <!-- END PAGE ACTIONS -->
+        <!-- BEGIN PAGE TOP -->
+        <div class="page-top">
+            <!-- BEGIN TOP NAVIGATION MENU -->
+            @*<div class="top-menu">
+                <ul class="nav navbar-nav pull-right" style="margin-top: 10px;">
+                    <li class="dropdown dropdown-user">
+                        <a href="~/Login/Index" style="font-size: 18px;">
+                            <i class="icon-key"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>*@
+        </div>
+    </div>
+</div>
+<div class="clearfix"> </div>
+<div class="page-container" style="margin-top: 68px;">
+    <div class="page-sidebar-wrapper">
+        <div class="page-sidebar navbar-collapse collapse">
+            <ul class="page-sidebar-menu  page-header-fixed page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                <li class="nav-item start active open">
+                    <a href="~/login" class="nav-link nav-toggle">
+                        <i class="icon-home"></i>
+                        <span class="title">প্রথম পাতা</span>
+                    </a>
+                </li>  
+                
+            </ul>
+        </div>
+    </div>
+
+    @RenderBody()
+    <div class="page-footer">
+        <div class="page-footer-inner">
+            
+            @{
+                var currentYear = DateTime.Now.Year;
+            }
+
+            @currentYear &copy; Chabagan Fishing
+            @*<a target="_blank" href="https://www.rams-app.co.uk/terms-and-conditions">Terms of Service</a> |
+            <a target="_blank" href="https://www.rams-app.co.uk/privacy-policy">Privacy Policy</a> | 
+            <a target="_blank" href="http://factionhsg.co.uk">Faction Health and Safety Group</a>*@
+            <div class="scroll-to-top">
+                <i class="icon-arrow-up"></i>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+@RenderSection("scripts", required: false)

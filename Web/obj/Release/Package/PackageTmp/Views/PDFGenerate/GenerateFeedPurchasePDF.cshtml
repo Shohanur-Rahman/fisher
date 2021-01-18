@@ -1,0 +1,163 @@
+﻿@using Services.Domain.FeedPurchase
+@using Web.AppCode;
+@model FeedPurchasePDFInfo
+@{
+    ViewBag.Title = "GenerateFeedPurchase";
+    Layout = null;
+}
+
+<style type="text/css">
+    body {
+        font-family: 'Play', sans-serif;
+        font-size: 12pt !important;
+        font-weight: normal !important;
+        background: #fff !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header-wraper {
+        display: block;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #32c5d2;
+    }
+
+    .left {
+        float: left;
+        width: 46%;
+        display: block;
+    }
+
+    .right {
+        display: block;
+        width: 45%;
+        float: right;
+        margin-right: 60px;
+    }
+
+    .sller-name {
+        background: #32c5d2;
+        padding: 8px 15px;
+        color: #fff;
+        text-transform: uppercase;
+        width: 100%;
+        display: block;
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+        .sller-name h1 {
+            margin: 0;
+        }
+
+    .repeat-report {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+    }
+
+    .full-row {
+        padding: 5px;
+        border-bottom: 1px dotted #32c5d2;
+        border-left: 1px solid #32c5d2;
+        border-right: 1px solid #32c5d2;
+    }
+
+        .full-row.first {
+            border-top: 1px solid #32c5d2;
+            border-bottom: 1px solid #32c5d2;
+        }
+
+        .full-row.last {
+            border-top: 1px solid #32c5d2;
+            border-bottom: 1px solid #32c5d2;
+        }
+
+    .one-five {
+        display: inline-block;
+        width: 15%;
+        text-align: left;
+        overflow: hidden;
+    }
+
+    .25px {
+        width: 25px;
+    }
+
+    .signatured {
+        width: 100%;
+        display: block;
+        overflow: hidden;
+    }
+
+    .signatured-caption {
+        padding: 50px 15px 8px;
+        border-bottom: 1px dotted #32c5d2;
+        width: 22%;
+        margin-bottom: 40px;
+    }
+</style>
+
+<body>
+    <header>
+        <div class="header-wraper">
+            <div class="left">
+                <strong style="display: block; font-weight: 700; margin-bottom: 15px; font-size: 50px;" class="company-name">নবীন ট্রেডার্স</strong>
+                <span style="display: block; margin-bottom: 6px;">
+                <span>@Model.FeedPurcaseTable.SellingReportName</span> <span>(@Model.FeedPurcaseTable.SellingFeedReportNumber)</span></span>
+                <span style="display: block; margin-bottom: 20px;">@Model.FeedPurcaseTable.SellingFeedCalculationDate.ToString("dd MMM yy")</span>
+            </div>
+
+            <div class="right">
+                <img src="~/assets/layouts/layout2/img/logo-default.png" style="max-width: 250px !important; max-height:140px !important; float: right;" />
+            </div>
+        </div>
+    </header>
+
+    <div class="sller-name">
+        <h1></h1>
+    </div>
+    <div class="repeat-report">
+        <div class="full-row first">
+            <div class="one-five">খাদ্যের নাম</div>
+            <div class="one-five">খাদ্যের ধরন</div>
+            <div class="one-five">খাদ্যের পরিমান (বস্তায়)</div>
+            <div class="one-five 25px">বস্তা</div>
+            <div class="one-five">ওজন</div>
+            <div class="one-five">মূল্য</div>
+        </div>
+
+        @for (var methodCount = 0; methodCount < Model.feedReportList.Count; methodCount++)
+            {
+            <div class="full-row">
+                <div class="one-five">@Model.feedReportList[methodCount].FeedName </div>
+                <div class="one-five">@Model.feedReportList[methodCount].CategoryName</div>
+                <div class="one-five">@Model.feedReportList[methodCount].FeedBagsWeight কেজি</div>
+                <div class="one-five 25px">@Model.feedReportList[methodCount].FeedTotalBags টা</div>
+                <div class="one-five">@Model.feedReportList[methodCount].TotalWeight কেজি</div>
+                <div class="one-five">@Model.feedReportList[methodCount].TotalPrice টাকা</div>
+            </div>
+        }
+
+        <div class="full-row last">
+            <div class="one-five">&nbsp;</div>
+            <div class="one-five">সম্পূর্ণ হিসাব</div>
+            <div class="one-five">@Model.totalReportEachItem.FeedBagsWeight কেজি</div>
+            <div class="one-five 25px">@Model.totalReportEachItem.FeedTotalBags টা</div>
+            <div class="one-five">@Model.totalReportEachItem.TotalWeight কেজি</div>
+            <div class="one-five">@Model.totalReportEachItem.TotalPrice টাকা</div>
+        </div>
+    </div>
+
+
+    <div class="signatured">
+        <div class="signatured-caption">
+            স্বাক্ষর
+        </div>
+
+    </div>
+
+</body>
+
+

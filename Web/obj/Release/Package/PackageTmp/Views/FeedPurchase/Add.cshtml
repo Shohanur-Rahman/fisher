@@ -1,0 +1,797 @@
+﻿@using Services.Domain.FeedPurchase
+@model FeedPurchaseTableDomain
+@{
+    ViewBag.Title = "Add";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+
+        <!-- BEGIN PAGE HEADER-->
+        <div class="page-bar wow fadeInUp animated">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="icon-home"></i>
+                    <a href="~/ProjectDashboard"><span class="ln-english">Dashboard</span><span class="ln-bangla">প্রথম পাতা</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="~/FeedPurchase"><span class="ln-english">Project</span><span class="ln-bangla">খাদ্য ক্রয়ের হিসাব</span></a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <span class="ln-english">Add New Project</span><span class="ln-bangla">নতুন হিসাব যুক্ত করুন </span>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="row operation-page">
+            @using (Html.BeginForm("AddFeedPurchaseReport", "FeedPurchase", FormMethod.Post, new { @class = "form-horizontal", id = "frmCreateFeed", role = "form", @autocomplete = "off", enctype = "multipart/form-data" }))
+            {
+                @*@Html.HiddenFor(m => m.FeedPurcaseTable.ProjectId, new { Value = ViewBag.ProjectId })
+                @Html.HiddenFor(m => m.FeedPurcaseTable.AreaId, new { Value = ViewBag.AreaId })*@
+
+                <div class="col-md-12">
+                    <div class="profile-sidebar">
+                        <div class="portlet light profile-sidebar-portlet wow fadeInUp animated ">
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">হিসাবের নাম</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.FeedPurcaseTable.SellingReportName, new { @class = "form-control", id = "txtSellingReportName", autocomplete = "off", })
+                                    <span class="validation-message-color" id="#spnSellingReportName"><span class="ln-bangla">হিসাবের নাম লিখুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">হিসাবের নং</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @Html.TextBoxFor(m => m.FeedPurcaseTable.SellingFeedReportNumber, new { @class = "form-control", id = "txtSellingFeedReportNumber", autocomplete = "off", })
+                                    <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">হিসাবের নং লিখুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">এলাকা/স্থান</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().MultiSelect()
+                                    .Name("cmbAreaNameIdList")
+                                    .DataTextField("Name")
+                                    .DataValueField("ID")
+                                    .HtmlAttributes(new { style = "width: 100%;", id = "cmbAreaNameIdList" })
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Action("GetAllAreaList", "CreateSegment");
+                                        });
+                                    })
+                                    .Events(e =>
+                                        {
+                                            e.Change("OnChangeAreaNameListMultiSelect");
+                                        })
+                                    )
+                                    @Html.HiddenFor(m => m.AreaIdListWithComma, new { id = "dummy_AreaIdListString" })
+                                    <span class="validation-message-color" id="spnMainFishNameList"><span class="ln-bangla">এলাকা/স্থান নিশ্চিত করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মোট ওজন</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurcaseTable.SellingFeedTotalWeight)
+                                    .Format("#.00 কেজি")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 কেজি")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalWeight", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট মুল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">মোট মুল্য</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurcaseTable.SellingFeedTotalPrice)
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalPrice", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট মুল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">তারিখ</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().DatePicker()
+                                        .Name("SellDate")
+                                        .Format("dd/MM/yyyy")
+                                        .Value(DateTime.Now)
+                                        .Max(DateTime.Now)
+                                        .HtmlAttributes(new { style = "width: 100%", id = "txtClnSellDate" })
+                                    )
+                                    @Html.HiddenFor(m => m.FeedPurcaseTable.SellingFeedCalculationDate, new { id = "hdnSellDate" })
+                                    <span class="validation-message-color" id="#spnFishSellingDate"><span class="ln-bangla">তারিখ নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">পরিশোধিত মূল্য</span> <span class="required" aria-required="true"> * </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurcaseTable.FeedAmountPaid)
+                                    .Events(e => e
+                                            .Change("OnChangeDoCalculationDueAmount")
+                                            .Spin("OnChangeDoCalculationDueAmount")
+                                    )
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAmountPaid" })
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">পরিশোধিত মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">বকেয়া মূল্য</span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurcaseTable.FeedAmountDue)
+                                    .Format("#.00 টাকা")
+                                    .Min(0)
+                                    .Max(99999999)
+                                    .Step(1)
+                                    .Placeholder("0.00 টাকা")
+                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumAmountToDue", @readonly = "true" })
+                                    )
+                                    <span class="validation-message-color" id="#spnPricePerKg"><span class="ln-bangla">বকেয়া মূল্য নির্ধারণ করুন</span></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                <label class="control-label col-md-12">
+                                    <span class="ln-bangla">নোট </span>
+                                </label>
+                                <div class="col-md-12">
+                                    @(Html.Kendo().EditorFor(m => m.FeedPurcaseTable.SellingFeedSellNote)
+                                     .HtmlAttributes(new { style = "width:100%;height:150px;", @class = "form-control", aria_label = "editor", id = "CompanyDetails" })
+                                     .Resizable(resizable => resizable.Content(false).Toolbar(true))
+                                     .Tools(tools => tools.Clear()
+                                     .InsertUnorderedList()
+                                     .Bold().Italic().Underline()
+                                     .InsertOrderedList().CreateLink()
+                                     ))
+                                </div>
+                            </div>
+
+                            <div class="profile-usermenu wow fadeInUp animated">
+                                <ul class="nav">
+                                    <li class="active">
+                                        <a style="cursor:default !important" href="javascript:;">
+                                            <i class="icon-settings"></i><span class="ln-bangla">নতুন হিসাব যুক্ত করুন</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-content">
+                        <div class="row">
+                            <div class="col-md-12 portlet light">
+                                <div class="portlet light right-panelbar">
+                                    <div class="portlet-title tabbable-line wow fadeInUp animated">
+                                        <div class="caption caption-md">
+                                            <span class="caption-subject font-blue-madison bold uppercase"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class="ln-bangla">নতুন হিসাব</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="tab-content">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <div class="form-wizard dummy_assessment_information_body">
+                                                <div class="form-body">
+                                                    <div class="clear-div row" style="min-height: 250px;">
+                                                        @for (var feedItem = 0; feedItem < ViewBag.AllFeedListForBindUI.Count; feedItem++)
+                                                        {
+                                                            <div class="col-sm-6 dummy_toggle_area_controll_area" id="divAreaVisibilityByAreaId_@ViewBag.AllFeedListForBindUI[feedItem].ID" style="display: none;">
+
+                                                                @Html.HiddenFor(m => m.FeedPurchaseReportTable[feedItem].MapperAreaId, new { Value = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                <div class="row">
+                                                                    <label class="control-label col-md-12">
+                                                                        <span style="font-weight: bold; font-size: 16px; color: darkgoldenrod;">@ViewBag.AllFeedListForBindUI[feedItem].Name</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="row">
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">খাদ্যের নাম</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().ComboBoxFor(m => m.FeedPurchaseReportTable[feedItem].FeedId)
+                                                                      .DataTextField("Name")
+                                                                      .DataValueField("ID")
+                                                                      .HtmlAttributes(new { style = "width: 100%;", id = "cmbFeedNameList" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                      .DataSource(source =>
+                                                                      {
+                                                                          source.Read(read =>
+                                                                          {
+                                                                              read.Action("GetAllFeedNameList", "SellOfFeed");
+                                                                          });
+                                                                      })
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnMainFishNameList"><span class="ln-bangla">খাদ্যের নাম নিশ্চিত করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">খাদ্যের ধরন</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @Html.TextBoxFor(m => m.FeedPurchaseReportTable[feedItem].FeedCategoryId, new { id = "txtCmbFeedCategoryList" + ViewBag.AllFeedListForBindUI[feedItem].ID, style = "width: 100%;", @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                            <span class="validation-message-color" id="#spnMainFishNameList"><span class="ln-bangla">খাদ্যের ধরন নিশ্চিত করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <script type="text/javascript">
+
+                                                                        var feedNameListList_@ViewBag.AllFeedListForBindUI[feedItem].ID;
+                                                                        var feedCategoryList_@ViewBag.AllFeedListForBindUI[feedItem].ID;
+                                                                        var fedId_@ViewBag.AllFeedListForBindUI[feedItem].ID=0;
+
+                                                                        $(document).ready(function () {
+
+                                                                            feedNameListList_@ViewBag.AllFeedListForBindUI[feedItem].ID = $("#cmbFeedNameList" + @ViewBag.AllFeedListForBindUI[feedItem].ID).data("kendoComboBox");
+                                                                            LoadFeedCategoryComboBox(fedId_@ViewBag.AllFeedListForBindUI[feedItem].ID,@ViewBag.AllFeedListForBindUI[feedItem].ID);
+
+
+                                                                            setTimeout(function(){
+                                                                                feedCategoryList_@ViewBag.AllFeedListForBindUI[feedItem].ID = $($.trim("#txtCmbFeedCategoryList" + @ViewBag.AllFeedListForBindUI[feedItem].ID)).data("kendoComboBox");
+                                                                                DoFeedNameListComboBoxChangeEvent(feedNameListList_@ViewBag.AllFeedListForBindUI[feedItem].ID,feedCategoryList_@ViewBag.AllFeedListForBindUI[feedItem].ID,@ViewBag.AllFeedListForBindUI[feedItem].ID);
+
+                                                                            }, 2000);
+
+
+
+                                                                        });
+
+
+
+
+                                                                    </script>
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">খাদ্যের পরিমান (বস্তায়)</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().ComboBoxFor(m => m.FeedPurchaseReportTable[feedItem].FeedBagsWeight)
+                                                                      .Placeholder("")
+                                                                      .DataTextField("Text")
+                                                                      .DataValueField("Value")
+                                                                      .BindTo(new List<SelectListItem>() {
+                                                                            new SelectListItem() {
+                                                                            Text = "20 কেজি", Value = "20"
+                                                                            },
+                                                                            new SelectListItem() {
+                                                                            Text = "25 কেজি", Value = "25"
+                                                                            },
+                                                                            new SelectListItem() {
+                                                                            Text = "30 কেজি", Value = "30"
+                                                                            },
+
+                                                                            new SelectListItem() {
+                                                                            Text = "40 কেজি", Value = "40"
+                                                                            },
+                                                                            new SelectListItem() {
+                                                                            Text = "50 কেজি", Value = "50"
+                                                                            }
+                                                                      })
+                                                                      .Events(e =>
+                                                                        {
+                                                                            e.Change("OnChangeSellingFeedWeightPerSack");
+                                                                        })
+                                                                      .Suggest(true)
+                                                                      .HtmlAttributes(new { style = "width:100%;", id = "txtCmbWeightOfSack" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">খাদ্যের পরিমান (বস্তায়) নির্ধারণ করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">বস্তার সংখ্যা</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurchaseReportTable[feedItem].FeedTotalBags)
+                                                                            .Events(e => e
+                                                                                 .Change("OnChangeSellingFeedWeightPerSack")
+                                                                                 .Spin("OnChangeSellingFeedWeightPerSack")
+                                                                            )
+                                                                        .Format("#0 টা")
+                                                                        .Min(0)
+                                                                        .Max(99999999)
+                                                                        .Step(1)
+                                                                        .Placeholder("0 টা")
+                                                                        .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedSackNumber" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">বস্তার সংখ্যা নির্ধারণ করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">মোট ওজন</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurchaseReportTable[feedItem].TotalWeight)           
+                                                                                .Format("#.00 কেজি")
+                                                                                .Min(0)
+                                                                                .Max(99999999)
+                                                                                .Step(1)
+                                                                                .Placeholder("0.00 কেজি")
+                                                                                .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalWeight" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID, @readonly = "true" })
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট ওজন নির্ধারণ করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">মুল্য/কেজি</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurchaseReportTable[feedItem].PricePerKg)
+                                                                        .Events(e => e
+                                                                             .Change("OnChangeSellingFeedPricePerKg")
+                                                                             .Spin("OnChangeSellingFeedPricePerKg")
+                                                                        )
+                                                                        .Format("#.00 টাকা")
+                                                                        .Min(0)
+                                                                        .Max(99999999)
+                                                                        .Step(1)
+                                                                        .Placeholder("0.00 টাকা")
+                                                                        .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedPricePerKg" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মুল্য প্রতি কেজি নির্ধারণ করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row xs-nopadding-left wow fadeInUp animated">
+                                                                        <label class="control-label col-md-4">
+                                                                            <span class="ln-bangla">মোট মুল্য</span> <span class="required" aria-required="true"> * </span>
+                                                                        </label>
+                                                                        <div class="col-md-8">
+                                                                            @(Html.Kendo().NumericTextBoxFor(m => m.FeedPurchaseReportTable[feedItem].TotalPrice)
+                                                                        .Events(e => e
+                                                                             .Change("OnChangeSellingFeedTotalPrice")
+                                                                             .Spin("OnChangeSellingFeedTotalPrice")
+                                                                        )
+                                                                    .Format("#.00 টাকা")
+                                                                    .Min(0)
+                                                                    .Max(99999999)
+                                                                    .Step(1)
+                                                                    .Placeholder("0.00 টাকা")
+                                                                    .HtmlAttributes(new { style = "width: 100%", title = "numeric", id = "txtNumSellingFeedTotalPrice" + ViewBag.AllFeedListForBindUI[feedItem].ID, @areaid = ViewBag.AllFeedListForBindUI[feedItem].ID })
+                                                                            )
+                                                                            <span class="validation-message-color" id="#spnSellingFeedReportNumber"><span class="ln-bangla">মোট মুল্য নির্ধারণ করুন</span></span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                    <div class="row wow fadeInUp animated">
+                                                        <div class="col-md-12 footer-button-btm-24">
+                                                            <a class="btn btn-outline green dummy_back_btn pull-left" href="~/FeedPurchase" id="btnBack"><span id="spnBack"><span class="ln-english">Back</span><span class="ln-bangla">ফেরত যান</span> </span></a>
+                                                            <button class="btn green pull-right" type="submit" onclick="return DoThisFormValidation();"> <span class="ln-english">Save</span><span class="ln-bangla">সংরক্ষণ করুন</span></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <!-- END PROFILE CONTENT -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#lstFeedPurchase").addClass("active");
+    });
+
+
+    function LoadFeedCategoryComboBox(thisId,feedLoopID) {
+
+        $.get("/SellOfFeed/GetFeedCategoryListByFeedId", { feedId: thisId }, function (data) {
+
+            var dataSourceGrid = new kendo.data.DataSource({
+                data: data,
+            });
+
+            $($.trim("#txtCmbFeedCategoryList" + feedLoopID)).kendoComboBox({
+                placeholder: "",
+                dataTextField: "FeedCategoryName",
+                dataValueField: "FeedCategoryId",
+                filter: "contains",
+                autoBind: false,
+                dataSource: dataSourceGrid
+            });
+
+
+        });
+
+    }
+
+
+
+    function DoFeedNameListComboBoxChangeEvent(comboBoxVariableName, categoryList,feedLoopID){
+      
+        comboBoxVariableName.bind("change", function () {
+            categoryList.value("");
+            if ((comboBoxVariableName.selectedIndex === -1 && comboBoxVariableName.value()) || comboBoxVariableName.value() == "") {
+                var feedId = 0;
+                LoadFeedCategoryComboBox(feedId,feedLoopID);
+            }
+            else {
+                feedId = comboBoxVariableName.value();
+                LoadFeedCategoryComboBox(feedId,feedLoopID);
+            }
+        });
+
+    }
+
+
+    function OnChangeAreaNameListMultiSelect(e){
+        var value = this.value();
+        $(".dummy_toggle_area_controll_area").hide();
+        for (var i = 0; i < value.length; i++) {
+            $("#divAreaVisibilityByAreaId_" + value[i]).show();
+        }
+       
+        var removeId = IsAreaIdExistInCurrentList();
+        if (removeId > 0) {
+            $($.trim("#cmbFeedNameList" + removeId)).data("kendoComboBox").value("");
+            $($.trim("#txtCmbFeedCategoryList" + removeId)).data("kendoComboBox").value("");
+            $($.trim("#txtCmbWeightOfSack" + removeId)).data("kendoComboBox").value("");
+            $($.trim("#txtNumSellingFeedSackNumber" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumSellingFeedTotalWeight" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumSellingFeedPricePerKg" + removeId)).data("kendoNumericTextBox").value("");
+            $($.trim("#txtNumSellingFeedTotalPrice" + removeId)).data("kendoNumericTextBox").value("");
+        }
+
+        DoCalculationTotalWeight();
+        DoCalculateTotalPrice();
+       
+        $("#dummy_AreaIdListString").val(value);
+
+    }
+
+
+    function IsAreaIdExistInCurrentList() {
+        var idList = $.trim($("#dummy_AreaIdListString").val());
+        var returnFalue = 0;
+        if (idList != "") {
+            var arrayList = idList.split(",");
+            for (index = 0; index < arrayList.length; index++) {
+                var moveId = CheckNewChangeExist(arrayList[index]);
+                if(moveId > 0){
+                    returnFalue=moveId;
+                }
+            }
+        }
+        return returnFalue;
+    }
+
+    function CheckNewChangeExist(loopValue) {
+        var value = $("#cmbAreaNameIdList").data("kendoMultiSelect").value();
+        var returnID = loopValue;
+        for (var i = 0; i < value.length; i++) {
+            if (value[i] == loopValue) {
+                returnID = 0;
+            }
+        }
+        return returnID;
+    }
+
+    function OnChangeSellingFeedWeightPerSack(e){
+        
+        var elementAttr = this.element.context;
+        var contextID;
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.areaid) {
+            contextID = elementAttr.attributes.areaid.value;
+            if (contextID) {
+                var sackWeight = $($.trim("#txtCmbWeightOfSack" + contextID)).data("kendoComboBox").value();
+                var sackNumber = $($.trim("#txtNumSellingFeedSackNumber" + contextID)).data("kendoNumericTextBox").value();
+                var calCulatedValue;
+                if (sackWeight && sackNumber) {
+                    calCulatedValue = (sackNumber * sackWeight);
+                    $($.trim("#txtNumSellingFeedTotalWeight" + contextID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+
+
+                var totalPrice = $($.trim("#txtNumSellingFeedPricePerKg" + contextID)).data("kendoNumericTextBox").value();
+                if (calCulatedValue && totalPrice) {
+                    var sackPrice = (totalPrice * calCulatedValue);
+                    $($.trim("#txtNumSellingFeedTotalPrice" + contextID)).data("kendoNumericTextBox").value(sackPrice);
+                }
+            }
+        }
+        DoCalculationTotalWeight();
+        DoCalculateTotalPrice();
+    }
+
+
+    function OnChangeSellingFeedPricePerKg(e){
+        var elementAttr = this.element.context;
+        var contextID;
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.areaid) {
+            contextID = elementAttr.attributes.areaid.value;
+            if (contextID) {
+                var sackWeight=$($.trim("#txtNumSellingFeedTotalWeight" + contextID)).data("kendoNumericTextBox").value();
+                var weightPErKG = $($.trim("#txtNumSellingFeedPricePerKg" + contextID)).data("kendoNumericTextBox").value();
+
+                if (sackWeight && weightPErKG) {
+                    var calCulatedValue = (weightPErKG * sackWeight);
+                    $($.trim("#txtNumSellingFeedTotalPrice" + contextID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+
+            }
+        }
+
+        DoCalculateTotalPrice();
+
+
+    }
+
+    function OnChangeSellingFeedTotalPrice(e){
+
+        var elementAttr = this.element.context;
+        var contextID;
+        if (elementAttr && elementAttr.attributes && elementAttr.attributes.areaid) {
+            contextID = elementAttr.attributes.areaid.value;
+            if (contextID) {
+                var sackWeight=$($.trim("#txtNumSellingFeedTotalWeight" + contextID)).data("kendoNumericTextBox").value();
+                var totalPrice = $($.trim("#txtNumSellingFeedTotalPrice" + contextID)).data("kendoNumericTextBox").value();
+
+                if (sackWeight && totalPrice) {
+                    var calCulatedValue = (totalPrice / sackWeight);
+                    $($.trim("#txtNumSellingFeedPricePerKg" + contextID)).data("kendoNumericTextBox").value(calCulatedValue);
+                }
+            }
+        }
+
+        DoCalculateTotalPrice();
+    }
+
+
+    function DoCalculateTotalPrice(){
+
+        var multiSelectVal = $("#cmbAreaNameIdList").data("kendoMultiSelect").value();
+        var totalPrice = "";
+
+        for (var i = 0; i < multiSelectVal.length; i++) {
+
+            var areaID = multiSelectVal[i];
+            var sellInKG = $($.trim("#txtNumSellingFeedTotalPrice" + areaID)).data("kendoNumericTextBox").value();
+            if (totalPrice == "") {
+                totalPrice = sellInKG;
+            } else {
+                totalPrice = (totalPrice + sellInKG);
+            }
+        }
+
+        $($.trim("#txtNumSellingFeedTotalPrice")).data("kendoNumericTextBox").value(totalPrice);
+
+        OnChangeDoCalculationDueAmount();
+    }
+
+
+
+    function OnChangeDoCalculationDueAmount(){
+        var totalFeedPrice = $($.trim("#txtNumSellingFeedTotalPrice")).data("kendoNumericTextBox").value();
+        var amountPaid = $($.trim("#txtNumAmountPaid")).data("kendoNumericTextBox").value();
+    
+        if (totalFeedPrice && amountPaid) {
+            var calCulatedValue = (totalFeedPrice - amountPaid);
+            $($.trim("#txtNumAmountToDue")).data("kendoNumericTextBox").value(calCulatedValue);
+            if (amountPaid > totalFeedPrice) {
+                ShowAjaxNotificationMessage("চমৎকার", "আপনি সব টাকা পরিশোধ করেছেন। আপনাকে ধন্যবাদ।", "success");
+            }
+        }else{
+            $($.trim("#txtNumAmountToDue")).data("kendoNumericTextBox").value(totalFeedPrice);
+        }
+    }
+
+
+    function DoCalculationTotalWeight(){
+
+        var multiSelectVal = $("#cmbAreaNameIdList").data("kendoMultiSelect").value();
+        var totalPrice = "";
+
+        for (var i = 0; i < multiSelectVal.length; i++) {
+
+            var areaID = multiSelectVal[i];
+            var sellInKG = $($.trim("#txtNumSellingFeedTotalWeight" + areaID)).data("kendoNumericTextBox").value();
+            if (totalPrice == "") {
+                totalPrice = sellInKG;
+            } else {
+                totalPrice = (totalPrice + sellInKG);
+            }
+        }
+
+        $($.trim("#txtNumSellingFeedTotalWeight")).data("kendoNumericTextBox").value(totalPrice);
+
+    }
+
+
+    function DoValidationForEveryArea() {
+      
+        var isThisFishValid = true;
+        var multiSelectVal = $("#cmbAreaNameIdList").data("kendoMultiSelect").value();
+        for (var i = 0; i < multiSelectVal.length; i++) {
+            var fishId = multiSelectVal[i];
+            
+            var feedName = $($.trim("#cmbFeedNameList" + fishId)).data("kendoComboBox").value();
+            var feedCatName = $($.trim("#txtCmbFeedCategoryList" + fishId)).data("kendoComboBox").value();
+            var sackWeight = $($.trim("#txtCmbWeightOfSack" + fishId)).data("kendoComboBox").value();
+
+            var sackNumber = $($.trim("#txtNumSellingFeedSackNumber" + fishId)).data("kendoNumericTextBox").value();
+            var totalWeight = $($.trim("#txtNumSellingFeedTotalWeight" + fishId)).data("kendoNumericTextBox").value();
+            var pricePerKG = $($.trim("#txtNumSellingFeedPricePerKg" + fishId)).data("kendoNumericTextBox").value();
+            var totalPrice = $($.trim("#txtNumSellingFeedTotalPrice" + fishId)).data("kendoNumericTextBox").value();
+            
+            if ($($.trim("#cmbFeedNameList" + fishId)).data("kendoComboBox").selectedIndex === -1 && feedName || feedName == "" || feedName == null) {
+                isFormValid = false;
+                $($.trim("#cmbFeedNameList" + fishId)).closest("div").find('span').css("display", "block");
+            }
+
+            if ($($.trim("#txtCmbFeedCategoryList" + fishId)).data("kendoComboBox").selectedIndex === -1 && feedCatName || feedCatName == "" || feedCatName == null) {
+                isFormValid = false;
+                $($.trim("#txtCmbFeedCategoryList" + fishId)).closest("div").find('span').css("display", "block");
+            }
+
+            if ($($.trim("#txtCmbWeightOfSack" + fishId)).data("kendoComboBox").selectedIndex === -1 && sackWeight || sackWeight == "" || sackWeight == null) {
+                isFormValid = false;
+                $($.trim("#txtCmbWeightOfSack" + fishId)).closest("div").find('span').css("display", "block");
+            }
+
+            if (typeof sackNumber === 'undefined' || sackNumber == null || sackNumber <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumSellingFeedSackNumber" + fishId)).closest("div").find('span').css("display", "block");
+            }
+
+            if (typeof totalWeight === 'undefined' || totalWeight == null || totalWeight <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumSellingFeedTotalWeight" + fishId)).closest("div").find('span').css("display", "block");
+            }
+            if (typeof pricePerKG === 'undefined' || pricePerKG == null || pricePerKG <= 0) {
+                isThisFishValid = false;
+                $($.trim("#txtNumSellingFeedTotalPrice" + fishId)).closest("div").find('span').css("display", "block");
+            }
+           
+        }
+
+        return isThisFishValid;
+    }
+
+
+    function DoThisFormValidation() {
+        $(".dummy_fields_error_msg").hide();
+        $("#divExistingEmailMessage,.validation-message-color").hide();
+        
+        var isFormValid = true;
+        var fishName = $.trim($("#txtSellingReportName").val());
+        var reportName = $.trim($("#txtSellingFeedReportNumber").val());
+        var sellDate = $("#txtClnSellDate").data("kendoDatePicker").value();
+        var multiSelectVal = $("#cmbAreaNameIdList").data("kendoMultiSelect").value();
+        var txtNumAmountPaid = $("#txtNumAmountPaid").data("kendoNumericTextBox").value();
+
+        if (sellDate) {
+            var dateString = kendo.toString(new Date(sellDate), "MM/dd/yyyy");
+            $("#hdnSellDate").val(dateString);
+        } else {
+            $("#hdnSellDate").val("");
+        }
+        var dateText = $.trim($("#hdnSellDate").val());
+
+        if (typeof fishName === 'undefined' || fishName == "") {
+            isFormValid = false;
+            $("#txtSellingReportName").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof reportName === 'undefined' || reportName == "") {
+            isFormValid = false;
+            $("#txtSellingFeedReportNumber").closest("div").find('span').css("display", "block");
+        }
+
+        if (multiSelectVal == "" || multiSelectVal.length <= 0) {
+            isFormValid = false;
+            $("#spnMainFishNameList").css({ "display": "block"});
+        }
+        
+        if (typeof txtNumAmountPaid === 'undefined' || txtNumAmountPaid == null || txtNumAmountPaid < 0) {
+            isFormValid = false;
+            $("#txtNumAmountPaid").closest("div").find('span').css("display", "block");
+        }
+
+        if (typeof dateText === 'undefined' || dateText == "") {
+            isFormValid = false;
+            $("#spnFishSellingDate").css("display", "block");
+        }
+
+        if (isFormValid == true) {
+
+            var isReturn = DoValidationForEveryArea();
+
+            if (isReturn == false) {
+                ShowAjaxNotificationMessage("দুঃখিত", "দুঃখিত, আপনি নির্ধারিত সব মাছের জন্য হিসাব সম্পূর্ণ করেন নাই!", "warning");
+            }
+
+            isFormValid = isReturn;
+
+        }
+
+
+        if (isFormValid == true) {
+
+            ShowAjaxNotificationMessage("প্রসেসিং", "<img src='" + domainURL + "/images/loading-indicator.gif' draggable='false' class='disable-image' /> ", "success");
+            $(".k-button-icon.k-window-action").css({ "display": "none" });
+
+            //DoAllCalculationCheck();
+        }
+
+
+        return isFormValid;;
+    }
+
+</script>
+

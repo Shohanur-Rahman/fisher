@@ -1,0 +1,145 @@
+﻿.risk-matrix-table .numbers td.low {
+    background: #5cb85c;
+}
+
+.risk-matrix-table .numbers td.medium {
+    background: #f0ad4e;
+}
+
+.risk-matrix-table .numbers td.high {
+    background: #d9534f;
+}
+
+.risk-matrix-table .numbers td a {
+    color: #fff;
+    display: block;
+    line-height: 20px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.risk-matrix-table .risk_numbers td a {
+    color: #fff;
+    display: block;
+    line-height: 24px !important;
+    text-decoration: none;
+    width: 100%;
+}
+
+
+
+
+.risk-matrix-table .numbers td {
+    text-align: center;
+}
+
+.risk-matrix-table .numbers {
+    padding: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.risk-matrix-table {
+    font-size: 16px;
+}
+
+table {
+    background-color: transparent;
+}
+
+td, th {
+    padding: 0;
+}
+
+.risk-matrix-container.focused .risk-matrix-table {
+    display: block;
+    padding: 20px;
+    height: 250px;
+}
+
+.risk-matrix-table {
+    font-size: 16px;
+    z-index: 1;
+    width: 800px;
+    height: 100px;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    display: none;
+    padding: 10px;
+    position: absolute;
+}
+
+.backColor {
+    background-color: red;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.green {
+    color: blue;
+}
+
+.numbers td {
+    border: 1px solid #4f4c54 !important;
+    font-size: .88em;
+}
+
+.risk-matrix-container.focused .risk-matrix-table {
+    height: 310px !important;
+    width: 770px;
+}
+
+.pad3 {
+    padding: 3px;
+}
+
+.numbers .low {
+    width: 20%;
+}
+
+.numbers .medium {
+    width: 20%;
+}
+
+.numbers .high {
+    width: 20%;
+}
+
+.pad5 {
+    padding: 5px;
+}
+/*tooltip text*/
+
+/*.test {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}*/
+
+.paul-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    /*Position the tooltip*/
+    position: absolute;
+    z-index: 1;
+}
+
+.paul-tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.last-tooltip {
+    right: 8px !important;
+}

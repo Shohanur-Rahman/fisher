@@ -1,0 +1,684 @@
+﻿@using Services.Domain.Models.User.EditorModel;
+@model UserProfileModel
+
+
+@{
+    ViewData["Title"] = "Settings";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var userId = Model.PersonalInfo.UserId;
+}
+
+<style type="text/css">
+    .k-button.k-upload-button {
+        margin-left: -7px;
+        margin-right: -5px;
+    }
+
+    .k-upload-button.btn.btn-circle.green.btn-sm {
+        width: 195px !important;
+        cursor: pointer !important;
+        font-size: 15px !important;
+    }
+
+
+    @@media screen and (max-width: 414px) and (min-width:320px) {
+        .portlet > .portlet-title > .nav-tabs {
+            background: 0 0;
+            margin: 1px 0 0;
+            float: left !important;
+            display: inline-block;
+            border: 0;
+        }
+    }
+
+    .k-dropzone {
+        text-align: center;
+    }
+
+    .spnCompanyText {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .userIMGUploader.k-dropzone em {
+        visibility: visible;
+    }
+
+    .div-doc-settings {
+        display: block;
+        margin-left: 17px;
+    }
+
+    .div-main-doc-settings {
+        float: left;
+        margin-left: 50px;
+        margin-top: -10px;
+    }
+
+    .div-sub-doc-settings {
+        margin-left: 30px;
+        margin-top: -15px;
+    }
+
+    .div-custom-pdf .k-dropzone {
+        text-align: left !important;
+    }
+
+    .div-custom-pdf .btn.green:not(.btn-outline) {
+        color: black !important;
+        background-color: white !important;
+        border-color: black !important;
+    }
+
+    .div-custom-pdf .btn-circle {
+        border-radius: 0px !important;
+        overflow: hidden;
+    }
+
+    .div-custom-pdf .k-widget.k-upload.k-header {
+        border: none !important;
+    }
+
+    /*New CSS added By SF For Responsive*/
+    @@media screen and (max-width: 650px) and (min-width:320px) {
+        .responsive-custom-pdf-hr {
+            padding-bottom: 15px;
+        }
+    }
+
+    .div-custom-pdf {
+        margin-top: 15px;
+        padding-left: 5px;
+    }
+
+    .div-pdf-refresh {
+        margin-top: 0px;
+        margin-left: 11px;
+        padding-left: 5px;
+        clear: both;
+    }
+
+    @@media screen and (max-width: 768px) and (min-width: 361px) {
+        .div-custom-pdf {
+            margin-left: -30px;
+        }
+    }
+
+    @@media screen and (max-width: 360px) and (min-width: 320px) {
+        .div-custom-pdf {
+            margin-left: -31px;
+            padding-right: 0px;
+        }
+    }
+
+    .chk-cover-page {
+        min-height: 23px;
+        width: 20px;
+        display: block;
+        float: left;
+        margin-right: 5px !important;
+        margin-top: 0px !important;
+    }
+
+    .review-link-padding .btn {
+        margin-left: 0;
+        width: 75px;
+    }
+
+    @@media screen and (max-width: 1280px) and (min-width:1024px) {
+        .review-link-padding .btn {
+            margin-bottom: 5px;
+        }
+    }
+
+    .smtoxs-inside-row.smtoxs-last .btn {
+        margin-left: 0;
+        width: 88px;
+    }
+
+    @@media screen and (max-width: 768px) and (min-width:320px) {
+        .div-pdf-refresh {
+            margin-left: -20px;
+        }
+
+        .smtoxs-table-content {
+            width: 65%;
+            margin-left: 0px !important;
+        }
+
+        .smtoxs-first {
+            width: 100%;
+        }
+
+        .smtoxs-inside-row {
+            width: 100%;
+        }
+
+            .smtoxs-inside-row.smtoxs-last {
+                margin-left: 1px;
+            }
+
+        .smtoxs-table-lebel {
+            width: 75px;
+        }
+    }
+</style>
+
+
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <h1 class="page-title">
+
+            <div style="display:none;" class="alert alert-dismissable alert-worning-msg" id="divForProfileImageValidation">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong></strong><span id="ProfileImageValidationMessage"></span>
+            </div>
+
+            @if (ViewBag.PasswordInformationMessage != null)
+            {
+                <div class="alert alert-dismissable alert-worning-msg" id="divPasswordDontMatchMSG">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong></strong>@ViewBag.PasswordInformationMessage
+                </div>
+            }
+            @if (ViewBag.InformationMessage != null)
+            {
+                <div class="alert alert-success alert-dismissable alert-success-msg" id="divProfileInfoUpdateMSG">
+                    <i class="fa fa-check"></i>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong></strong>@ViewBag.InformationMessage
+                </div>
+            }
+
+            <div class="alert alert-dismissable alert-worning-msg" style="display:none;" id="CustomPDFUploadMessage">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <span id="spnCustomPDFMessage"><strong></strong></span>
+            </div>
+
+            My Profile | Account Settings
+
+        </h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-sidebar">
+                    <div class="portlet light profile-sidebar-portlet ">
+
+                        @{  if (Model.PersonalInfo.IsImageUploadedByUser == false && Model.PersonalInfo.IsTrialUser == false)
+                            {
+                                <div class="div-add-logo-header dummy_logo_header_txt">
+                                    <span class="spn-add-logo-title"> ADD YOUR LOGO </span>
+                                </div>
+                            }
+                        }
+
+                        <div class="profile-userpic">
+
+                            @{
+                                var imageURL = "" + Model.PersonalInfo.UserImagePath;
+                                var fullName = Model.PersonalInfo.FirstName + " " + Model.PersonalInfo.LastName;
+                            }
+
+                            <div class="dummy_UserImageContainerDiv">
+                                <img src="@imageURL" id="divDefaultUploadedUserImg" class="img-responsive" alt="User Logo" title="@Model.PersonalInfo.UserImageCaption">
+                            </div>
+
+                            <div class="form-group col-sm-12 imageUploadDivHide">
+                                <div class="col-sm-12">
+                                    <div>
+                                        <br />
+                                        @{  if (Model.PersonalInfo.IsImageUploadedByUser == false && Model.PersonalInfo.IsTrialUser==false) 
+                                            {
+
+                                                using (Html.BeginForm("UserProfileInformationUpdate", "Profile", FormMethod.Post, new { @class = "form-horizontal", @autocomplete = "off", id = "frmAddGHSImageInfo", role = "form", enctype = "multipart/form-data" }))
+                                                {
+                                                    @(Html.Kendo().Upload()
+                                                        .Name("files")
+                                                        .Async(a => a
+                                                            .Save("UserImageUpload", "Profile")
+                                                            .AutoUpload(true)
+                                                        )
+                                                        .Multiple(false)
+                                                        .DropZone("userIMGUploader")
+                                                        .Events(events => events
+                                                        .Select("onSelect")
+                                                        .Success("onSuccess")
+                                                        )
+                                                        .Messages(mess => mess.Select("Upload your logo here"))
+                                                        .HtmlAttributes(new { id = "usrUploader" })
+                                                        .Validation(validation =>
+                                                        {
+                                                            validation.AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif" });
+                                                            validation.MaxFileSize(512000);//500KB max
+                                                        })
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="profile-usertitle">
+                            <div class="profile-usertitle-name"> @fullName </div>
+                  
+                        </div>
+                   
+                        <div class="profile-usermenu">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a href="javascript:;">
+                                        <i class="icon-settings"></i> Account Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="~/CompanySupport">
+                                        <i class="fa fa-support"></i> Support
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="portlet light ">
+                        <!-- STAT -->
+                       
+                        <div>
+                            <h4 class="profile-desc-title">Edit User Profile Settings</h4>
+                            <span class="profile-desc-text"> Please edit here, if you update or change your package the next bill will change automatically. </span>
+                            <div class="terms-margin-top profile-desc-link" style="margin-top: 10px;">
+                                <i class="fa fa-globe"></i>
+                                <a href="https://www.rams-app.co.uk/terms-and-conditions" target="_blank" style="text-decoration: none;">RAMs App Terms</a>
+                            </div>
+                            <div class="terms-margin-top profile-desc-link" style="margin-top: 5px;">
+                                <i class="fa fa-globe"></i>
+                                <a href="https://www.rams-app.co.uk/privacy-policy" target="_blank" style="text-decoration: none;">Privacy Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet light ">
+                                <div class="portlet-title tabbable-line">
+                                    <div class="caption caption-md">
+                                        <i class="icon-globe theme-font hide"></i>
+                                        <span class="caption-subject font-blue-madison bold uppercase">Profile Account</span>
+                                    </div>
+                                    <ul class="nav nav-tabs">
+                                        <li class="dummy_active_tab_1">
+                                            <a href="#tab_1_1" data-toggle="tab">Personal Information</a>
+                                        </li>
+                                 
+                                  
+                                    </ul>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="tab-content">
+                                        <!-- Personal Info & Password Tab -->
+                                        <div class="tab-pane" id="tab_1_1">
+                                            <div class="tab-pane active" id="tab_1_1">
+                                                @using (Html.BeginForm("UserProfileInformationUpdate", "Profile", FormMethod.Post, new { @autocomplete = "off", role = "form", id = "userProfilePersonalInfoForm" }))
+                                                {
+
+                                                    @Html.AntiForgeryToken()
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.PersonalInfo.FirstName, new { @class = "form-control", @maxlength = "20", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.PersonalInfo.FirstName, new { @class = "control-label" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(m => m.PersonalInfo.FirstName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    @Html.HiddenFor(m => m.PersonalInfo.UserId)
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.PersonalInfo.LastName, new { @class = "form-control", @maxlength = "20", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.PersonalInfo.LastName, new { @class = "control-label" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(m => m.PersonalInfo.LastName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            <div class="input-group">
+                                                                @Html.TextBoxFor(m => m.PersonalInfo.EmailAddress, new { @class = "form-control", type = "email", id = "dummy_User_Registration_Email", autocomplete = "nope" })
+                                                                @Html.LabelFor(m => m.PersonalInfo.EmailAddress, new { @class = "control-label" })
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-envelope"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <span style="display: none;" id="divExistingEmailMessage" class="text-danger field-validation-valid">Email already exist, please try with different email address.</span>
+                                                        @Html.ValidationMessageFor(m => m.PersonalInfo.EmailAddress, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.PersonalInfo.Position, new { @class = "form-control", @maxlength = "99", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.PersonalInfo.Position, new { @class = "control-label" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(m => m.PersonalInfo.Position, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <button class="btn green" type="submit">Update Personal Information</button>
+                                                    <a href="~/Dashboard" class="btn default"> Cancel </a>
+                                                }
+                                                <!-- CHANGE PASSWORD TAB -->
+
+                                                @using (Html.BeginForm("UserPasswordUpdate", "Profile", FormMethod.Post, new { @autocomplete = "off", role = "form" }))
+                                                {
+
+                                                    @Html.AntiForgeryToken()
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.UserPassword.CurrentPassword, new { @class = "form-control", type = "password", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.UserPassword.CurrentPassword, new { @class = "control-label" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(m => m.UserPassword.CurrentPassword, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    @Html.HiddenFor(m => m.UserPassword.UserId)
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.UserPassword.Password, new { @class = "form-control", type = "password", id = "password", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.UserPassword.Password, new { @class = "control-label" })
+                                                            @Html.ValidationMessageFor(m => m.UserPassword.Password, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="form-group form-md-line-input form-md-floating-label">
+                                                            @Html.TextBoxFor(m => m.UserPassword.ConfirmPassword, new { @class = "form-control", type = "password", autocomplete = "nope" })
+                                                            @Html.LabelFor(m => m.UserPassword.ConfirmPassword, new { @class = "control-label" })
+                                                        </div>
+                                                        @Html.ValidationMessageFor(m => m.UserPassword.ConfirmPassword, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <div class="margin-top-10">
+                                                        <button class="btn green" type="submit"> Change Password </button>
+                                                        <a href="~/Dashboard" class="btn default"> Cancel </a>
+                                                    </div>
+
+                                            <!-- END CHANGE PASSWORD TAB -->
+                                                }
+                                            </div>
+                                        </div>
+
+                                              
+
+                                        <!-- DOcument Settings Tab -->
+                                   
+
+                                    </div>
+                                </div>
+                                <!-- END PROFILE CONTENT -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="divDeleteModelApper">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Information</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your custom PDF?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger dummy_delete_yes">Delete</button>
+                <button type="button" class="btn btn green dummy_delete_no" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="divPreviewModelApper">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Information</h3>
+            </div>
+            <div class="modal-body">
+                <p>RAMs App is just creating your preview document. It’ll only take a moment or two.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn green dummy_preview_yes" id="load" data-loading-text="<i class='fa fa-spinner fa-spin pull-right' style='margin-top:3px;'></i> PDF document is generating">Preview Document</button>
+                <button type="button" class="btn btn-danger dummy_preview_no" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link type="text/css" href="~/css/password.css" rel="stylesheet" />
+<script src="~/Scripts/password.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#password').password({
+            animate: false
+        });
+
+        $(".k-upload-button").removeClass("k-button");
+        $(".k-upload-button").addClass("btn btn-circle green btn-sm");
+
+       
+        if ('@ViewBag.RedirectCheck' != null && '@ViewBag.RedirectCheck' != "" && '@ViewBag.RedirectCheck' == "fromAddDocument")
+        {
+            //ul-li class add,remove
+            $(".dummy_active_tab_1").removeClass('active');
+            $(".dummy_active_tab_2").addClass('active');
+
+            //tab class add,remove
+            $("#tab_1_1").removeClass('active');
+            $("#tab_1_2").addClass('active');
+        } else {
+            //ul-li class add
+            $(".dummy_active_tab_1").addClass('active');
+            //tab class add
+            $("#tab_1_1").addClass('active');
+        }
+
+        ExistingEmailAddressChgeckWithOnKeyUP();
+     
+
+    });//end document ready
+
+
+    $(window).load(function () {
+
+        var companyName = $("#hdnCompanyName").val();
+        if (companyName == "") {
+            $("#hdnCompanyName").val("Not known")
+        }
+    });
+
+    //Added New Code Here
+    function UserCustomPDFOnSuccess(response) {
+        $(".dummy_user_custom_pdf").show();
+    }
+
+    function UserCustomPDFOnError(response)
+    {
+        var err = response.XMLHttpRequest.responseText;
+        if (err != null && err != "") {
+
+            $("#spnCustomPDFMessage").text(err);
+            $("#CustomPDFUploadMessage").show().fadeOut(5000);
+            document.documentElement.scrollTop = 0;
+        }
+    }
+
+    function AddDocumentOnClick(elem) {
+
+        var chkRedirect = "fromAddDocument";
+        window.location.href = "/CompanyUserProfile/Index/" + chkRedirect;
+    }
+
+
+
+  
+
+
+    //End New Code Here
+
+
+     function ExistingEmailAddressChgeckWithOnKeyUP() {
+
+         @*$("#dummy_User_Registration_Email").keyup(function () {
+            var email = $("#dummy_User_Registration_Email").val();
+            var userId = @userId;
+
+            $.ajax({
+               
+                type: "GET",        
+                url: "/SignUp/CheckEmailExistInCompanyAndUser",
+                data: { email: email, userId: userId, companyId: 0 },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                  
+                    if (response.CHKStatus == true) {
+
+                        $("#divExistingEmailMessage").show();
+                    }
+                    if (response.CHKStatus == false) {
+
+                        $("#divExistingEmailMessage").hide();
+                    }
+                }
+            });
+        });*@
+
+    }
+
+    $(window).load(function () {
+
+        if ('@ViewBag.InformationMessage' != null && '@ViewBag.InformationMessage' != '') {
+            $("#divProfileInfoUpdateMSG").show().fadeOut(5000);
+        }
+        if ('@ViewBag.PasswordInformationMessage' != null && '@ViewBag.PasswordInformationMessage' != '') {
+            $("#divPasswordDontMatchMSG").show().fadeOut(5000);
+        }
+
+     });
+
+
+    function onSelect(e) {
+
+        $("#divForProfileImageValidation").hide();
+        var files = e.files;
+
+        var fullImageName = e.files["0"].name;
+        var imageExtension = e.files["0"].extension;
+        var exactImageName = fullImageName.replace(imageExtension, "");
+
+        $.each(files, function () {
+
+            if (this.size > 512000 && exactImageName.length > 90) {
+
+                //image & name validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB in size and 90 characters name are allowed for your logo.");
+                $('#divForProfileImageValidation').show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size > 512000 && exactImageName.length <= 90) {
+
+                //image validation
+                $('#ProfileImageValidationMessage').text("Maximum 500KB image allowed for your logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+
+            if (this.size <= 512000 && exactImageName.length > 90) {
+
+                //name validation
+                $('#ProfileImageValidationMessage').text("Maximum 90 characters name allowed for your logo.");
+                $("#divForProfileImageValidation").show();
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $("#divForProfileImageValidation").fadeOut(5000);
+
+                e.preventDefault();
+            }
+        });
+    }
+
+
+    function onSuccess(e) {
+        try {
+
+            if (typeof e.response.DynamicHtml !== 'undefined' && e.response.DynamicHtml != null) {
+
+                setTimeout(function () {
+                    $(".dummy_logo_header_txt").hide();
+                    $("#divDefaultUploadedUserImg").hide();
+                    $('.dummy_divUplodedUserImg').hide();
+                    //this code will execute after 4 sec
+                    $(".dummy_UserImageContainerDiv").append($(e.response.DynamicHtml));
+                    $(".imageUploadDivHide").hide();
+                    //alert(e.response.UploadImageURL);
+                    $(".img-circle").attr("src", e.response.UploadImageURL);
+                }, 8000);
+            }
+
+        }
+        catch (err) {
+
+        }
+    }
+
+
+    $('#userProfilePersonalInfoForm').submit(function () {
+
+        $("#divExistingEmailMessage").hide();
+        var isValid = true;
+        var email = $("#dummy_User_Registration_Email").val();
+        var userId = @userId;
+
+        if (email.length > 0) {
+
+            //$.ajax({
+            //    async: false,
+            //    type: "GET",      
+            //    url: "/SignUp/CheckEmailExistInCompanyAndUser",
+            //    data: { email: email, userId: userId, companyId: 0 },
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    success: function (response) {
+                  
+            //        if (response.CHKStatus == true) {
+
+            //            $("#divExistingEmailMessage").show();
+            //            isValid = false;
+            //        }
+            //        if (response.CHKStatus == false) {
+
+            //            $("#divExistingEmailMessage").hide();
+            //            isValid = true;
+            //        }
+            //    }
+            //});
+
+            if (!isValid)
+            return false;
+        }
+    });
+
+
+
+</script>
